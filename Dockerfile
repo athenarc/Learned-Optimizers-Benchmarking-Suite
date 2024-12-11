@@ -14,6 +14,8 @@ ENV DATA_DIR="/app/datasets"
 ENV DB_CLUSTER_DIR="/app/db"
 ENV POSTGRES_BIN="${INSTALL_DIR}/${POSTGRES_VERSION}/bin"
 ENV PG_CONF="${DB_CLUSTER_DIR}/postgresql.conf"
+ENV PG_HBA="${DB_CLUSTER_DIR}/pg_hba.conf"
+ENV PATCH_DIR="${BENCHMARKS_DIR}/patches"
 
 # Set the path to the PostgreSQL binaries
 ENV PSQL="${POSTGRES_BIN}/psql"
@@ -56,17 +58,19 @@ RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-$
 # Set up directories for benchmarks, datasets, and database cluster
 WORKDIR /app
 RUN mkdir -p \
-    benchmark_scripts/{job/utility,ssb/utility,stats,tpc-ds/tpc-ds-tool/{answer_sets,query_templates,query_variants,specification,tests,tools},tpc-ds/utility,tpc-h/tpc-h-tool/{dbgen/{answers,check_answers,queries,reference,tests,variants},dev-tools,ref_data/{1,100,1000,10000,100000,300,3000,30000}}} \
+    benchmark_scripts/{patches,job/utility,ssb/utility,stats,tpc-ds/tpc-ds-tool/{answer_sets,query_templates,query_variants,specification,tests,tools},tpc-ds/utility,tpc-h/tpc-h-tool/{dbgen/{answers,check_answers,queries,reference,tests,variants},dev-tools,ref_data/{1,100,1000,10000,100000,300,3000,30000}}} \
     datasets db
 
 # Copy benchmark load scripts
 COPY benchmark_scripts/ /app/benchmark_scripts/
 
+WORKDIR /tmp/postgresql-${POSTGRES_VERSION}
 # Necessary source modifications for the benchmarks to work with PostgreSQL
 COPY psql_source_modification.sh /app/psql_source_modification.sh
 RUN chmod +x /app/psql_source_modification.sh && /app/psql_source_modification.sh
+# RUN patch -s -p1 < ${PATCH_DIR}/stats_benchmark.patch
 
-RUN cd /tmp/postgresql-${POSTGRES_VERSION} && ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --enable-depend --enable-cassert CFLAGS="-ggdb -O0" && \
+RUN ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --enable-depend --enable-cassert CFLAGS="-ggdb -O0" && \
     make && \
     make install && \
     rm -rf /tmp/postgresql-${POSTGRES_VERSION} /tmp/postgresql-${POSTGRES_VERSION}.tar.gz
@@ -74,6 +78,7 @@ RUN cd /tmp/postgresql-${POSTGRES_VERSION} && ./configure --prefix=${INSTALL_DIR
 # Expose default PostgreSQL port
 EXPOSE 5432
 
+WORKDIR /app
 # Custom script that starts the database
 COPY start_postgresql.sh /app/start_postgresql.sh
 RUN chmod +x /app/start_postgresql.sh
