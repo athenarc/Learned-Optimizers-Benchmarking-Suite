@@ -48,7 +48,7 @@ if ! make; then
 fi
 
 # Generate the data
-if ! ./dbgen -s 1 -T a; then
+if ! ./dbgen -s 1 -T a -f; then
     echo "Error: Failed to generate the data"
     exit 1
 fi
