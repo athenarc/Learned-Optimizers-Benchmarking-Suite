@@ -11,7 +11,7 @@ fi
 
 # Run the database configuration script
 echo 'Running database configurations setup...'
-/app/psql_configurations.sh
+/app/installation_scripts/psql_configurations.sh
 
 # Start PostgreSQL in the background
 echo 'Starting PostgreSQL...'
@@ -23,11 +23,11 @@ sleep 5
 
 # Load the benchmarks datasets and their workloads into the database
 echo 'Running benchmark loaders...'
-/app/benchmark_loader.sh
+/app/installation_scripts/benchmark_loader.sh
 
 # Run the database configuration script
 echo 'Revokinf database privileges...'
-/app/psql_privileges.sh
+/app/installation_scripts/psql_privileges.sh
 
 # Keep the container running
 tail -f /dev/null

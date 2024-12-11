@@ -55,4 +55,11 @@ if ! bash "$SCRIPT_DIR/utility/load_job_postgres.sh" "$JOB_DIR" "$DBNAME"; then
     exit 1
 fi
 
+# Change to workload directory
+pushd "$WORKLOAD_DIR" || { echo "Error: Failed to navigate to workload directory"; exit 1; }
+mkdir -p join-order-benchmark || { echo "Error: Failed to create directory join-order-benchmark"; exit 1; }
+cp "$BENCHMARKS_DIR"/job/workload/* join-order-benchmark/ || { echo "Error: Failed to copy workload.sql to join-order-benchmark"; exit 1; }
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
+
 echo "IMDB dataset successfully loaded into $DBNAME database."

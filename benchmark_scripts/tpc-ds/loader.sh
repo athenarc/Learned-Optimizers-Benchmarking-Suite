@@ -37,4 +37,22 @@ if ! bash "$SCRIPT_DIR/utility/load_tpcds_postgres.sh" "$TPCDS_DIR" "$TOOL_DIR" 
     exit 1
 fi
 
+BENCHMARK_DIR="${BENCHMARKS_DIR}/tpc-ds/tpc-ds-tool/tools"
+TEMPLATES_DIR="${BENCHMARKS_DIR}/tpc-ds/tpc-ds-tool/query_templates"
+
+# Change to workload directory
+pushd "$WORKLOAD_DIR" || { echo "Error: Failed to navigate to workload directory"; exit 1; }
+mkdir -p tpc-ds-benchmark || { echo "Error: Failed to create directory tpc-ds-benchmark"; exit 1; }
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
+# Known issue: TPC-DS qgen tool does not work with PostgreSQL
+# pushd "$TEMPLATES_DIR" || { echo "Error: Failed to navigate to tpc-ds-tool/query_templates directory"; exit 1; }
+# bash "$BENCHMARKS_DIR"/tpc-ds/utility/fix_templates.sh
+# popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
+# pushd "$BENCHMARK_DIR" || { echo "Error: Failed to navigate to tpc-ds-tool/tools directory"; exit 1; }
+# # make
+# ./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -VERBOSE Y -QUALIFY Y -SCALE 10 -DIALECT netezza -OUTPUT_DIR "$WORKLOAD_DIR"/tpc-ds-benchmark
+# popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
 echo "TPCDS dataset successfully loaded into $DBNAME database."

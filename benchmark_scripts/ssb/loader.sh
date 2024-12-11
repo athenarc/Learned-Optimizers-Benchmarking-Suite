@@ -80,4 +80,10 @@ if ! bash "$SCRIPT_DIR/utility/load_ssb_postgres.sh" "$SSB_DIR" "$DBNAME"; then
     exit 1
 fi
 
+# Change to workload directory
+pushd "$WORKLOAD_DIR" || { echo "Error: Failed to navigate to workload directory"; exit 1; }
+mkdir -p star-schema-benchmark || { echo "Error: Failed to create directory star-schema-benchmark"; exit 1; }
+cp "$BENCHMARKS_DIR"/ssb/utility/workload.sql star-schema-benchmark/ssb.sql || { echo "Error: Failed to copy workload.sql to star-schema-benchmark"; exit 1; }
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
 echo "SSB dataset successfully loaded into $DBNAME database."

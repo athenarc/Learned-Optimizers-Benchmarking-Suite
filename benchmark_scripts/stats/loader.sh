@@ -53,5 +53,11 @@ $PSQL $DBNAME -f "$BENCHMARK_DIR/datasets/stats_simplified/stats.sql"
 $PSQL $DBNAME -f "$BENCHMARK_DIR/scripts/sql/stats_load.sql"
 $PSQL $DBNAME -f "$BENCHMARK_DIR/scripts/sql/stats_index.sql"
 
+# Change to workload directory
+pushd "$WORKLOAD_DIR" || { echo "Error: Failed to navigate to workload directory"; exit 1; }
+mkdir -p stats-benchmark || { echo "Error: Failed to create directory stats-benchmark"; exit 1; }
+cp -r "$BENCHMARKS_DIR"/stats/workload/* stats-benchmark/ || { echo "Error: Failed to copy workload.sql to stats-benchmark"; exit 1; }
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
 echo "Stats dataset successfully loaded into $DBNAME database."
 

@@ -37,4 +37,21 @@ if ! bash "$SCRIPT_DIR/utility/load_tpch_postgres.sh" "$TPCH_DIR" "$TOOL_DIR" "$
     exit 1
 fi
 
+BENCHMARK_DIR="${BENCHMARKS_DIR}/tpc-h/tpc-h-tool/dbgen"
+
+# Change to workload directory
+pushd "$WORKLOAD_DIR" || { echo "Error: Failed to navigate to workload directory"; exit 1; }
+mkdir -p tpc-h-benchmark || { echo "Error: Failed to create directory tpc-h-benchmark"; exit 1; }
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
+pushd "$BENCHMARK_DIR" || { echo "Error: Failed to navigate to tpc-h-tool/dbgen directory"; exit 1; }
+# make
+for q in `seq 1 22`
+do
+    DSS_QUERY=queries ./qgen $q >> "${WORKLOAD_DIR}/tpc-h-benchmark/$q.sql"
+    sed 's/^select/explain select/' "${WORKLOAD_DIR}/tpc-h-benchmark/$q.sql" > "${WORKLOAD_DIR}/tpc-h-benchmark/$q.explain.sql"
+    cat "${WORKLOAD_DIR}/tpc-h-benchmark/$q.sql" >> "${WORKLOAD_DIR}/tpc-h-benchmark/$q.explain.sql"
+done
+popd || { echo "Error: Failed to return to the original directory"; exit 1; }
+
 echo "TPCH dataset successfully loaded into $DBNAME database."

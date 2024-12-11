@@ -12,6 +12,7 @@ ENV POSTGRES_VERSION=12.5
 ENV BENCHMARKS_DIR="/app/benchmark_scripts"
 ENV DATA_DIR="/app/datasets"
 ENV DB_CLUSTER_DIR="/app/db"
+ENV WORKLOAD_DIR="/app/workloads"
 ENV POSTGRES_BIN="${INSTALL_DIR}/${POSTGRES_VERSION}/bin"
 ENV PG_CONF="${DB_CLUSTER_DIR}/postgresql.conf"
 ENV PG_HBA="${DB_CLUSTER_DIR}/pg_hba.conf"
@@ -58,16 +59,17 @@ RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-$
 # Set up directories for benchmarks, datasets, and database cluster
 WORKDIR /app
 RUN mkdir -p \
-    benchmark_scripts/{patches,job/utility,ssb/utility,stats,tpc-ds/tpc-ds-tool/{answer_sets,query_templates,query_variants,specification,tests,tools},tpc-ds/utility,tpc-h/tpc-h-tool/{dbgen/{answers,check_answers,queries,reference,tests,variants},dev-tools,ref_data/{1,100,1000,10000,100000,300,3000,30000}}} \
-    datasets db
+    benchmark_scripts/{patches,job/{utility,workload},ssb/utility,stats/workload,tpc-ds/tpc-ds-tool/{answer_sets,query_templates,query_variants,specification,tests,tools},tpc-ds/utility,tpc-h/tpc-h-tool/{dbgen/{answers,check_answers,queries,reference,tests,variants},dev-tools,ref_data/{1,100,1000,10000,100000,300,3000,30000}}} \
+    datasets db workloads/
 
-# Copy benchmark load scripts
+# Copy benchmark load scripts and installation scripts
 COPY benchmark_scripts/ /app/benchmark_scripts/
+COPY installation_scripts/ /app/installation_scripts/
+COPY start_postgresql.sh /app/start_postgresql.sh
 
 WORKDIR /tmp/postgresql-${POSTGRES_VERSION}
 # Necessary source modifications for the benchmarks to work with PostgreSQL
-COPY psql_source_modification.sh /app/psql_source_modification.sh
-RUN chmod +x /app/psql_source_modification.sh && /app/psql_source_modification.sh
+RUN chmod +x /app/installation_scripts/psql_source_modification.sh && /app/installation_scripts/psql_source_modification.sh
 # RUN patch -s -p1 < ${PATCH_DIR}/stats_benchmark.patch
 
 RUN ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --enable-depend --enable-cassert CFLAGS="-ggdb -O0" && \
@@ -79,25 +81,16 @@ RUN ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --enable-depend --en
 EXPOSE 5432
 
 WORKDIR /app
-# Custom script that starts the database
-COPY start_postgresql.sh /app/start_postgresql.sh
+# Custom scripts for starting and configuring the database
 RUN chmod +x /app/start_postgresql.sh
-
-# Custom script that configures the database -> will run in start_postgresql.sh
-COPY psql_configurations.sh /app/psql_configurations.sh
-RUN chmod +x /app/psql_configurations.sh
-
-# Custom script that handles the privileges users have on the database -> will run in start_postgresql.sh
-COPY psql_privileges.sh /app/psql_privileges.sh
-RUN chmod +x /app/psql_privileges.sh
-
-# Custom script that loads the benchmark datasets && workloads -> will run in start_postgresql.sh
-COPY benchmark_loader.sh /app/benchmark_loader.sh
-RUN chmod +x /app/benchmark_loader.sh
+RUN chmod +x /app/installation_scripts/psql_configurations.sh
+RUN chmod +x /app/installation_scripts/psql_privileges.sh
+RUN chmod +x /app/installation_scripts/benchmark_loader.sh
 
 RUN chown -R postgres:postgres ${DATA_DIR}
 RUN chown -R postgres:postgres ${DB_CLUSTER_DIR}
 RUN chown -R postgres:postgres ${BENCHMARKS_DIR}
+RUN chown -R postgres:postgres ${WORKLOAD_DIR}
 
 # Switch to the postgres user
 USER postgres
