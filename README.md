@@ -5,10 +5,10 @@ This repo acts as a testbed for learned optimizers providing out of the box tool
 
 ### How to Run the Image
 
-1. **Stop existing containers and remove volumes:**
+1. **Stop existing containers and remove all images & volumes:**
 
     ```bash
-    docker-compose down -v
+    docker-compose down --rmi all -v
     ```
 
 2. **Build and start the container:**
@@ -33,8 +33,8 @@ psql -h localhost -U suite_user -d suite_db
 
 ### Debugging
 
-View logs with:
+View logs in real-time with:
 
 ```bash
-docker logs evaluation_suite
+docker logs -f evaluation_suite
 ```
