@@ -20,7 +20,7 @@ cd "$JOB_DIR" || { echo "Error: Failed to navigate to directory $JOB_DIR"; exit 
 
 # Download the IMDb dataset
 IMDB_TAR="imdb.tgz"
-if ! wget -c "http://homepages.cwi.nl/~boncz/job/$IMDB_TAR"; then
+if ! wget -c "https://event.cwi.nl/da/job/$IMDB_TAR"; then
     echo "Error: Failed to download $IMDB_TAR"
     exit 1
 fi
