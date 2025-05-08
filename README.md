@@ -3,37 +3,55 @@ This repo acts as a testbed for learned optimizers providing out of the box tool
 
 ## Docker Setup
 
-### How to Run the Image
+### Quick Start
 
-1. **Stop existing containers and remove all images & volumes:**
+```bash
+    docker compose down --rmi all -v     # Clean slate
+    docker compose up --build -d         # Rebuild and start
+```
 
-    ```bash
-    docker-compose down --rmi all -v
-    ```
+Containers: `evaluation_suite` and `evaluation_suite_alt`.
 
-2. **Build and start the container:**
+### Rebuilding Specific Containers
 
-    ```bash
-    docker-compose up --build -d
-    ```
+1. Stop and remove target container:
+```bash
+docker container ls
+# Find the id of containers named learned-optimizers-benchmarking-suite-db or learned-optimizers-benchmarking-suite-db2
 
-   The container will be named `evaluation_suite`.
+docker stop <container_id>
+docker container rm <container_id>
+```
+
+2. Remove associated resources:
+```bash
+# For db1:
+docker image rm learned-optimizers-benchmarking-suite-db
+docker volume rm learned-optimizers-benchmarking-suite_db_data
+
+# For db2:
+docker image rm learned-optimizers-benchmarking-suite-db2
+docker volume rm learned-optimizers-benchmarking-suite_db2_data
+```
+
+3. Rebuild
+```bash
+docker compose up --build -d db   # or db2
+```
 
 ### Postgres Connection Details
 
-- **User**: `suite_user`
-- **Password**: `71Vgfi4mUNPm`
-- **Database**: `suite_db`
+- **Credentials**: `suite_user`/`71Vgfi4mUNPm`
+- **Databases**: `imdbload`, `tpch`,`tpcds`
+- **Ports**: 5468,5469
 
 Connect with:
 
 ```bash
-psql -h localhost -U suite_user -d suite_db
+psql -U suite_user -d <db> -h train.darelab.athenarc.gr -p <port>
 ```
 
-### Debugging
-
-View logs in real-time with:
+### Monitoring
 
 ```bash
 docker logs -f evaluation_suite

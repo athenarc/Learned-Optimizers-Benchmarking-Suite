@@ -1,3 +1,4 @@
+version: "2"
 services:
   db:
     build:
@@ -9,9 +10,32 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "5468:5468"
     volumes:
       - db_data:/app/db
+    shm_size: 40g  # Set shared memory size to 16GB
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+
+  db2:  # Second instance
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: evaluation_suite_alt
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}_2  # Different DB name
+    ports:
+      - "5469:5468"  # Different host port
+    volumes:
+      - db2_data:/app/db  # Different volume
+    shm_size: 40g
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
 
 volumes:
   db_data:
+  db2_data:

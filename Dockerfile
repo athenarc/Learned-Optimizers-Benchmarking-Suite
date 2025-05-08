@@ -19,9 +19,9 @@ ENV PG_HBA="${DB_CLUSTER_DIR}/pg_hba.conf"
 ENV PATCH_DIR="${BENCHMARKS_DIR}/patches"
 
 # Set the path to the PostgreSQL binaries
-ENV PSQL="${POSTGRES_BIN}/psql"
+ENV PSQL="${POSTGRES_BIN}/psql -p 5468"
 ENV PG_CTL="${POSTGRES_BIN}/pg_ctl"
-ENV CREATE_DB="${POSTGRES_BIN}/createdb"
+ENV CREATE_DB="${POSTGRES_BIN}/createdb -p 5468 --encoding=UTF8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
 
 # Update and install dependencies
 RUN apt-get update && apt-get upgrade -y && \
@@ -45,16 +45,23 @@ RUN apt-get update && apt-get upgrade -y && \
         g++-9 \
         gcc-9 \
         bison \
-        flex && \
+        flex \
+        nano \
+        sudo \
+        locales \
+        perl \    
+        libperl-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+dpkg-reconfigure --frontend=noninteractive locales && \
+update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Create postgres user and group
 RUN groupadd -r postgres && useradd -r -g postgres -m postgres
-
-# Download and install PostgreSQL if not already installed
-WORKDIR /tmp
-RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-${POSTGRES_VERSION}.tar.gz && \
-    tar xzvf postgresql-${POSTGRES_VERSION}.tar.gz
 
 # Set up directories for benchmarks, datasets, and database cluster
 WORKDIR /app
@@ -67,30 +74,80 @@ COPY benchmark_scripts/ /app/benchmark_scripts/
 COPY installation_scripts/ /app/installation_scripts/
 COPY start_postgresql.sh /app/start_postgresql.sh
 
+# Install PostgreSQL from local tar file
+WORKDIR /tmp
+RUN cp /app/installation_scripts/augmented_postgresql-${POSTGRES_VERSION}.tar.gz . && \
+    tar xzvf augmented_postgresql-${POSTGRES_VERSION}.tar.gz
+
+# Apply Lero patch before compiling PostgreSQL
 WORKDIR /tmp/postgresql-${POSTGRES_VERSION}
-# Necessary source modifications for the benchmarks to work with PostgreSQL
-RUN chmod +x /app/installation_scripts/psql_source_modification.sh && /app/installation_scripts/psql_source_modification.sh
+RUN patch -s -p1 < ${PATCH_DIR}/0001-init-lero.patch || \
+    (echo "Some hunks failed to apply. Check .rej files" && exit 0)
+
+WORKDIR /tmp/postgresql-${POSTGRES_VERSION}
+# Necessary source modifications for the benchmarks to work with PostgreSQL (commenting out for now, because it is breaking due to the lero patch)
+# RUN chmod +x /app/installation_scripts/psql_source_modification.sh && /app/installation_scripts/psql_source_modification.sh
 # RUN patch -s -p1 < ${PATCH_DIR}/stats_benchmark.patch
 
-RUN ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --enable-depend --enable-cassert CFLAGS="-ggdb -O0" && \
-    make && \
+# Configure PostgreSQL with --with-perl
+RUN ./configure --prefix=${INSTALL_DIR}/${POSTGRES_VERSION} --without-readline --with-perl && \
+    make -j && \
     make install && \
-    rm -rf /tmp/postgresql-${POSTGRES_VERSION} /tmp/postgresql-${POSTGRES_VERSION}.tar.gz
+    rm -rf /tmp/postgresql-${POSTGRES_VERSION} /tmp/augmented_postgresql-${POSTGRES_VERSION}.tar.gz
 
 # Expose default PostgreSQL port
-EXPOSE 5432
+EXPOSE 5468
+
+WORKDIR /app
+RUN cp /app/installation_scripts/bao.tar.gz . && \
+    tar -xvf bao.tar.gz
+
+RUN cp ${BENCHMARKS_DIR}/patches/Makefile_pg_bao /app/BaoForPostgreSQL/pg_extension/Makefile
+
+# Build and install the PostgreSQL extension
+WORKDIR /app/BaoForPostgreSQL/pg_extension
+RUN make USE_PGXS=1 install
+
+# Clone pg_hint_plan repository
+WORKDIR /app
+RUN cp /app/installation_scripts/pg_hint_plan.tar.gz . && \
+    tar xzvf pg_hint_plan.tar.gz
+RUN cp ${BENCHMARKS_DIR}/patches/Makefile_pg_hint_plan /app/pg_hint_plan/Makefile
+
+# Build and install the PostgreSQL extension for pg_hint_plan
+WORKDIR /app/pg_hint_plan
+RUN make && make install
 
 WORKDIR /app
 # Custom scripts for starting and configuring the database
 RUN chmod +x /app/start_postgresql.sh
 RUN chmod +x /app/installation_scripts/psql_configurations.sh
 RUN chmod +x /app/installation_scripts/psql_privileges.sh
+RUN chmod +x /app/installation_scripts/psql_privileges_job.sh
 RUN chmod +x /app/installation_scripts/benchmark_loader.sh
+RUN chmod +x /app/installation_scripts/job_loader.sh
+RUN chmod +x /app/installation_scripts/clear_cache.sh
+
+# Create the log file and set permissions
+RUN touch /app/installation_scripts/udf_log.txt && \
+    chown postgres:postgres /app/installation_scripts/udf_log.txt && \
+    chmod 666 /app/installation_scripts/udf_log.txt
 
 RUN chown -R postgres:postgres ${DATA_DIR}
-RUN chown -R postgres:postgres ${DB_CLUSTER_DIR}
+RUN chown -R postgres:postgres ${DB_CLUSTER_DIR} && chmod 775 ${DB_CLUSTER_DIR}
 RUN chown -R postgres:postgres ${BENCHMARKS_DIR}
 RUN chown -R postgres:postgres ${WORKLOAD_DIR}
+
+# Add postgres user to the sudo group
+RUN usermod -aG sudo postgres
+
+# Configure sudo to allow passwordless access for postgres (optional)
+RUN echo "postgres ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Create suite_user and add to sudoers
+RUN useradd -m -s /bin/bash suite_user && \
+    usermod -aG sudo suite_user && \
+    echo "suite_user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Switch to the postgres user
 USER postgres

@@ -6,6 +6,11 @@ set -e
 # Run dataset loader scripts for all benchmarks
 for BENCHMARK in "$BENCHMARKS_DIR"/*; do
     if [[ -d "$BENCHMARK" ]]; then
+        # Skip the "ssb" directory
+        if [[ "$BENCHMARK_NAME" == "ssb" || "$BENCHMARK_NAME" == "stats" ]]; then
+            continue
+        fi
+        
         LOADER="$BENCHMARK/loader.sh"
         if [[ -f "$LOADER" ]]; then
             echo "Running dataset loader script for $(basename "$BENCHMARK")"
