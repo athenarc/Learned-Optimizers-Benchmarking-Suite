@@ -1,0 +1,763 @@
+filename,raw_cost,cost,timer,raw_origin,origin,raw_relative,relative,use_generated,use_generated_rc,plan,baseline
+2a.sql,744.877,728.7869453430176,996.5159893035889,718.593,728.7845611572266,1.0365770331745507,1.0000032714548552,False,1.3673670415317736,"((((mk k) mc) cn) t) NoHashJoin(k mc mk cn) NoHashJoin(mk k) NoMergeJoin(cn k mc mk t) NoMergeJoin(k mk mc)/*+ NoHashJoin(mk k) NoMergeJoin(k mk mc) NoHashJoin(k mc mk cn) NoMergeJoin(cn k mc mk t) */ select min(t.title) AS movie_title
+from movie_keyword AS mk
+inner join keyword AS k
+on mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'
+inner join movie_companies AS mc
+on mc.movie_id = mk.movie_id
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[de]'
+inner join title AS t
+on mc.movie_id = t.id AND t.id = mk.movie_id;","[('k', 'mk'), (0, 'mc'), (1, 'cn'), (2, 't')]"
+1a.sql,17.981,235.27884483337402,258.0909729003906,219.693,235.2757453918457,0.08184603059724252,1.0000131736551219,False,1.0969722887097721,"((((it mi_idx) t) mc) ct) NoHashJoin(it mc mi_idx t ct) NoHashJoin(it mi_idx t mc) NoHashJoin(it mi_idx)/*+ NoHashJoin(it mi_idx) NoHashJoin(it mi_idx t mc) NoHashJoin(it mc mi_idx t ct) */ select min(mc.note) AS production_note,
+min(t.title) AS movie_title,
+min(t.production_year) AS movie_year
+from info_type AS it
+inner join movie_info_idx AS mi_idx
+on it.id = mi_idx.info_type_id AND it.info = 'top 250 rank'
+inner join title AS t
+on t.id = mi_idx.movie_id
+inner join movie_companies AS mc
+on mc.movie_id = mi_idx.movie_id AND t.id = mc.movie_id AND mc.note not like '%(as Metro-Goldwyn-Mayer Pictures)%' AND ( mc.note like '%(co-production)%' OR mc.note like '%(presents)%')
+inner join company_type AS ct
+on ct.id = mc.company_type_id AND ct.kind = 'production companies';","[('mi_idx', 'it'), (0, 'mc'), (1, 'ct'), (2, 't')]"
+5a.sql,285.683,295.0303554534912,516.8619155883789,275.201,295.0279712677002,1.0380885243876292,1.0000080812194883,False,1.7519081779516856,"((((ct mc) t) mi) it) NoNestLoop(ct mc mi t it)/*+ NoNestLoop(ct mc mi t it) */ select min(t.title) AS typical_european_movie
+from company_type AS ct
+inner join movie_companies AS mc
+on ct.id = mc.company_type_id AND ct.kind = 'production companies' AND mc.note like '%(theatrical)%' AND mc.note like '%(France)%'
+inner join title AS t
+on t.id = mc.movie_id AND t.production_year > 2005
+inner join movie_info AS mi
+on t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Norway',
+'Germany',
+'Denmark',
+'Swedish',
+'Denish',
+'Norwegian',
+'German')
+inner join info_type AS it
+on it.id = mi.info_type_id;","[('mc', 'ct'), (0, 't'), (1, 'mi'), (2, 'it')]"
+18a.sql,850.552,5029.189586639404,1190.7973289489746,5002.012,5029.186964035034,0.17004197510921606,1.000000521476809,False,0.2367773036605444,"((((((n ci) t) mi) it1) mi_idx) it2) NoHashJoin(ci it1 mi n t mi_idx) NoNestLoop(ci it1 mi mi_idx n t it2) NoNestLoop(ci mi n t it1)/*+ NoNestLoop(ci mi n t it1) NoHashJoin(ci it1 mi n t mi_idx) NoNestLoop(ci it1 mi mi_idx n t it2) */ select min(mi.info) AS movie_budget,
+min(mi_idx.info) AS movie_votes,
+min(t.title) AS movie_title
+from name AS n
+inner join cast_info AS ci
+on n.id = ci.person_id AND n.gender = 'm' AND n.name like '%Tim%' AND ci.note IN ('(producer)',
+'(executive producer)')
+inner join title AS t
+on t.id = ci.movie_id
+inner join movie_info AS mi
+on ci.movie_id = mi.movie_id AND t.id = mi.movie_id
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'budget'
+inner join movie_info_idx AS mi_idx
+on ci.movie_id = mi_idx.movie_id AND t.id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'votes';","[('mi_idx', 'it2'), (0, 'mi'), (1, 'it1'), (2, 'ci'), (3, 'n'), (4, 't')]"
+19a.sql,611.799,503.678560256958,1062.410593032837,471.569,503.67236137390137,1.2973689958415418,1.0000123073718792,False,2.1093287512041106,"(((((((((n ci) mc) cn) t) mi) chn) it) rt) an) NoMergeJoin(chn ci cn it mc mi n t rt) NoMergeJoin(ci n mc) NoNestLoop(chn ci cn mc mi n t it)/*+ NoMergeJoin(ci n mc) NoNestLoop(chn ci cn mc mi n t it) NoMergeJoin(chn ci cn it mc mi n t rt) */ select min(n.name) AS voicing_actress,
+min(t.title) AS voiced_movie
+from name AS n
+inner join cast_info AS ci
+on n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Ang%' AND ci.note IN ('(voice)',
+'(voice: Japanese version)',
+'(voice) (uncredited)',
+'(voice: English version)')
+inner join movie_companies AS mc
+on mc.movie_id = ci.movie_id AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]'
+inner join title AS t
+on t.id = mc.movie_id AND t.id = ci.movie_id AND t.production_year BETWEEN 2005 AND 2009
+inner join movie_info AS mi
+on mc.movie_id = mi.movie_id AND mi.movie_id = ci.movie_id AND t.id = mi.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')
+inner join char_name AS chn
+on chn.id = ci.person_role_id
+inner join info_type AS it
+on it.id = mi.info_type_id AND it.info = 'release dates'
+inner join role_type AS rt
+on rt.id = ci.role_id AND rt.role = 'actress'
+inner join aka_name AS an
+on n.id = an.person_id AND ci.person_id = an.person_id;","[('n', 'an'), (0, 'ci'), (1, 'rt'), (2, 't'), (3, 'chn'), (4, 'mc'), (5, 'cn'), (6, 'mi'), (7, 'it')]"
+17a.sql,8346.528,10497.049808502197,8853.598833084106,10479.73,10497.046709060669,0.7964449465778222,1.0000002952679563,False,0.8434371188843051,"((((((k mk) t) ci) n) mc) cn)/*+  */ select min(n.name) AS member_in_charnamed_american_movie,
+min(n.name) AS a1
+from keyword AS k
+inner join movie_keyword AS mk
+on mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'
+inner join title AS t
+on t.id = mk.movie_id
+inner join cast_info AS ci
+on ci.movie_id = t.id AND ci.movie_id = mk.movie_id
+inner join name AS n
+on n.id = ci.person_id AND n.name like 'B%'
+inner join movie_companies AS mc
+on ci.movie_id = mc.movie_id AND t.id = mc.movie_id AND mc.movie_id = mk.movie_id
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code = '[us]';","[('k', 'mk'), (0, 't'), (1, 'mc'), (2, 'cn'), (3, 'ci'), (4, 'n')]"
+7a.sql,128.449,686.9907379150391,814.215898513794,670.652,686.9781017303467,0.19152854237369007,1.0000183938682479,False,1.1852137593075576,"(((((((it pi) n) an) ci) ml) t) lt)/*+  */ select min(n.name) AS of_person,
+min(t.title) AS biography_movie
+from info_type AS it
+inner join person_info AS pi
+on it.id = pi.info_type_id AND it.info = 'mini biography' AND pi.note = 'Volker Boehm'
+inner join name AS n
+on n.id = pi.person_id AND n.name_pcode_cf BETWEEN 'A' AND 'F' AND ( n.gender = 'm' OR ( n.gender = 'f' AND n.name like 'B%'))
+inner join aka_name AS an
+on n.id = an.person_id AND pi.person_id = an.person_id AND an.name like '%a%'
+inner join cast_info AS ci
+on ci.person_id = n.id AND an.person_id = ci.person_id AND pi.person_id = ci.person_id
+inner join movie_link AS ml
+on ci.movie_id = ml.linked_movie_id
+inner join title AS t
+on ml.linked_movie_id = t.id AND t.id = ci.movie_id AND t.production_year BETWEEN 1980 AND 1995
+inner join link_type AS lt
+on lt.id = ml.link_type_id AND lt.link = 'features';","[('lt', 'ml'), (0, 't'), (1, 'ci'), (2, 'n'), (3, 'pi'), (4, 'an'), (5, 'it')]"
+31a.sql,312.311,456.27522468566895,825.3870010375977,376.879,456.2711715698242,0.8286771085680018,1.0000088831293696,False,1.8089834564778915,"((((((((((cn mc) mi) it1) ci) n) mi_idx) it2) t) mk) k) NoMergeJoin(cn it1 mc mi ci) NoNestLoop(ci cn it1 it2 mc mi mi_idx mk n t k) NoNestLoop(ci cn it1 mc mi mi_idx n it2)/*+ NoMergeJoin(cn it1 mc mi ci) NoNestLoop(ci cn it1 mc mi mi_idx n it2) NoNestLoop(ci cn it1 it2 mc mi mi_idx mk n t k) */ select min(mi.info) AS movie_budget,
+min(mi_idx.info) AS movie_votes,
+min(n.name) AS writer,
+min(t.title) AS violent_liongate_movie
+from company_name AS cn
+inner join movie_companies AS mc
+on cn.id = mc.company_id AND cn.name like 'Lionsgate%'
+inner join movie_info AS mi
+on mi.movie_id = mc.movie_id AND mi.info IN ('Horror',
+'Thriller')
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'genres'
+inner join cast_info AS ci
+on ci.movie_id = mc.movie_id AND ci.movie_id = mi.movie_id AND ci.note IN ('(writer)',
+'(head writer)',
+'(written by)',
+'(story)',
+'(story editor)')
+inner join name AS n
+on n.id = ci.person_id AND n.gender = 'm'
+inner join movie_info_idx AS mi_idx
+on mi_idx.movie_id = mc.movie_id AND ci.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'votes'
+inner join title AS t
+on t.id = mc.movie_id AND t.id = mi_idx.movie_id AND t.id = ci.movie_id AND t.id = mi.movie_id
+inner join movie_keyword AS mk
+on t.id = mk.movie_id AND mi_idx.movie_id = mk.movie_id AND mi.movie_id = mk.movie_id AND mk.movie_id = mc.movie_id AND ci.movie_id = mk.movie_id
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'violence',
+'blood',
+'gore',
+'death',
+'female-nudity',
+'hospital');","[('cn', 'mc'), (0, 'mi_idx'), (1, 'it2'), (2, 'mi'), (3, 'ci'), (4, 'n'), (5, 't'), (6, 'mk'), (7, 'k'), (8, 'it1')]"
+27a.sql,30.361,144.16909217834473,935.4643821716309,29.648,144.1650390625,1.024048839719374,1.0000281144157495,False,6.488843538314987,"(((((((((((lt ml) cc) cct2) t) mc) cn) mk) k) ct) mi) cct1) NoHashJoin(cc cct2 cn lt mc mk ml t k) NoMergeJoin(cc cct2 cn lt mc ml t mk)/*+ NoMergeJoin(cc cct2 cn lt mc ml t mk) NoHashJoin(cc cct2 cn lt mc mk ml t k) */ select min(cn.name) AS producing_company,
+min(lt.link) AS link_type,
+min(t.title) AS complete_western_sequel
+from link_type AS lt
+inner join movie_link AS ml
+on lt.id = ml.link_type_id AND lt.link like '%follow%'
+inner join complete_cast AS cc
+on ml.movie_id = cc.movie_id
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind = 'complete'
+inner join title AS t
+on t.id = cc.movie_id AND ml.movie_id = t.id AND t.production_year BETWEEN 1950 AND 2000
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = cc.movie_id AND ml.movie_id = mc.movie_id AND mc.note IS NULL
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')
+inner join movie_keyword AS mk
+on mk.movie_id = mc.movie_id AND t.id = mk.movie_id AND mk.movie_id = cc.movie_id AND ml.movie_id = mk.movie_id
+inner join keyword AS k
+on mk.keyword_id = k.id AND k.keyword = 'sequel'
+inner join company_type AS ct
+on mc.company_type_id = ct.id AND ct.kind = 'production companies'
+inner join movie_info AS mi
+on mi.movie_id = t.id AND mi.movie_id = cc.movie_id AND mk.movie_id = mi.movie_id AND ml.movie_id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Germany',
+'Swedish',
+'German')
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind IN ('cast',
+'crew');","[('lt', 'ml'), ('cc', 0), (1, 'cct2'), (2, 'cct1'), (3, 'mc'), (4, 'ct'), (5, 'cn'), (6, 't'), (7, 'mi'), (8, 'mk'), (9, 'k')]"
+13a.sql,1994.445,1938.1794929504395,2428.926467895508,1925.491,1938.1771087646484,1.0358111255778395,1.000001230117609,False,1.253201504089403,"((((((((it miidx) t) kt) mc) ct) cn) mi) it2) NoNestLoop(it kt mc miidx t ct)/*+ NoNestLoop(it kt mc miidx t ct) */ select min(mi.info) AS release_date,
+min(miidx.info) AS rating,
+min(t.title) AS german_movie
+from info_type AS it
+inner join movie_info_idx AS miidx
+on it.id = miidx.info_type_id AND it.info = 'rating'
+inner join title AS t
+on miidx.movie_id = t.id
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind = 'movie'
+inner join movie_companies AS mc
+on miidx.movie_id = mc.movie_id AND mc.movie_id = t.id
+inner join company_type AS ct
+on ct.id = mc.company_type_id AND ct.kind = 'production companies'
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[de]'
+inner join movie_info AS mi
+on mi.movie_id = mc.movie_id AND mi.movie_id = miidx.movie_id AND mi.movie_id = t.id
+inner join info_type AS it2
+on it2.id = mi.info_type_id AND it2.info = 'release dates';","[('miidx', 'it'), (0, 't'), (1, 'kt'), (2, 'mc'), (3, 'ct'), (4, 'cn'), (5, 'mi'), (6, 'it2')]"
+15a.sql,419.36,453.1681537628174,894.2532539367676,437.473,453.16481590270996,0.9585963019432057,1.0000073656647432,False,1.973351024958555,"((((((((it1 mi) at) t) mc) ct) cn) mk) k) NoHashJoin(at ct it1 mc mi t cn) NoHashJoin(at it1 mc mi t ct) NoHashJoin(it1 mi at) NoMergeJoin(at cn ct it1 mc mi mk t k) NoMergeJoin(at cn ct it1 mc mi t mk) NoMergeJoin(at it1 mi t mc)/*+ NoHashJoin(it1 mi at) NoMergeJoin(at it1 mi t mc) NoHashJoin(at it1 mc mi t ct) NoHashJoin(at ct it1 mc mi t cn) NoMergeJoin(at cn ct it1 mc mi t mk) NoMergeJoin(at cn ct it1 mc mi mk t k) */ select min(mi.info) AS release_date,
+min(t.title) AS internet_movie
+from info_type AS it1
+inner join movie_info AS mi
+on it1.id = mi.info_type_id AND it1.info = 'release dates' AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'
+inner join aka_title AS at
+on mi.movie_id = at.movie_id
+inner join title AS t
+on t.id = at.movie_id AND t.id = mi.movie_id AND t.production_year > 2000
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = at.movie_id AND mi.movie_id = mc.movie_id AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%'
+inner join company_type AS ct
+on ct.id = mc.company_type_id
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]'
+inner join movie_keyword AS mk
+on mk.movie_id = mc.movie_id AND t.id = mk.movie_id AND mk.movie_id = at.movie_id AND mk.movie_id = mi.movie_id
+inner join keyword AS k
+on k.id = mk.keyword_id;","[('mc', 'cn'), (0, 'at'), (1, 't'), (2, 'mi'), (3, 'ct'), (4, 'it1'), (5, 'mk'), (6, 'k')]"
+12a.sql,219.683,261.13343238830566,827.0604610443115,251.718,261.1217498779297,0.8727345680483716,1.0000447397062153,False,3.167336544852925,"(((((((mi_idx it2) t) mi) it1) mc) ct) cn) NoNestLoop(it1 it2 mc mi mi_idx t ct) NoNestLoop(it2 mi mi_idx t it1)/*+ NoNestLoop(it2 mi mi_idx t it1) NoNestLoop(it1 it2 mc mi mi_idx t ct) */ select min(cn.name) AS movie_company,
+min(mi_idx.info) AS rating,
+min(t.title) AS drama_horror_movie
+from movie_info_idx AS mi_idx
+inner join info_type AS it2
+on mi_idx.info_type_id = it2.id AND mi_idx.info > '8.0' AND it2.info = 'rating'
+inner join title AS t
+on t.id = mi_idx.movie_id AND t.production_year BETWEEN 2005 AND 2008
+inner join movie_info AS mi
+on mi.movie_id = mi_idx.movie_id AND t.id = mi.movie_id AND mi.info IN ('Drama',
+'Horror')
+inner join info_type AS it1
+on mi.info_type_id = it1.id AND it1.info = 'genres'
+inner join movie_companies AS mc
+on mc.movie_id = mi_idx.movie_id AND t.id = mc.movie_id AND mc.movie_id = mi.movie_id
+inner join company_type AS ct
+on ct.id = mc.company_type_id AND ct.kind = 'production companies'
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]';","[('mi_idx', 'it2'), (0, 'mc'), (1, 'ct'), (2, 't'), (3, 'cn'), (4, 'mi'), (5, 'it1')]"
+10a.sql,318.222,315.86194038391113,648.759126663208,300.272,315.8586025238037,1.059779133585549,1.000010567577013,False,2.0539542740942642,"((((((cn mc) t) ci) rt) chn) ct) NoMergeJoin(ci cn mc t rt) NoNestLoop(chn ci cn mc rt t ct)/*+ NoMergeJoin(ci cn mc t rt) NoNestLoop(chn ci cn mc rt t ct) */ select min(chn.name) AS uncredited_voiced_character,
+min(t.title) AS russian_movie
+from company_name AS cn
+inner join movie_companies AS mc
+on cn.id = mc.company_id AND cn.country_code = '[ru]'
+inner join title AS t
+on t.id = mc.movie_id AND t.production_year > 2005
+inner join cast_info AS ci
+on t.id = ci.movie_id AND ci.movie_id = mc.movie_id AND ci.note like '%(voice)%' AND ci.note like '%(uncredited)%'
+inner join role_type AS rt
+on rt.id = ci.role_id AND rt.role = 'actor'
+inner join char_name AS chn
+on chn.id = ci.person_role_id
+inner join company_type AS ct
+on ct.id = mc.company_type_id;","[('cn', 'mc'), (0, 't'), (1, 'ci'), (2, 'rt'), (3, 'chn'), (4, 'ct')]"
+25a.sql,3232.142,2202.3518085479736,3860.827684402466,2185.28,2202.335834503174,1.4790516547078634,1.0000072532283903,False,1.753060375223578,"((((((((mk k) mi) it1) ci) n) t) mi_idx) it2) NoHashJoin(ci it1 k mi mk n t) NoNestLoop(ci it1 k mi mi_idx mk n t it2) NoNestLoop(ci it1 k mi mk n t mi_idx)/*+ NoHashJoin(ci it1 k mi mk n t) NoNestLoop(ci it1 k mi mk n t mi_idx) NoNestLoop(ci it1 k mi mi_idx mk n t it2) */ select min(mi.info) AS movie_budget,
+min(mi_idx.info) AS movie_votes,
+min(n.name) AS male_writer,
+min(t.title) AS violent_movie_title
+from movie_keyword AS mk
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'blood',
+'gore',
+'death',
+'female-nudity')
+inner join movie_info AS mi
+on mi.movie_id = mk.movie_id AND mi.info = 'Horror'
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'genres'
+inner join cast_info AS ci
+on ci.movie_id = mk.movie_id AND ci.movie_id = mi.movie_id AND ci.note IN ('(writer)',
+'(head writer)',
+'(written by)',
+'(story)',
+'(story editor)')
+inner join name AS n
+on n.id = ci.person_id AND n.gender = 'm'
+inner join title AS t
+on t.id = ci.movie_id AND t.id = mi.movie_id AND t.id = mk.movie_id
+inner join movie_info_idx AS mi_idx
+on ci.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id AND t.id = mi_idx.movie_id AND mi_idx.movie_id = mk.movie_id
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'votes';","[('k', 'mk'), (0, 'mi_idx'), ('it2', 1), (2, 'mi'), (3, 'ci'), (4, 'it1'), (5, 'n'), (6, 't')]"
+3a.sql,150.139,112.48207092285156,395.9510326385498,107.535,112.47754096984863,1.3961872878597668,1.000040274289106,False,3.52026750606764,"(((mk k) t) mi)/*+  */ select min(t.title) AS movie_title
+from movie_keyword AS mk
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword like '%sequel%'
+inner join title AS t
+on t.id = mk.movie_id AND t.production_year > 2005
+inner join movie_info AS mi
+on t.id = mi.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Norway',
+'Germany',
+'Denmark',
+'Swedish',
+'Denish',
+'Norwegian',
+'German');","[('k', 'mk'), (0, 't'), (1, 'mi')]"
+29a.sql,76.498,3017.1186923980713,1415.950059890747,179.787,3017.11368560791,0.42549238821494323,1.0000016594635412,False,0.46930616723030477,"((((((((((((((((k mk) cc) cct2) mi) ci) rt) pi) cct1) it3) t) it) an) n) chn) mc) cn) NoHashJoin(an cc cct1 cct2 chn ci it it3 k mi mk n pi rt t mc) NoNestLoop(cc cct1 cct2 ci it3 k mi mk pi rt t it)/*+ NoNestLoop(cc cct1 cct2 ci it3 k mi mk pi rt t it) NoHashJoin(an cc cct1 cct2 chn ci it it3 k mi mk n pi rt t mc) */ select min(chn.name) AS voiced_char,
+min(n.name) AS voicing_actress,
+min(t.title) AS voiced_animation
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword = 'computer-animation'
+inner join complete_cast AS cc
+on mk.movie_id = cc.movie_id
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind = 'complete+verified'
+inner join movie_info AS mi
+on mi.movie_id = cc.movie_id AND mi.movie_id = mk.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')
+inner join cast_info AS ci
+on mi.movie_id = ci.movie_id AND ci.movie_id = cc.movie_id AND ci.movie_id = mk.movie_id AND ci.note IN ('(voice)',
+'(voice) (uncredited)',
+'(voice: English version)')
+inner join role_type AS rt
+on rt.id = ci.role_id AND rt.role = 'actress'
+inner join person_info AS pi
+on ci.person_id = pi.person_id
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind = 'cast'
+inner join info_type AS it3
+on it3.id = pi.info_type_id AND it3.info = 'trivia'
+inner join title AS t
+on t.id = cc.movie_id AND t.id = mi.movie_id AND t.id = mk.movie_id AND t.id = ci.movie_id AND t.title = 'Shrek 2' AND t.production_year BETWEEN 2000 AND 2010
+inner join info_type AS it
+on it.id = mi.info_type_id AND it.info = 'release dates'
+inner join aka_name AS an
+on ci.person_id = an.person_id
+inner join name AS n
+on n.id = pi.person_id AND n.id = an.person_id AND n.id = ci.person_id AND n.gender = 'f' AND n.name like '%An%'
+inner join char_name AS chn
+on chn.id = ci.person_role_id AND chn.name = 'Queen'
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = cc.movie_id AND mc.movie_id = mi.movie_id AND mc.movie_id = mk.movie_id AND mc.movie_id = ci.movie_id
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]';","[('k', 'mk'), (0, 'cc'), ('cct1', 1), ('cct2', 2), (3, 'mi'), (4, 'ci'), (5, 'rt'), (6, 'pi'), ('it3', 7), (8, 'an'), (9, 'it'), (10, 'n'), (11, 't'), (12, 'chn'), (13, 'mc'), (14, 'cn')]"
+11a.sql,49.477,66.67685508728027,407.1338176727295,58.542,66.67184829711914,0.845153906596973,1.00007509601562,False,6.1065326381587886,"(((((((lt ml) t) mc) cn) mk) k) ct) NoMergeJoin(cn lt mc mk ml t k) NoMergeJoin(cn lt mc ml t mk) NoNestLoop(cn k lt mc mk ml t ct)/*+ NoMergeJoin(cn lt mc ml t mk) NoMergeJoin(cn lt mc mk ml t k) NoNestLoop(cn k lt mc mk ml t ct) */ select min(cn.name) AS from_company,
+min(lt.link) AS movie_link_type,
+min(t.title) AS non_polish_sequel_movie
+from link_type AS lt
+inner join movie_link AS ml
+on lt.id = ml.link_type_id AND lt.link like '%follow%'
+inner join title AS t
+on ml.movie_id = t.id AND t.production_year BETWEEN 1950 AND 2000
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND ml.movie_id = mc.movie_id AND mc.note IS NULL
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')
+inner join movie_keyword AS mk
+on mk.movie_id = mc.movie_id AND t.id = mk.movie_id AND ml.movie_id = mk.movie_id
+inner join keyword AS k
+on mk.keyword_id = k.id AND k.keyword = 'sequel'
+inner join company_type AS ct
+on mc.company_type_id = ct.id AND ct.kind = 'production companies';","[('k', 'mk'), (0, 'ml'), ('lt', 1), (2, 't'), (3, 'mc'), (4, 'cn'), (5, 'ct')]"
+28a.sql,252.319,4252.4731159210205,1361.3154888153076,4058.65,4252.469539642334,0.062168208640804204,1.0000008409886663,False,0.3201235132021204,"(((((((((((((k mk) cc) t) cct1) mi_idx) it2) cct2) mi) it1) mc) kt) cn) ct) NoHashJoin(cc cct1 cct2 it1 it2 k kt mc mi mi_idx mk t cn) NoHashJoin(cc cct1 cct2 it1 it2 k mc mi mi_idx mk t kt) NoHashJoin(cc k mk t cct1) NoNestLoop(cc cct1 cct2 it2 k mi mi_idx mk t it1)/*+ NoHashJoin(cc k mk t cct1) NoNestLoop(cc cct1 cct2 it2 k mi mi_idx mk t it1) NoHashJoin(cc cct1 cct2 it1 it2 k mc mi mi_idx mk t kt) NoHashJoin(cc cct1 cct2 it1 it2 k kt mc mi mi_idx mk t cn) */ select min(cn.name) AS movie_company,
+min(mi_idx.info) AS rating,
+min(t.title) AS complete_euro_dark_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'murder-in-title',
+'blood',
+'violence')
+inner join complete_cast AS cc
+on mk.movie_id = cc.movie_id
+inner join title AS t
+on t.id = cc.movie_id AND t.id = mk.movie_id AND t.production_year > 2000
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind = 'crew'
+inner join movie_info_idx AS mi_idx
+on t.id = mi_idx.movie_id AND mi_idx.movie_id = cc.movie_id AND mk.movie_id = mi_idx.movie_id AND mi_idx.info < '8.5'
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'rating'
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind <> 'complete+verified'
+inner join movie_info AS mi
+on mi.movie_id = mi_idx.movie_id AND t.id = mi.movie_id AND mi.movie_id = cc.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Norway',
+'Germany',
+'Denmark',
+'Swedish',
+'Danish',
+'Norwegian',
+'German',
+'USA',
+'American')
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'countries'
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = cc.movie_id AND mc.movie_id = mi_idx.movie_id AND mk.movie_id = mc.movie_id AND mi.movie_id = mc.movie_id AND mc.note not like '%(USA)%' AND mc.note like '%(200%)%'
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind IN ('movie',
+'episode')
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code <> '[us]'
+inner join company_type AS ct
+on ct.id = mc.company_type_id;","[('k', 'mk'), (0, 'mi_idx'), ('it2', 1), (2, 'cc'), (3, 'mc'), (4, 'ct'), (5, 't'), (6, 'mi'), (7, 'it1'), (8, 'kt'), (9, 'cn'), (10, 'cct1'), (11, 'cct2')]"
+32a.sql,23.675,19.926071166992188,326.8246650695801,11.844,19.92011070251465,1.9989023978385683,1.000299218441431,False,16.406769518018933,"(((((k mk) t1) ml) t2) lt)/*+  */ select min(lt.link) AS link_type,
+min(t1.title) AS first_movie,
+min(t2.title) AS second_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on mk.keyword_id = k.id AND k.keyword = '10,000-mile-club'
+inner join title AS t1
+on t1.id = mk.movie_id AND mk.movie_id = t1.id
+inner join movie_link AS ml
+on ml.movie_id = t1.id
+inner join title AS t2
+on ml.linked_movie_id = t2.id
+inner join link_type AS lt
+on lt.id = ml.link_type_id;","[('k', 'mk'), (0, 'ml'), (1, 'lt'), (2, 't1'), (3, 't2')]"
+30a.sql,839.418,1785.2733135223389,1831.1891555786133,1723.827,1785.2699756622314,0.48695025660927693,1.0000018696668587,False,1.0257211405234934,"(((((((((((k mk) cc) cct2) mi_idx) it2) t) ci) mi) n) it1) cct1) NoHashJoin(cc cct2 ci it2 k mi mi_idx mk t n) NoMergeJoin(cc cct2 ci it2 k mi_idx mk t mi) NoMergeJoin(cc cct2 it2 k mi_idx mk t ci) NoMergeJoin(cc cct2 it2 k mi_idx mk t) NoMergeJoin(cc cct2 k mi_idx mk it2) NoMergeJoin(cc k mk cct2)/*+ NoMergeJoin(cc k mk cct2) NoMergeJoin(cc cct2 k mi_idx mk it2) NoMergeJoin(cc cct2 it2 k mi_idx mk t) NoMergeJoin(cc cct2 it2 k mi_idx mk t ci) NoMergeJoin(cc cct2 ci it2 k mi_idx mk t mi) NoHashJoin(cc cct2 ci it2 k mi mi_idx mk t n) */ select min(mi.info) AS movie_budget,
+min(mi_idx.info) AS movie_votes,
+min(n.name) AS writer,
+min(t.title) AS complete_violent_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'violence',
+'blood',
+'gore',
+'death',
+'female-nudity',
+'hospital')
+inner join complete_cast AS cc
+on mk.movie_id = cc.movie_id
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind = 'complete+verified'
+inner join movie_info_idx AS mi_idx
+on mi_idx.movie_id = cc.movie_id AND mi_idx.movie_id = mk.movie_id
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'votes'
+inner join title AS t
+on t.id = mi_idx.movie_id AND t.id = cc.movie_id AND t.id = mk.movie_id AND t.production_year > 2000
+inner join cast_info AS ci
+on ci.movie_id = mi_idx.movie_id AND t.id = ci.movie_id AND ci.movie_id = cc.movie_id AND ci.movie_id = mk.movie_id AND ci.note IN ('(writer)',
+'(head writer)',
+'(written by)',
+'(story)',
+'(story editor)')
+inner join movie_info AS mi
+on mi.movie_id = mi_idx.movie_id AND ci.movie_id = mi.movie_id AND t.id = mi.movie_id AND mi.movie_id = cc.movie_id AND mi.movie_id = mk.movie_id AND mi.info IN ('Horror',
+'Thriller')
+inner join name AS n
+on n.id = ci.person_id AND n.gender = 'm'
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'genres'
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind IN ('cast',
+'crew');","[('k', 'mk'), (0, 'mi_idx'), ('it2', 1), (2, 'cc'), (3, 't'), (4, 'ci'), (5, 'mi'), (6, 'cct1'), (7, 'it1'), (8, 'n'), (9, 'cct2')]"
+4a.sql,110.37,92.64016151428223,537.2054576873779,78.473,92.62704849243164,1.406471015508519,1.0001415679551924,False,5.799660751700102,"((((mk k) mi_idx) it) t) NoHashJoin(k mk mi_idx) NoHashJoin(mk k) NoMergeJoin(k mi_idx mk it)/*+ NoHashJoin(mk k) NoHashJoin(k mk mi_idx) NoMergeJoin(k mi_idx mk it) */ select min(mi_idx.info) AS rating,
+min(t.title) AS movie_title
+from movie_keyword AS mk
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword like '%sequel%'
+inner join movie_info_idx AS mi_idx
+on mk.movie_id = mi_idx.movie_id AND mi_idx.info > '5.0'
+inner join info_type AS it
+on it.id = mi_idx.info_type_id AND it.info = 'rating'
+inner join title AS t
+on t.id = mi_idx.movie_id AND t.id = mk.movie_id AND t.production_year > 2005;","[('k', 'mk'), (0, 'mi_idx'), ('it', 1), (2, 't')]"
+26a.sql,475.628,1246.1860179901123,1026.5212059020996,1202.641,1246.1814880371094,0.39548626730670244,1.0000036350668393,False,0.8237333131300145,"(((((((((((k mk) cc) mi_idx) t) kt) cct1) cct2) it2) ci) chn) n) NoMergeJoin(cc cct1 cct2 k kt mi_idx mk t it2) NoMergeJoin(cc cct1 k kt mi_idx mk t cct2)/*+ NoMergeJoin(cc cct1 k kt mi_idx mk t cct2) NoMergeJoin(cc cct1 cct2 k kt mi_idx mk t it2) */ select min(chn.name) AS character_name,
+min(mi_idx.info) AS rating,
+min(n.name) AS playing_actor,
+min(t.title) AS complete_hero_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('superhero',
+'marvel-comics',
+'based-on-comic',
+'tv-special',
+'fight',
+'violence',
+'magnet',
+'web',
+'claw',
+'laser')
+inner join complete_cast AS cc
+on mk.movie_id = cc.movie_id
+inner join movie_info_idx AS mi_idx
+on cc.movie_id = mi_idx.movie_id AND mk.movie_id = mi_idx.movie_id AND mi_idx.info > '7.0'
+inner join title AS t
+on t.id = mi_idx.movie_id AND t.id = cc.movie_id AND t.id = mk.movie_id AND t.production_year > 2000
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind = 'movie'
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind = 'cast'
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind like '%complete%'
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'rating'
+inner join cast_info AS ci
+on t.id = ci.movie_id AND ci.movie_id = cc.movie_id AND mk.movie_id = ci.movie_id AND ci.movie_id = mi_idx.movie_id
+inner join char_name AS chn
+on chn.id = ci.person_role_id AND chn.name IS NOT NULL AND ( chn.name like '%man%' OR chn.name like '%Man%')
+inner join name AS n
+on n.id = ci.person_id;","[('cc', 'cct1'), (0, 'cct2'), (1, 'mi_idx'), ('it2', 2), (3, 't'), ('kt', 4), (5, 'ci'), (6, 'chn'), (7, 'mk'), (8, 'k'), (9, 'n')]"
+33a.sql,26.054,348.1485843658447,999.2337226867676,41.933,348.1450080871582,0.6213244938354041,1.0000102723824942,False,2.870165303179097,"(((((((((((((lt ml) t2) kt2) mi_idx2) it2) t1) kt1) mi_idx1) it1) mc1) cn1) mc2) cn2) NoHashJoin(cn1 it1 it2 kt1 kt2 lt mc1 mi_idx1 mi_idx2 ml t1 t2 mc2) NoHashJoin(it2 kt1 kt2 lt mi_idx1 mi_idx2 ml t1 t2 it1) NoHashJoin(it2 kt1 kt2 lt mi_idx2 ml t1 t2 mi_idx1) NoHashJoin(it2 kt2 lt mi_idx2 ml t1 t2 kt1) NoNestLoop(kt2 lt mi_idx2 ml t2 it2)/*+ NoNestLoop(kt2 lt mi_idx2 ml t2 it2) NoHashJoin(it2 kt2 lt mi_idx2 ml t1 t2 kt1) NoHashJoin(it2 kt1 kt2 lt mi_idx2 ml t1 t2 mi_idx1) NoHashJoin(it2 kt1 kt2 lt mi_idx1 mi_idx2 ml t1 t2 it1) NoHashJoin(cn1 it1 it2 kt1 kt2 lt mc1 mi_idx1 mi_idx2 ml t1 t2 mc2) */ select min(cn1.name) AS first_company,
+min(cn2.name) AS second_company,
+min(mi_idx1.info) AS first_rating,
+min(mi_idx2.info) AS second_rating,
+min(t1.title) AS first_movie,
+min(t2.title) AS second_movie
+from link_type AS lt
+inner join movie_link AS ml
+on lt.id = ml.link_type_id AND lt.link IN ('sequel',
+'follows',
+'followed by')
+inner join title AS t2
+on t2.id = ml.linked_movie_id AND t2.production_year BETWEEN 2005 AND 2008
+inner join kind_type AS kt2
+on kt2.id = t2.kind_id AND kt2.kind IN ('tv series')
+inner join movie_info_idx AS mi_idx2
+on t2.id = mi_idx2.movie_id AND ml.linked_movie_id = mi_idx2.movie_id AND mi_idx2.info < '3.0'
+inner join info_type AS it2
+on it2.id = mi_idx2.info_type_id AND it2.info = 'rating'
+inner join title AS t1
+on t1.id = ml.movie_id
+inner join kind_type AS kt1
+on kt1.id = t1.kind_id AND kt1.kind IN ('tv series')
+inner join movie_info_idx AS mi_idx1
+on t1.id = mi_idx1.movie_id AND ml.movie_id = mi_idx1.movie_id
+inner join info_type AS it1
+on it1.id = mi_idx1.info_type_id AND it1.info = 'rating'
+inner join movie_companies AS mc1
+on ml.movie_id = mc1.movie_id AND mi_idx1.movie_id = mc1.movie_id AND t1.id = mc1.movie_id
+inner join company_name AS cn1
+on cn1.id = mc1.company_id AND cn1.country_code = '[us]'
+inner join movie_companies AS mc2
+on t2.id = mc2.movie_id AND ml.linked_movie_id = mc2.movie_id AND mi_idx2.movie_id = mc2.movie_id
+inner join company_name AS cn2
+on cn2.id = mc2.company_id;","[('ml', 'lt'), ('mi_idx1', 0), (1, 'it1'), (2, 't1'), (3, 'kt1'), (4, 'mi_idx2'), (5, 'it2'), (6, 'mc2'), (7, 't2'), (8, 'mc1'), (9, 'cn1'), (10, 'cn2'), (11, 'kt2')]"
+21a.sql,52.392,128.45849990844727,479.0058135986328,103.602,128.45635414123535,0.5057045230787051,1.000016704251232,False,3.728938259231419,"((((((((lt ml) t) mc) cn) mk) k) mi) ct) NoMergeJoin(cn lt mc mk ml t k) NoNestLoop(cn k lt mc mi mk ml t ct)/*+ NoMergeJoin(cn lt mc mk ml t k) NoNestLoop(cn k lt mc mi mk ml t ct) */ select min(cn.name) AS company_name,
+min(lt.link) AS link_type,
+min(t.title) AS western_follow_up
+from link_type AS lt
+inner join movie_link AS ml
+on lt.id = ml.link_type_id AND lt.link like '%follow%'
+inner join title AS t
+on ml.movie_id = t.id AND t.production_year BETWEEN 1950 AND 2000
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND ml.movie_id = mc.movie_id AND mc.note IS NULL
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')
+inner join movie_keyword AS mk
+on mk.movie_id = mc.movie_id AND t.id = mk.movie_id AND ml.movie_id = mk.movie_id
+inner join keyword AS k
+on mk.keyword_id = k.id AND k.keyword = 'sequel'
+inner join movie_info AS mi
+on mc.movie_id = mi.movie_id AND mi.movie_id = t.id AND mk.movie_id = mi.movie_id AND ml.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Norway',
+'Germany',
+'Denmark',
+'Swedish',
+'Denish',
+'Norwegian',
+'German')
+inner join company_type AS ct
+on mc.company_type_id = ct.id AND ct.kind = 'production companies';","[('k', 'mk'), (0, 'ml'), ('lt', 1), (2, 'mi'), (3, 'mc'), (4, 'cn'), (5, 'ct'), (6, 't')]"
+8a.sql,501.279,1283.9343547821045,1080.1761150360107,1262.888,1283.9221954345703,0.39693068585654473,1.000009470470701,False,0.8413096361110904,"((((((n1 ci) t) an1) rt) mc) cn)/*+  */ select min(an1.name) AS actress_pseudonym,
+min(t.title) AS japanese_movie_dubbed
+from name AS n1
+inner join cast_info AS ci
+on n1.id = ci.person_id AND n1.name like '%Yo%' AND n1.name not like '%Yu%' AND ci.note = '(voice: English version)'
+inner join title AS t
+on ci.movie_id = t.id
+inner join aka_name AS an1
+on an1.person_id = n1.id AND an1.person_id = ci.person_id
+inner join role_type AS rt
+on ci.role_id = rt.id AND rt.role = 'actress'
+inner join movie_companies AS mc
+on ci.movie_id = mc.movie_id AND t.id = mc.movie_id AND mc.note like '%(Japan)%' AND mc.note not like '%(USA)%'
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code = '[jp]';","[('mc', 'cn'), (0, 't'), (1, 'ci'), (2, 'rt'), (3, 'an1'), (4, 'n1')]"
+16a.sql,6115.785,248.57091903686523,6502.377986907959,226.202,248.5663890838623,27.03682991308653,1.0000182243183386,False,26.15952225429063,"(((((((mk mc) k) t) cn) ci) an) n) NoHashJoin(an ci cn k mc mk t n) NoHashJoin(mc mk k) NoMergeJoin(cn k mc mk t ci) NoMergeJoin(k mc mk t cn) NoMergeJoin(k mc mk t) NoMergeJoin(mk mc) NoNestLoop(ci cn k mc mk t an)/*+ NoMergeJoin(mk mc) NoHashJoin(mc mk k) NoMergeJoin(k mc mk t) NoMergeJoin(k mc mk t cn) NoMergeJoin(cn k mc mk t ci) NoNestLoop(ci cn k mc mk t an) NoHashJoin(an ci cn k mc mk t n) */ select min(an.name) AS cool_actor_pseudonym,
+min(t.title) AS series_named_after_char
+from movie_keyword AS mk
+inner join movie_companies AS mc
+on mc.movie_id = mk.movie_id
+inner join keyword AS k
+on mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'
+inner join title AS t
+on t.id = mc.movie_id AND t.id = mk.movie_id AND t.episode_nr >= 50 AND t.episode_nr < 100
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code = '[us]'
+inner join cast_info AS ci
+on ci.movie_id = mc.movie_id AND ci.movie_id = t.id AND ci.movie_id = mk.movie_id
+inner join aka_name AS an
+on an.person_id = ci.person_id
+inner join name AS n
+on an.person_id = n.id AND n.id = ci.person_id;","[('k', 'mk'), (0, 't'), (1, 'mc'), (2, 'cn'), (3, 'ci'), (4, 'n'), (5, 'an')]"
+9a.sql,427.527,639.9908065795898,935.5869293212891,625.903,639.979362487793,0.6830563202285338,1.0000178819700567,False,1.4619017177122404,"(((((((n ci) mc) t) cn) an) rt) chn) NoHashJoin(an ci cn mc n t rt) NoHashJoin(ci cn mc n t an) NoMergeJoin(ci n mc)/*+ NoMergeJoin(ci n mc) NoHashJoin(ci cn mc n t an) NoHashJoin(an ci cn mc n t rt) */ select min(an.name) AS alternative_name,
+min(chn.name) AS character_name,
+min(t.title) AS movie
+from name AS n
+inner join cast_info AS ci
+on n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Ang%' AND ci.note IN ('(voice)',
+'(voice: Japanese version)',
+'(voice) (uncredited)',
+'(voice: English version)')
+inner join movie_companies AS mc
+on ci.movie_id = mc.movie_id AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')
+inner join title AS t
+on t.id = mc.movie_id AND ci.movie_id = t.id AND t.production_year BETWEEN 2005 AND 2015
+inner join company_name AS cn
+on mc.company_id = cn.id AND cn.country_code = '[us]'
+inner join aka_name AS an
+on an.person_id = n.id AND an.person_id = ci.person_id
+inner join role_type AS rt
+on ci.role_id = rt.id AND rt.role = 'actress'
+inner join char_name AS chn
+on chn.id = ci.person_role_id;","[('n', 'an'), (0, 'ci'), (1, 'rt'), (2, 't'), (3, 'mc'), (4, 'chn'), (5, 'cn')]"
+23a.sql,423.258,509.98449325561523,913.642406463623,456.271,509.9806785583496,0.9276460699891073,1.0000074800819443,False,1.7915235711407218,"((((((((((it1 mi) cc) mk) cct1) t) mc) kt) cn) ct) k) NoMergeJoin(cc cct1 cn ct it1 kt mc mi mk t k) NoMergeJoin(cc cct1 it1 mi mk t mc) NoNestLoop(cc cct1 cn it1 kt mc mi mk t ct) NoNestLoop(cc cct1 it1 mc mi mk t kt)/*+ NoMergeJoin(cc cct1 it1 mi mk t mc) NoNestLoop(cc cct1 it1 mc mi mk t kt) NoNestLoop(cc cct1 cn it1 kt mc mi mk t ct) NoMergeJoin(cc cct1 cn ct it1 kt mc mi mk t k) */ select min(kt.kind) AS movie_kind,
+min(t.title) AS complete_us_internet_movie
+from info_type AS it1
+inner join movie_info AS mi
+on it1.id = mi.info_type_id AND it1.info = 'release dates' AND mi.note like '%internet%' AND mi.info IS NOT NULL AND ( mi.info like 'USA:% 199%' OR mi.info like 'USA:% 200%')
+inner join complete_cast AS cc
+on mi.movie_id = cc.movie_id
+inner join movie_keyword AS mk
+on mk.movie_id = cc.movie_id AND mk.movie_id = mi.movie_id
+inner join comp_cast_type AS cct1
+on cct1.id = cc.status_id AND cct1.kind = 'complete+verified'
+inner join title AS t
+on t.id = cc.movie_id AND t.id = mk.movie_id AND t.id = mi.movie_id AND t.production_year > 2000
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = cc.movie_id AND mk.movie_id = mc.movie_id AND mi.movie_id = mc.movie_id
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind IN ('movie')
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]'
+inner join company_type AS ct
+on ct.id = mc.company_type_id
+inner join keyword AS k
+on k.id = mk.keyword_id;","[('kt', 't'), ('cc', 'cct1'), (0, 1), (2, 'mi'), (3, 'it1'), (4, 'mk'), (5, 'mc'), (6, 'cn'), (7, 'ct'), (8, 'k')]"
+14a.sql,364.555,389.07527923583984,1031.5916538238525,366.558,389.0643119812012,0.9945356532936125,1.0000281887963016,False,2.651468207327371,"(((((((k mk) t) kt) mi_idx) it2) mi) it1)/*+  */ select min(mi_idx.info) AS rating,
+min(t.title) AS northern_dark_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'murder-in-title',
+'blood',
+'violence')
+inner join title AS t
+on t.id = mk.movie_id AND t.production_year > 2010
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind = 'movie'
+inner join movie_info_idx AS mi_idx
+on t.id = mi_idx.movie_id AND mk.movie_id = mi_idx.movie_id AND mi_idx.info < '8.5'
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'rating'
+inner join movie_info AS mi
+on mi.movie_id = mi_idx.movie_id AND t.id = mi.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Sweden',
+'Norway',
+'Germany',
+'Denmark',
+'Swedish',
+'Denish',
+'Norwegian',
+'German',
+'USA',
+'American')
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'countries';","[('k', 'mk'), (0, 't'), ('kt', 1), (2, 'mi_idx'), ('it2', 3), (4, 'mi'), (5, 'it1')]"
+20a.sql,2683.92,1900.0792503356934,3128.6215782165527,1884.45,1900.0756740570068,1.4242458011621428,1.000001882176976,False,1.6465773552778438,"(((((((((k mk) cc) cct2) cct1) t) kt) ci) chn) n) NoMergeJoin(cc cct2 k mk cct1) NoMergeJoin(cc k mk cct2)/*+ NoMergeJoin(cc k mk cct2) NoMergeJoin(cc cct2 k mk cct1) */ select min(t.title) AS complete_downey_ironman_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('superhero',
+'sequel',
+'second-part',
+'marvel-comics',
+'based-on-comic',
+'tv-special',
+'fight',
+'violence')
+inner join complete_cast AS cc
+on mk.movie_id = cc.movie_id
+inner join comp_cast_type AS cct2
+on cct2.id = cc.status_id AND cct2.kind like '%complete%'
+inner join comp_cast_type AS cct1
+on cct1.id = cc.subject_id AND cct1.kind = 'cast'
+inner join title AS t
+on t.id = cc.movie_id AND t.id = mk.movie_id AND t.production_year > 1950
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind = 'movie'
+inner join cast_info AS ci
+on t.id = ci.movie_id AND ci.movie_id = cc.movie_id AND mk.movie_id = ci.movie_id
+inner join char_name AS chn
+on chn.id = ci.person_role_id AND chn.name not like '%Sherlock%' AND ( chn.name like '%Tony%Stark%' OR chn.name like '%Iron%Man%')
+inner join name AS n
+on n.id = ci.person_id;","[('k', 'mk'), (0, 'cc'), ('cct1', 1), ('cct2', 2), (3, 't'), ('kt', 4), (5, 'ci'), (6, 'chn'), (7, 'n')]"
+6a.sql,1535.581,21.314144134521484,1784.7316265106201,14.753,21.311283111572266,104.08601640344337,1.000134249211286,False,83.74585505560155,"((((mk t) k) ci) n) NoHashJoin(mk t k) NoMergeJoin(mk t)/*+ NoMergeJoin(mk t) NoHashJoin(mk t k) */ select min(k.keyword) AS movie_keyword,
+min(n.name) AS actor_name,
+min(t.title) AS marvel_movie
+from movie_keyword AS mk
+inner join title AS t
+on t.id = mk.movie_id AND t.production_year > 2010
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword = 'marvel-cinematic-universe'
+inner join cast_info AS ci
+on t.id = ci.movie_id AND ci.movie_id = mk.movie_id
+inner join name AS n
+on n.id = ci.person_id AND n.name like '%Downey%Robert%';","[('k', 'mk'), (0, 't'), (1, 'ci'), (2, 'n')]"
+22a.sql,495.684,379.7764778137207,992.088794708252,351.877,379.77123260498047,1.4086854213262021,1.0000138114956845,False,2.612332661173877,"((((((((((k mk) t) kt) mi_idx) it2) mi) it1) mc) cn) ct) NoNestLoop(it2 k kt mi mi_idx mk t it1)/*+ NoNestLoop(it2 k kt mi mi_idx mk t it1) */ select min(cn.name) AS movie_company,
+min(mi_idx.info) AS rating,
+min(t.title) AS western_violent_movie
+from keyword AS k
+inner join movie_keyword AS mk
+on k.id = mk.keyword_id AND k.keyword IN ('murder',
+'murder-in-title',
+'blood',
+'violence')
+inner join title AS t
+on t.id = mk.movie_id AND t.production_year > 2008
+inner join kind_type AS kt
+on kt.id = t.kind_id AND kt.kind IN ('movie',
+'episode')
+inner join movie_info_idx AS mi_idx
+on t.id = mi_idx.movie_id AND mk.movie_id = mi_idx.movie_id AND mi_idx.info < '7.0'
+inner join info_type AS it2
+on it2.id = mi_idx.info_type_id AND it2.info = 'rating'
+inner join movie_info AS mi
+on mi.movie_id = mi_idx.movie_id AND t.id = mi.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Germany',
+'German',
+'USA',
+'American')
+inner join info_type AS it1
+on it1.id = mi.info_type_id AND it1.info = 'countries'
+inner join movie_companies AS mc
+on mc.movie_id = mi_idx.movie_id AND mi.movie_id = mc.movie_id AND t.id = mc.movie_id AND mk.movie_id = mc.movie_id AND mc.note not like '%(USA)%' AND mc.note like '%(200%)%'
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code <> '[us]'
+inner join company_type AS ct
+on ct.id = mc.company_type_id;","[('k', 'mk'), (0, 't'), (1, 'kt'), (2, 'mi_idx'), ('it2', 3), (4, 'mc'), (5, 'cn'), (6, 'ct'), (7, 'mi'), (8, 'it1')]"
+24a.sql,914.417,419.44360733032227,1646.2433338165283,353.74,419.44074630737305,2.5849974557584665,1.0000068210420052,False,3.9248531486498317,"(((((((((((mk k) mi) it) ci) rt) an) n) t) mc) cn) chn) NoNestLoop(k mi mk it)/*+ NoNestLoop(k mi mk it) */ select min(chn.name) AS voiced_char_name,
+min(n.name) AS voicing_actress_name,
+min(t.title) AS voiced_action_movie_jap_eng
+from movie_keyword AS mk
+inner join keyword AS k
+on k.id = mk.keyword_id AND k.keyword IN ('hero',
+'martial-arts',
+'hand-to-hand-combat')
+inner join movie_info AS mi
+on mi.movie_id = mk.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%201%' OR mi.info like 'USA:%201%')
+inner join info_type AS it
+on it.id = mi.info_type_id AND it.info = 'release dates'
+inner join cast_info AS ci
+on ci.movie_id = mk.movie_id AND mi.movie_id = ci.movie_id AND ci.note IN ('(voice)',
+'(voice: Japanese version)',
+'(voice) (uncredited)',
+'(voice: English version)')
+inner join role_type AS rt
+on rt.id = ci.role_id AND rt.role = 'actress'
+inner join aka_name AS an
+on ci.person_id = an.person_id
+inner join name AS n
+on n.id = an.person_id AND n.id = ci.person_id AND n.gender = 'f' AND n.name like '%An%'
+inner join title AS t
+on t.id = ci.movie_id AND t.id = mi.movie_id AND t.id = mk.movie_id AND t.production_year > 2010
+inner join movie_companies AS mc
+on t.id = mc.movie_id AND mc.movie_id = mi.movie_id AND mc.movie_id = mk.movie_id AND mc.movie_id = ci.movie_id
+inner join company_name AS cn
+on cn.id = mc.company_id AND cn.country_code = '[us]'
+inner join char_name AS chn
+on chn.id = ci.person_role_id;","[('k', 'mk'), (0, 't'), (1, 'mi'), ('it', 2), (3, 'ci'), (4, 'mc'), (5, 'cn'), (6, 'an'), (7, 'chn'), (8, 'n'), (9, 'rt')]"
