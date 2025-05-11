@@ -152,8 +152,19 @@ class JSONTCPHandler(socketserver.BaseRequestHandler):
 class BaoJSONHandler(JSONTCPHandler):
     def setup(self):
         self.__messages = []
+        # Stores the embeddings for each plan
+        self.embeddings = []
     
     def handle_json(self, data):
+        
+        activation = {}
+        def getActivation(name):
+        # the hook signature
+            def hook(model, input, output):
+                # print(output[0].size())
+                activation[name] = output[0].detach()
+            return hook
+        h = self.server.bao_model._BaoModel__current_model._BaoRegression__net.tree_conv[7].register_forward_hook(getActivation('TreeLayerNorm'))
         if "final" in data:
             message_type = self.__messages[0]["type"]
 
@@ -165,6 +176,7 @@ class BaoJSONHandler(JSONTCPHandler):
                 self.request.close()
             elif message_type == "predict":
                 result = self.server.bao_model.predict(self.__messages)
+                self.embeddings.append(activation['TreeLayerNorm'])
                 self.request.sendall(struct.pack("d", result))
                 self.request.close()
             elif message_type == "reward":
