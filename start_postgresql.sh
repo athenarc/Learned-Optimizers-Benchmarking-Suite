@@ -15,7 +15,7 @@ echo 'Running database configurations setup...'
 
 # Start PostgreSQL in the background
 echo 'Starting PostgreSQL...'
-$PG_CTL -D "$DB_CLUSTER_DIR" start &
+$PG_CTL -D "$DB_CLUSTER_DIR" start -o "-c logging_collector=on -c log_directory='/app/db/log' -c log_filename='postgresql-%Y-%m-%d_%H%M%S.log'" &
 
 # Wait for PostgreSQL to be ready
 echo 'Waiting for PostgreSQL to be ready...'
@@ -35,20 +35,6 @@ echo 'Revoking database privileges...'
 echo 'Creating plperl and plperlu extensions...'
 $PSQL -U suite_user -d imdbload -c "CREATE EXTENSION plperl;"
 $PSQL -U suite_user -d imdbload -c "CREATE LANGUAGE plperlu;"
-
-# Define the clear_cache() function
-echo 'Defining the clear_cache() function...'
-$PSQL -U suite_user -d imdbload -c "CREATE OR REPLACE FUNCTION clear_cache() RETURNS boolean AS \$\$
-my \$script = '/app/installation_scripts/clear_cache.sh';
-my \$log_file = '/app/installation_scripts/udf_log.txt';
-if (-e \$script) {
-    system(\"nohup \$script >> \$log_file 2>&1 &\") == 0 or die \"Script execution failed: \$!\";
-    return 1;
-} else {
-    die \"Script not found: \$script\";
-}
-return 0;
-\$\$ LANGUAGE plperlu;"
 
 # Define the clear_cache() function
 echo 'Defining the clear_cache() function...'
