@@ -2,8 +2,6 @@
 
 This repo acts as a testbed for learned optimizers.
 
----
-
 ## Docker Setup
 
 ### Quick Start
@@ -17,8 +15,6 @@ This launches the following containers:
 
 * `evaluation_suite`
 * `evaluation_suite_alt`
-
----
 
 ### Rebuilding Specific Containers
 
@@ -50,8 +46,6 @@ docker volume rm learned-optimizers-benchmarking-suite_db2_data
 docker compose up --build -d db   # or db2
 ```
 
----
-
 ### Postgres Connection Details
 
 * **Credentials**:
@@ -68,8 +62,6 @@ docker compose up --build -d db   # or db2
 ```bash
 psql -U suite_user -d <db> -h train.darelab.athenarc.gr -p <port>
 ```
-
----
 
 ### Monitoring
 
