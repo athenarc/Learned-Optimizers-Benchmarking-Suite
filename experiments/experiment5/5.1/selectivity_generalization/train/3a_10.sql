@@ -1,0 +1,1 @@
+SELECT MIN(t.title) AS movie_title FROM keyword AS k, movie_info AS mi, movie_keyword AS mk, title AS t WHERE t.id = mi.movie_id AND t.id = mk.movie_id AND mk.movie_id = mi.movie_id AND k.id = mk.keyword_id AND k.keyword = 'kidney-heist' AND mi.info = 'Rod Edgar. "Gate Ahead". In: "Dreamwatch 10pp" (USA), Titan Publishing Group, Iss. 97, (MG)' AND t.production_year < 1960
