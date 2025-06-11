@@ -13,6 +13,11 @@ fi
 echo 'Running database configurations setup...'
 /app/installation_scripts/psql_configurations.sh
 
+# Move the extra PostgreSQL configuration files to the database cluster directory
+echo 'Moving extra PostgreSQL configuration files...'
+mv /app/installation_scripts/postgresql_lero.conf "$DB_CLUSTER_DIR/postgresql_lero.conf"
+mv /app/installation_scripts/postgresql_usual.conf "$DB_CLUSTER_DIR/postgresql_usual.conf"
+
 # Start PostgreSQL in the background
 echo 'Starting PostgreSQL...'
 $PG_CTL -D "$DB_CLUSTER_DIR" start -o "-c logging_collector=on -c log_directory='/app/db/log' -c log_filename='postgresql-%Y-%m-%d_%H%M%S.log'" &
