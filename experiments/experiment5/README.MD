@@ -8,12 +8,27 @@ We assess the optimizers’ ability to handle queries and scenarios not encounte
 
 ### Dimension 1: Distribution Generalization
 
-Evaluate performance on entirely different join structures with no overlapping predicates between training and testing workloads.
+Evaluate performance on entirely different workload distributions between training and testing workloads.
+
+In order to calculate the distribution of a workload we identify for each query:
+- Tables used: the names of the database tables referenced.
+- Joins performed: The joins that are present in each query
+- Predicates applied: Filters used in the query
+- (More to be added)
+
+The aggregated values of these features across all queries are used to construct empirical categorical distributions per feature type. This forms the **workload distribution**
+
+**Workload distance** 
+
+To quantify the similarity or divergence between two workloads, we compute the Jensen-Shannon Divergence (JS) between their corresponding feature distributions:
+- We align the distributions by unifying their categorical bins.
+- We compute the JS Distance per distribution, between the aligned distributions.
+- We average the distances across all distributions to obtain the overall workload distance.
 
 **Procedure:**
 
 1. Train on the standard JOB workload.
-2. Test on the JOB-Extended workload.
+2. Test on the JOB-Extended workload, which according to our calculations exhibits a distance of 0.8 from  the original JOB workload.
 
 ### Dimension 2: Query Complexity Generalization
 
