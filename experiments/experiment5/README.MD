@@ -14,6 +14,7 @@ In order to calculate the distribution of a workload we identify for each query:
 - Tables used: the names of the database tables referenced.
 - Joins performed: The joins that are present in each query
 - Predicates applied: Filters used in the query
+- Selected Columns: The columns that are eventually selected from the query
 - (More to be added)
 
 The aggregated values of these features across all queries are used to construct empirical categorical distributions per feature type. This forms the **workload distribution**
