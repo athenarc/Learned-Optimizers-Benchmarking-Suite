@@ -46,23 +46,6 @@ docker volume rm learned-optimizers-benchmarking-suite_db2_data
 docker compose up --build -d db   # or db2
 ```
 
-### Postgres Connection Details
-
-* **Credentials**:
-  `suite_user` / `71Vgfi4mUNPm`
-
-* **Databases**:
-  `imdbload`, `tpch`, `tpcds`
-
-* **Ports**:
-  `5468`, `5469`
-
-**Connect using:**
-
-```bash
-psql -U suite_user -d <db> -h train.darelab.athenarc.gr -p <port>
-```
-
 ### Monitoring
 
 ```bash
