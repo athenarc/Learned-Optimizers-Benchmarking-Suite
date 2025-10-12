@@ -1,0 +1,324 @@
+[
+    {
+        "Bao": {
+            "Bao prediction": 796.493,
+            "Bao recommended hint": "(no hint)"
+        }
+    },
+    {
+        "Plan": {
+            "Node Type": "Aggregate",
+            "Strategy": "Plain",
+            "Partial Mode": "Finalize",
+            "Parallel Aware": false,
+            "Startup Cost": 1370869.12,
+            "Total Cost": 1370869.13,
+            "Plan Rows": 1,
+            "Plan Width": 32,
+            "Actual Startup Time": 2863.839,
+            "Actual Total Time": 2908.953,
+            "Actual Rows": 1,
+            "Actual Loops": 1,
+            "Output": [
+                "((100.00 * sum(CASE WHEN ((part.p_type)::text ~~ 'PROMO%'::text) THEN (lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount)) ELSE '0'::numeric END)) / sum((lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount))))"
+            ],
+            "Plans": [
+                {
+                    "Node Type": "Gather",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Startup Cost": 1370868.66,
+                    "Total Cost": 1370869.07,
+                    "Plan Rows": 4,
+                    "Plan Width": 64,
+                    "Actual Startup Time": 2856.456,
+                    "Actual Total Time": 2908.93,
+                    "Actual Rows": 5,
+                    "Actual Loops": 1,
+                    "Output": [
+                        "(PARTIAL sum(CASE WHEN ((part.p_type)::text ~~ 'PROMO%'::text) THEN (lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount)) ELSE '0'::numeric END))",
+                        "(PARTIAL sum((lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount))))"
+                    ],
+                    "Workers Planned": 4,
+                    "Workers Launched": 4,
+                    "Single Copy": false,
+                    "Plans": [
+                        {
+                            "Node Type": "Aggregate",
+                            "Strategy": "Plain",
+                            "Partial Mode": "Partial",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Startup Cost": 1369868.66,
+                            "Total Cost": 1369868.67,
+                            "Plan Rows": 1,
+                            "Plan Width": 64,
+                            "Actual Startup Time": 2845.932,
+                            "Actual Total Time": 2845.935,
+                            "Actual Rows": 1,
+                            "Actual Loops": 5,
+                            "Output": [
+                                "PARTIAL sum(CASE WHEN ((part.p_type)::text ~~ 'PROMO%'::text) THEN (lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount)) ELSE '0'::numeric END)",
+                                "PARTIAL sum((lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount)))"
+                            ],
+                            "Workers": [
+                                {
+                                    "Worker Number": 0,
+                                    "Actual Startup Time": 2843.167,
+                                    "Actual Total Time": 2843.17,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 1
+                                },
+                                {
+                                    "Worker Number": 1,
+                                    "Actual Startup Time": 2843.103,
+                                    "Actual Total Time": 2843.106,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 1
+                                },
+                                {
+                                    "Worker Number": 2,
+                                    "Actual Startup Time": 2843.332,
+                                    "Actual Total Time": 2843.335,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 1
+                                },
+                                {
+                                    "Worker Number": 3,
+                                    "Actual Startup Time": 2844.537,
+                                    "Actual Total Time": 2844.54,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 1
+                                }
+                            ],
+                            "Plans": [
+                                {
+                                    "Node Type": "Hash Join",
+                                    "Parent Relationship": "Outer",
+                                    "Parallel Aware": true,
+                                    "Join Type": "Inner",
+                                    "Startup Cost": 1314738.29,
+                                    "Total Cost": 1366705.24,
+                                    "Plan Rows": 180767,
+                                    "Plan Width": 33,
+                                    "Actual Startup Time": 2568.298,
+                                    "Actual Total Time": 2787.549,
+                                    "Actual Rows": 154569,
+                                    "Actual Loops": 5,
+                                    "Output": [
+                                        "part.p_type",
+                                        "lineitem.l_extendedprice",
+                                        "lineitem.l_discount"
+                                    ],
+                                    "Inner Unique": false,
+                                    "Hash Cond": "(part.p_partkey = lineitem.l_partkey)",
+                                    "Workers": [
+                                        {
+                                            "Worker Number": 0,
+                                            "Actual Startup Time": 2565.676,
+                                            "Actual Total Time": 2783.123,
+                                            "Actual Rows": 160040,
+                                            "Actual Loops": 1
+                                        },
+                                        {
+                                            "Worker Number": 1,
+                                            "Actual Startup Time": 2565.445,
+                                            "Actual Total Time": 2783.021,
+                                            "Actual Rows": 158081,
+                                            "Actual Loops": 1
+                                        },
+                                        {
+                                            "Worker Number": 2,
+                                            "Actual Startup Time": 2565.861,
+                                            "Actual Total Time": 2787.585,
+                                            "Actual Rows": 147764,
+                                            "Actual Loops": 1
+                                        },
+                                        {
+                                            "Worker Number": 3,
+                                            "Actual Startup Time": 2566.48,
+                                            "Actual Total Time": 2784.233,
+                                            "Actual Rows": 160729,
+                                            "Actual Loops": 1
+                                        }
+                                    ],
+                                    "Plans": [
+                                        {
+                                            "Node Type": "Seq Scan",
+                                            "Parent Relationship": "Outer",
+                                            "Parallel Aware": true,
+                                            "Relation Name": "part",
+                                            "Schema": "public",
+                                            "Alias": "part",
+                                            "Startup Cost": 0.0,
+                                            "Total Cost": 47958.83,
+                                            "Plan Rows": 499983,
+                                            "Plan Width": 25,
+                                            "Actual Startup Time": 0.017,
+                                            "Actual Total Time": 68.143,
+                                            "Actual Rows": 400000,
+                                            "Actual Loops": 5,
+                                            "Output": [
+                                                "part.p_partkey",
+                                                "part.p_name",
+                                                "part.p_mfgr",
+                                                "part.p_brand",
+                                                "part.p_type",
+                                                "part.p_size",
+                                                "part.p_container",
+                                                "part.p_retailprice",
+                                                "part.p_comment",
+                                                "part.p_dummy"
+                                            ],
+                                            "Workers": [
+                                                {
+                                                    "Worker Number": 0,
+                                                    "Actual Startup Time": 0.017,
+                                                    "Actual Total Time": 67.999,
+                                                    "Actual Rows": 413203,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 1,
+                                                    "Actual Startup Time": 0.015,
+                                                    "Actual Total Time": 67.794,
+                                                    "Actual Rows": 408514,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 2,
+                                                    "Actual Startup Time": 0.018,
+                                                    "Actual Total Time": 68.317,
+                                                    "Actual Rows": 383811,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 3,
+                                                    "Actual Startup Time": 0.018,
+                                                    "Actual Total Time": 68.085,
+                                                    "Actual Rows": 415590,
+                                                    "Actual Loops": 1
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "Node Type": "Hash",
+                                            "Parent Relationship": "Inner",
+                                            "Parallel Aware": true,
+                                            "Startup Cost": 1313426.47,
+                                            "Total Cost": 1313426.47,
+                                            "Plan Rows": 104946,
+                                            "Plan Width": 16,
+                                            "Actual Startup Time": 2564.753,
+                                            "Actual Total Time": 2564.754,
+                                            "Actual Rows": 154569,
+                                            "Actual Loops": 5,
+                                            "Output": [
+                                                "lineitem.l_extendedprice",
+                                                "lineitem.l_discount",
+                                                "lineitem.l_partkey"
+                                            ],
+                                            "Hash Buckets": 1048576,
+                                            "Original Hash Buckets": 1048576,
+                                            "Hash Batches": 1,
+                                            "Original Hash Batches": 1,
+                                            "Peak Memory Usage": 49120,
+                                            "Workers": [
+                                                {
+                                                    "Worker Number": 0,
+                                                    "Actual Startup Time": 2564.873,
+                                                    "Actual Total Time": 2564.874,
+                                                    "Actual Rows": 155931,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 1,
+                                                    "Actual Startup Time": 2564.843,
+                                                    "Actual Total Time": 2564.844,
+                                                    "Actual Rows": 154051,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 2,
+                                                    "Actual Startup Time": 2565.013,
+                                                    "Actual Total Time": 2565.014,
+                                                    "Actual Rows": 153538,
+                                                    "Actual Loops": 1
+                                                },
+                                                {
+                                                    "Worker Number": 3,
+                                                    "Actual Startup Time": 2565.603,
+                                                    "Actual Total Time": 2565.603,
+                                                    "Actual Rows": 156592,
+                                                    "Actual Loops": 1
+                                                }
+                                            ],
+                                            "Plans": [
+                                                {
+                                                    "Node Type": "Seq Scan",
+                                                    "Parent Relationship": "Outer",
+                                                    "Parallel Aware": true,
+                                                    "Relation Name": "lineitem",
+                                                    "Schema": "public",
+                                                    "Alias": "lineitem",
+                                                    "Startup Cost": 0.0,
+                                                    "Total Cost": 1313426.47,
+                                                    "Plan Rows": 104946,
+                                                    "Plan Width": 16,
+                                                    "Actual Startup Time": 0.228,
+                                                    "Actual Total Time": 2451.048,
+                                                    "Actual Rows": 154569,
+                                                    "Actual Loops": 5,
+                                                    "Output": [
+                                                        "lineitem.l_extendedprice",
+                                                        "lineitem.l_discount",
+                                                        "lineitem.l_partkey"
+                                                    ],
+                                                    "Filter": "((lineitem.l_shipdate >= '1995-05-01'::date) AND (lineitem.l_shipdate < '1995-06-01 00:00:00'::timestamp without time zone))",
+                                                    "Rows Removed by Filter": 11842641,
+                                                    "Workers": [
+                                                        {
+                                                            "Worker Number": 0,
+                                                            "Actual Startup Time": 0.399,
+                                                            "Actual Total Time": 2453.679,
+                                                            "Actual Rows": 155931,
+                                                            "Actual Loops": 1
+                                                        },
+                                                        {
+                                                            "Worker Number": 1,
+                                                            "Actual Startup Time": 0.493,
+                                                            "Actual Total Time": 2453.174,
+                                                            "Actual Rows": 154051,
+                                                            "Actual Loops": 1
+                                                        },
+                                                        {
+                                                            "Worker Number": 2,
+                                                            "Actual Startup Time": 0.114,
+                                                            "Actual Total Time": 2449.638,
+                                                            "Actual Rows": 153538,
+                                                            "Actual Loops": 1
+                                                        },
+                                                        {
+                                                            "Worker Number": 3,
+                                                            "Actual Startup Time": 0.076,
+                                                            "Actual Total Time": 2450.859,
+                                                            "Actual Rows": 156592,
+                                                            "Actual Loops": 1
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Planning Time": 198.835,
+        "Triggers": [],
+        "Execution Time": 2909.295
+    }
+]

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(ci mi mi_idx t it1) NoHashJoin(ci it1 mi mi_idx t n) NoMergeJoin(ci it1 mi mi_idx n t it2) */ select min(mi.info) AS movie_budget,\nmin(mi_idx.info) AS movie_votes,\nmin(t.title) AS movie_title\nfrom movie_info_idx AS mi_idx\ninner join movie_info AS mi\non mi.movie_id = mi_idx.movie_id AND mi_idx.info > '6.5' AND mi.note IS NULL AND mi.info IN ('Sci-Fi',\n'Drama')\ninner join title AS t\non t.id = mi.movie_id AND t.id = mi_idx.movie_id AND t.production_year BETWEEN 1994 AND 2011\ninner join cast_info AS ci\non ci.movie_id = mi.movie_id AND t.id = ci.movie_id AND ci.movie_id = mi_idx.movie_id AND ci.note IN ('(uncredited)',\n'(writer)',\n'(producer)',\n'(voice)',\n'(executive producer)')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'genres'\ninner join name AS n\non n.id = ci.person_id AND n.gender IS NOT NULL AND n.gender = 'm'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'rating';",
+  "predicted_latency": 665.450930595398,
+  "actual_latency": 14239.117,
+  "q_error": 21.397696427082693,
+  "inference_time": 0.0373072624206543
+}

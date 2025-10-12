@@ -1,0 +1,9 @@
+{
+    "query_name": "00372",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(uncredited)',\n'(writer)',\n'(producer)',\n'(as Terri Colombino)')\nAND n.name like '%Terri%'\nAND t.production_year BETWEEN 1998  AND 2011;",
+    "hint_str": "/*+ HashJoin(cn t mc mi it chn ci n rt an)\n HashJoin(chn ci n rt an)\n NestLoop(chn ci n rt)\n MergeJoin(chn ci n)\n MergeJoin(chn ci)\n MergeJoin(cn t mc mi it)\n HashJoin(cn t mc mi)\n HashJoin(t mc mi)\n MergeJoin(mc mi)\n BitmapScan(cn)\n BitmapScan(t)\n BitmapScan(mc)\n TidScan(mi)\n BitmapScan(it)\n SeqScan(chn)\n BitmapScan(ci)\n SeqScan(n)\n IndexScan(rt)\n BitmapScan(an)\n Leading((((cn (t (mc mi))) it) ((((chn ci) n) rt) an))) */",
+    "inference_time": 5.48236346244812,
+    "planning_time": 23.468,
+    "predicted_latency": -11253.740234375,
+    "actual_latency": 11584.957
+}

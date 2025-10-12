@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(an ci it n pi ml) NoHashJoin(an ci it ml n pi t lt) */ select min(n.name) AS of_person,\nmin(t.title) AS biography_movie\nfrom person_info AS pi\ninner join info_type AS it\non it.id = pi.info_type_id AND pi.note = 'Volker Boehm' AND it.info = 'mini biography'\ninner join aka_name AS an\non pi.person_id = an.person_id AND an.name like '%a%'\ninner join name AS n\non n.id = an.person_id AND n.id = pi.person_id AND n.name_pcode_cf BETWEEN 'A' AND 'F' AND ( n.gender = 'm' OR ( n.gender = 'f' AND n.name like 'B%'))\ninner join cast_info AS ci\non ci.person_id = n.id AND an.person_id = ci.person_id AND pi.person_id = ci.person_id\ninner join movie_link AS ml\non ci.movie_id = ml.linked_movie_id\ninner join title AS t\non t.id = ci.movie_id AND ml.linked_movie_id = t.id AND t.production_year BETWEEN 1980 AND 1995\ninner join link_type AS lt\non lt.id = ml.link_type_id AND lt.link = 'features';",
+  "predicted_latency": 453.80938053131104,
+  "actual_latency": 99.699,
+  "q_error": 4.5517947073823315,
+  "inference_time": 0.0830841064453125
+}

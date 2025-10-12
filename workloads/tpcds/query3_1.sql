@@ -1,19 +1,19 @@
---start query 1 in stream 0 using template query3.tpl
-select  dt.d_year 
-       ,item.i_brand_id brand_id 
-       ,item.i_brand brand
-       ,sum(ss_ext_sales_price) sum_agg
- from  date_dim dt 
-      ,store_sales
-      ,item
- where dt.d_date_sk = store_sales.ss_sold_date_sk
-   and store_sales.ss_item_sk = item.i_item_sk
-   and item.i_manufact_id = 436
-   and dt.d_moy=12
- group by dt.d_year
-      ,item.i_brand
-      ,item.i_brand_id
- order by dt.d_year
-         ,sum_agg desc
-         ,brand_id
- limit 100;
+SELECT
+  dd.d_year,
+  i.i_brand_id AS brand_id,
+  i.i_brand AS brand,
+  SUM(ss.ss_ext_sales_price) AS sum_agg
+FROM date_dim AS dd,
+  store_sales AS ss,
+  item AS i
+WHERE
+  dd.d_date_sk = ss.ss_sold_date_sk AND ss.ss_item_sk = i.i_item_sk AND i.i_manufact_id = 436 AND dd.d_moy = 12
+GROUP BY
+  dd.d_year,
+  i.i_brand,
+  i.i_brand_id
+ORDER BY
+  dd.d_year,
+  sum_agg DESC,
+  brand_id
+LIMIT 100;

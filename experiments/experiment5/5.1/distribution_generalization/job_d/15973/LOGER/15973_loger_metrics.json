@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mi it1) NoMergeJoin(it1 mi t mi_idx) NoMergeJoin(it1 mi mi_idx t it2) NoMergeJoin(it1 it2 mi mi_idx t mc) NoMergeJoin(it1 it2 mc mi mi_idx t ct) NoMergeJoin(ct it1 it2 mc mi mi_idx t cn) */ select min(cn.name) AS movie_company,\nmin(mi_idx.info) AS rating,\nmin(t.title) AS drama_horror_movie\nfrom movie_info AS mi\ninner join info_type AS it1\non mi.info_type_id = it1.id AND mi.info IN ('Drama',\n'Western') AND it1.info = 'genres'\ninner join title AS t\non t.id = mi.movie_id AND t.production_year BETWEEN 2000 AND 2007\ninner join movie_info_idx AS mi_idx\non t.id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id AND mi_idx.info > '12'\ninner join info_type AS it2\non mi_idx.info_type_id = it2.id AND it2.info = 'rating'\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = mi_idx.movie_id AND mc.movie_id = mi.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 1087.1493816375732,
+  "actual_latency": 1149.416,
+  "q_error": 1.057275126504358,
+  "inference_time": 0.07930445671081543
+}

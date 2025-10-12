@@ -1,0 +1,9 @@
+{
+    "query_name": "1c",
+    "sql": "SELECT MIN(mc.note) AS production_note, MIN(t.title) AS movie_title, MIN(t.production_year) AS movie_year FROM company_type AS ct, info_type AS it, movie_companies AS mc, movie_info_idx AS mi_idx, title AS t WHERE ct.kind = 'production companies' AND it.info = 'top 250 rank' AND mc.note  not like '%(as Metro-Goldwyn-Mayer Pictures)%' and (mc.note like '%(co-production)%') AND t.production_year > 2010 AND ct.id = mc.company_type_id AND t.id = mc.movie_id AND t.id = mi_idx.movie_id AND mc.movie_id = mi_idx.movie_id AND it.id = mi_idx.info_type_id;",
+    "hint_str": "/*+ HashJoin(mc ct mi_idx t it)\n MergeJoin(mc ct mi_idx t)\n HashJoin(mc ct mi_idx)\n HashJoin(mc ct)\n TidScan(mc)\n BitmapScan(ct)\n BitmapScan(mi_idx)\n TidScan(t)\n BitmapScan(it)\n Leading(((((mc ct) mi_idx) t) it)) */",
+    "inference_time": 0.034536123275756836,
+    "planning_time": 1.96,
+    "predicted_latency": 10570.1259765625,
+    "actual_latency": 1350.513
+}

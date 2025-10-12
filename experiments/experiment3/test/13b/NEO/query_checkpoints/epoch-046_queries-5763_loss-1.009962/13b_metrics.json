@@ -1,0 +1,8 @@
+{
+    "query_name": "13b",
+    "sql": "SELECT MIN(cn.name) AS producing_company, MIN(miidx.info) AS rating, MIN(t.title) AS movie_about_winning FROM company_name AS cn, company_type AS ct, info_type AS it, info_type AS it2, kind_type AS kt, movie_companies AS mc, movie_info AS mi, movie_info_idx AS miidx, title AS t WHERE cn.country_code ='[us]' AND ct.kind ='production companies' AND it.info ='rating' AND it2.info ='release dates' AND kt.kind ='movie' AND t.title  != '' AND (t.title LIKE '%Champion%' OR t.title LIKE '%Loser%') AND mi.movie_id = t.id AND it2.id = mi.info_type_id AND kt.id = t.kind_id AND mc.movie_id = t.id AND cn.id = mc.company_id AND ct.id = mc.company_type_id AND miidx.movie_id = t.id AND it.id = miidx.info_type_id AND mi.movie_id = miidx.movie_id AND mi.movie_id = mc.movie_id AND miidx.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(mi miidx it mc ct t it2 kt cn)\n HashJoin(mi miidx it mc ct t it2 kt)\n HashJoin(mi miidx it mc ct t it2)\n HashJoin(mi miidx it mc ct t)\n MergeJoin(mi miidx it mc ct)\n MergeJoin(mi miidx it mc)\n MergeJoin(mi miidx it)\n HashJoin(miidx it)\n SeqScan(mi)\n BitmapScan(miidx)\n BitmapScan(it)\n SeqScan(mc)\n IndexScan(ct)\n IndexScan(t)\n BitmapScan(it2)\n BitmapScan(kt)\n BitmapScan(cn)\n Leading((((((((mi (miidx it)) mc) ct) t) it2) kt) cn)) */",
+    "predicted_latency_ms": 11875.5068359375,
+    "planning_time_ms": 9.592,
+    "actual_latency_ms": 20836.218
+}

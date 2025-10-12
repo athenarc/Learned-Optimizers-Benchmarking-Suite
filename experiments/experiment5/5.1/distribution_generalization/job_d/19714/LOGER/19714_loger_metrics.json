@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(kt t) NoHashJoin(kt t miidx) NoMergeJoin(kt miidx t it) NoMergeJoin(it kt mi miidx t it2) NoHashJoin(it it2 kt mi miidx t mc) NoNestLoop(it it2 kt mc mi miidx t ct) NoNestLoop(ct it it2 kt mc mi miidx t cn) */ select min(cn.name) AS producing_company,\nmin(miidx.info) AS rating,\nmin(t.title) AS movie_about_winning\nfrom kind_type AS kt\ninner join title AS t\non kt.id = t.kind_id AND kt.kind = 'movie' AND t.title <> '' AND ( t.title like 'Champion%' OR t.title like 'Loser%')\ninner join movie_info_idx AS miidx\non miidx.movie_id = t.id\ninner join info_type AS it\non it.id = miidx.info_type_id AND it.info = 'rating'\ninner join movie_info AS mi\non mi.movie_id = t.id AND mi.movie_id = miidx.movie_id\ninner join info_type AS it2\non it2.id = mi.info_type_id AND it2.info = 'release dates'\ninner join movie_companies AS mc\non mc.movie_id = t.id AND miidx.movie_id = mc.movie_id AND mi.movie_id = mc.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'distributors'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 631.1600208282471,
+  "actual_latency": 178.32,
+  "q_error": 3.5394797040615025,
+  "inference_time": 0.05232572555541992
+}

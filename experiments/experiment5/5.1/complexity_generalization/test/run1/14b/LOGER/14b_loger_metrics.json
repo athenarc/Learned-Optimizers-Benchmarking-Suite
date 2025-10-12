@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(mk k) NoHashJoin(k mk t) NoHashJoin(k mk t kt) NoHashJoin(k kt mk t mi_idx) NoMergeJoin(it2 k kt mi_idx mk t mi) NoHashJoin(it2 k kt mi mi_idx mk t it1) */ select min(mi_idx.info) AS rating,\nmin(t.title) AS western_dark_production\nfrom movie_keyword AS mk\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('murder',\n'murder-in-title')\ninner join title AS t\non t.id = mk.movie_id AND t.production_year > 2010 AND ( t.title like '%murder%' OR t.title like '%Murder%' OR t.title like '%Mord%')\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie'\ninner join movie_info_idx AS mi_idx\non mk.movie_id = mi_idx.movie_id AND t.id = mi_idx.movie_id AND mi_idx.info > '6.0'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'rating'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mi_idx.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Sweden',\n'Norway',\n'Germany',\n'Denmark',\n'Swedish',\n'Denish',\n'Norwegian',\n'German',\n'USA',\n'American')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'countries';",
+  "predicted_latency": 433.79589915275574,
+  "actual_latency": 441.946,
+  "q_error": 1.0187878697404982,
+  "inference_time": 0.5140447616577148
+}

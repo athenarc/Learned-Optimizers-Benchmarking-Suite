@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(ci rt t chn) NoMergeJoin(chn ci rt t mc) NoMergeJoin(chn ci mc rt t cn) NoMergeJoin(chn ci cn mc rt t ct) */ select min(chn.name) AS character,\nmin(t.title) AS russian_mov_with_actor_producer\nfrom title AS t\ninner join cast_info AS ci\non t.id = ci.movie_id AND t.production_year > 2009 AND ci.note like '%Rylan)%'\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join movie_companies AS mc\non ci.movie_id = mc.movie_id AND t.id = mc.movie_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[nl]'\ninner join company_type AS ct\non ct.id = mc.company_type_id;",
+  "predicted_latency": 428.3972382545471,
+  "actual_latency": 2800.092,
+  "q_error": 6.536204601618436,
+  "inference_time": 0.037281036376953125
+}

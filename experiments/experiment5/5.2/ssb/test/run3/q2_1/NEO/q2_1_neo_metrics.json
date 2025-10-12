@@ -1,0 +1,9 @@
+{
+    "query_name": "q2_1",
+    "sql": "SELECT SUM(l.l_revenue), d.d_year, p.p_brand1\nFROM lineitem AS l, orders AS o, date AS d, part AS p, supplier AS s\nWHERE l.l_orderkey = o.o_orderkey\n  AND o.o_orderdate = d.d_datekey\n  AND l.l_partkey = p.p_partkey\n  AND l.l_suppkey = s.s_suppkey\n  AND p.p_category = 'MFGR#12'\n  AND s.s_region = 'AMERICA'\nGROUP BY d.d_year, p.p_brand1\nORDER BY d.d_year, p.p_brand1;",
+    "hint_str": "/*+ HashJoin(d s o l p)\n HashJoin(s o l p)\n NestLoop(o l p)\n MergeJoin(o l)\n BitmapScan(d)\n TidScan(s)\n TidScan(o)\n BitmapScan(l)\n IndexScan(p)\n Leading((d (s ((o l) p)))) */",
+    "inference_time": 0.07520914077758789,
+    "planning_time": 1.335,
+    "predicted_latency": -92236.34375,
+    "actual_latency": 18220.132
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(l o) NoHashJoin(l o s) NoMergeJoin(l o s n) */ select n.n_name,\nsum(l.l_extendedprice * 1 - l.l_discount) AS revenue\nfrom lineitem AS l\ninner join orders AS o\non l.l_orderkey = o.o_orderkey AND o.o_orderdate >= '1993-01-01'::date AND o.o_orderdate < '1993-01-01'::date + '1'::interval(4)\ninner join supplier AS s\non l.l_suppkey = s.s_suppkey\ninner join nation AS n\non s.s_nationkey = n.n_nationkey\ninner join region AS r\non n.n_regionkey = r.r_regionkey AND r.r_name = 'AMERICA'\ninner join customer AS c\non c.c_custkey = o.o_custkey AND c.c_nationkey = s.s_nationkey group by n.n_name order by revenue desc;",
+  "predicted_latency": 219.27659213542938,
+  "actual_latency": 7592.65,
+  "q_error": 34.62590295689489,
+  "inference_time": 0.08131194114685059
+}

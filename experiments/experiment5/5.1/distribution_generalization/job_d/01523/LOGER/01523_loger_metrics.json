@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mc t mi) NoMergeJoin(ci mc mi rt t n) NoMergeJoin(an ci it mc mi n rt t chn) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS voiced_movie\nfrom title AS t\ninner join movie_companies AS mc\non t.id = mc.movie_id AND t.production_year BETWEEN 2001 AND 2008 AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join movie_info AS mi\non t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')\ninner join cast_info AS ci\non t.id = ci.movie_id AND mi.movie_id = ci.movie_id AND mc.movie_id = ci.movie_id AND ci.note IN ('(producer)',\n'(voice)',\n'(executive producer)',\n'(as Terri Colombino)')\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Terri%'\ninner join aka_name AS an\non ci.person_id = an.person_id AND n.id = an.person_id\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 139.43523168563843,
+  "actual_latency": 10793.282,
+  "q_error": 77.40713641394328,
+  "inference_time": 0.06799697875976562
+}

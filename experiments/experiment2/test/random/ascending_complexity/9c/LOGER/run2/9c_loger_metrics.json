@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(an ci n rt) NoHashJoin(an chn ci n rt mc) NoHashJoin(an chn ci mc n rt cn) */ select min(an.name) AS alternative_name,\nmin(chn.name) AS voiced_character_name,\nmin(n.name) AS voicing_actress,\nmin(t.title) AS american_movie\nfrom aka_name AS an\ninner join name AS n\non an.person_id = n.id AND n.gender = 'f' AND n.name like '%An%'\ninner join cast_info AS ci\non n.id = ci.person_id AND an.person_id = ci.person_id AND ci.note IN ('(voice)',\n'(voice: Japanese version)',\n'(voice) (uncredited)',\n'(voice: English version)')\ninner join role_type AS rt\non ci.role_id = rt.id AND rt.role = 'actress'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join movie_companies AS mc\non ci.movie_id = mc.movie_id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[us]'\ninner join title AS t\non t.id = mc.movie_id AND ci.movie_id = t.id;",
+  "predicted_latency": 386.1311078071594,
+  "actual_latency": 862.34,
+  "q_error": 2.2332828994204412,
+  "inference_time": 0.08311653137207031
+}

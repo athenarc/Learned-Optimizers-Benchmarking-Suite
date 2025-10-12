@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(q1 tq1 s) NoHashJoin(a1 q1 s t1 tq1 u1) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 0 AND q1.view_count <= 100\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('es',\n'stats')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('bayesian',\n'bootstrap',\n'c++',\n'classification',\n'json',\n'multiple-regression',\n'neural-networks',\n'statistical-significance')\ninner join answer AS a1\non s.site_id = a1.site_id AND q1.id = a1.question_id\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND u1.reputation >= 10 AND u1.reputation <= 100000\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Commentator',\n'Critic',\n'Curious',\n'Custodian',\n'Famous Question',\n'Nice Question',\n'Popular Question',\n'Revival',\n'Scholar',\n'Supporter',\n'Teacher',\n'Tumbleweed') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1615.5250072479248,
+  "actual_latency": 5916.731,
+  "q_error": 3.6624199399297783,
+  "inference_time": 0.08731460571289062
+}

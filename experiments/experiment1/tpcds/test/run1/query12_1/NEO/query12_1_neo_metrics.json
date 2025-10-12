@@ -1,0 +1,9 @@
+{
+    "query_name": "query12_1",
+    "sql": "SELECT\n  i.i_item_id,\n  i.i_item_desc,\n  i.i_category,\n  i.i_class,\n  i.i_current_price,\n  SUM(ws.ws_ext_sales_price) AS itemrevenue,\n  SUM(ws.ws_ext_sales_price) * 100 / SUM(SUM(ws.ws_ext_sales_price)) OVER (PARTITION BY i.i_class) AS revenueratio\nFROM web_sales AS ws,\n  item AS i,\n  date_dim AS dd\nWHERE\n  ws.ws_item_sk = i.i_item_sk AND i.i_category IN ('Jewelry', 'Sports', 'Books') AND ws.ws_sold_date_sk = dd.d_date_sk AND dd.d_date BETWEEN CAST('2001-01-12' AS date) AND CAST('2001-02-11' AS date)\nGROUP BY\n  i.i_item_id,\n  i.i_item_desc,\n  i.i_category,\n  i.i_class,\n  i.i_current_price\nORDER BY\n  i.i_category,\n  i.i_class,\n  i.i_item_id,\n  i.i_item_desc,\n  revenueratio\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(i ws dd)\n HashJoin(ws dd)\n BitmapScan(i)\n BitmapScan(ws)\n BitmapScan(dd)\n Leading((i (ws dd))) */",
+    "inference_time": 704.9283549785614,
+    "planning_time": 3.814,
+    "predicted_latency": 215320.015625,
+    "actual_latency": 47651.044
+}

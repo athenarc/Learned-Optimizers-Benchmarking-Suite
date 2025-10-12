@@ -1,0 +1,8 @@
+{
+    "query_name": "11c",
+    "sql": "SELECT MIN(cn.name) AS from_company, MIN(mc.note) AS production_note, MIN(t.title) AS movie_based_on_book FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_keyword AS mk, movie_link AS ml, title AS t WHERE cn.country_code  !='[pl]' and (cn.name like '20th Century Fox%' or cn.name like 'Twentieth Century Fox%') AND ct.kind  != 'production companies' and ct.kind is not NULL AND k.keyword  in ('sequel', 'revenge', 'based-on-novel') AND mc.note  is not NULL AND t.production_year  > 1950 AND lt.id = ml.link_type_id AND ml.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_type_id = ct.id AND mc.company_id = cn.id AND ml.movie_id = mk.movie_id AND ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(ct t mk ml cn mc k lt)\n HashJoin(ct t mk ml cn mc k)\n MergeJoin(ct t mk ml cn mc)\n MergeJoin(t mk ml cn mc)\n HashJoin(mk ml cn mc)\n HashJoin(ml cn mc)\n HashJoin(cn mc)\n TidScan(ct)\n IndexScan(t)\n BitmapScan(mk)\n SeqScan(ml)\n IndexScan(cn)\n TidScan(mc)\n BitmapScan(k)\n BitmapScan(lt)\n Leading((((ct (t (mk (ml (cn mc))))) k) lt)) */",
+    "predicted_latency_ms": 11932.3076171875,
+    "planning_time_ms": 6.179,
+    "actual_latency_ms": 5055.768
+}

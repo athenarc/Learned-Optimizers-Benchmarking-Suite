@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(a1 q1 s t1 tq1 u1 acc) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select count(*)\nfrom tag_question AS tq1\ninner join question AS q1\non q1.id = tq1.question_id AND q1.score >= 0 AND q1.score <= 1000\ninner join site AS s\non s.site_id = tq1.site_id AND s.site_id = q1.site_id AND s.site_name IN ('chemistry',\n'money',\n'rpg')\ninner join tag AS t1\non t1.id = tq1.tag_id AND s.site_id = t1.site_id AND t1.name IN ('magic-items',\n'physical-chemistry',\n'united-kingdom')\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.upvotes >= 0 AND u1.upvotes <= 1\ninner join answer AS a1\non q1.id = a1.question_id AND a1.owner_user_id = u1.id AND s.site_id = a1.site_id\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non b.user_id = u1.id AND s.site_id = b.site_id AND b.name IN ('Custodian',\n'Famous Question',\n'Nice Answer',\n'Nice Question',\n'Notable Question',\n'Tumbleweed');",
+  "predicted_latency": 1633.387804031372,
+  "actual_latency": 57414.457,
+  "q_error": 35.150536117813,
+  "inference_time": 0.07561731338500977
+}

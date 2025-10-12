@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(ci n rt) NoHashJoin(ci n rt mc) NoMergeJoin(ci mc n rt cn) NoMergeJoin(ci cn mc n rt chn) NoMergeJoin(chn ci cn mc n rt t) NoMergeJoin(an chn ci cn mc n rt t mi) NoHashJoin(an chn ci cn mc mi n rt t it) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS kung_fu_panda\nfrom cast_info AS ci\ninner join name AS n\non n.id = ci.person_id AND ci.note = '(voice)' AND n.gender = 'f' AND n.name like '%Angel%'\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join movie_companies AS mc\non mc.movie_id = ci.movie_id AND mc.note like '%(200%)%' AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join title AS t\non t.id = mc.movie_id AND t.id = ci.movie_id AND t.production_year BETWEEN 2007 AND 2008 AND t.title like '%Kung%Fu%Panda%'\ninner join aka_name AS an\non n.id = an.person_id AND ci.person_id = an.person_id\ninner join movie_info AS mi\non mc.movie_id = mi.movie_id AND t.id = mi.movie_id AND mi.movie_id = ci.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%2007%' OR mi.info like 'USA:%2008%')\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates';",
+  "predicted_latency": 653.7855267524719,
+  "actual_latency": 380.411,
+  "q_error": 1.7186293949241003,
+  "inference_time": 0.6107664108276367
+}

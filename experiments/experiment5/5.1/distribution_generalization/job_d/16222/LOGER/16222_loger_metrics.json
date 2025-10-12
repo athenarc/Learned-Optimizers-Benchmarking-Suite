@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(k lt mc mk ml ct) NoHashJoin(ct k lt mc mk ml cn) NoHashJoin(cn ct k lt mc mk ml t) */ select min(cn.name) AS from_company,\nmin(mc.note) AS production_note,\nmin(t.title) AS movie_based_on_book\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword IN ('murder-in-title',\n'sequel',\n'gore')\ninner join movie_link AS ml\non ml.movie_id = mk.movie_id\ninner join link_type AS lt\non lt.id = ml.link_type_id\ninner join movie_companies AS mc\non ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id AND mc.note IS NOT NULL\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind IS NOT NULL AND ct.kind <> 'distributors'\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]'\ninner join title AS t\non ml.movie_id = t.id AND t.id = mc.movie_id AND t.id = mk.movie_id AND t.production_year > 2003;",
+  "predicted_latency": 140.14004170894623,
+  "actual_latency": 60.446,
+  "q_error": 2.318433671524108,
+  "inference_time": 0.04491448402404785
+}

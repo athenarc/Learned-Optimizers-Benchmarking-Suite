@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(a1 q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom tag_question AS tq1\ninner join question AS q1\non q1.id = tq1.question_id AND q1.view_count >= 100 AND q1.view_count <= 100000\ninner join tag AS t1\non t1.id = tq1.tag_id AND t1.name IN ('book-recommendation',\n'gparted',\n'order-theory')\ninner join site AS s\non s.site_id = t1.site_id AND s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('askubuntu',\n'math')\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.upvotes >= 10 AND u1.upvotes <= 1000000\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Altruist',\n'Benefactor',\n'Electorate',\n'Fanatic',\n'Generalist',\n'Quorum',\n'Self-Learner',\n'Steward',\n'Suffrage',\n'Taxonomist',\n'Vox Populi')\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1435.2986812591553,
+  "actual_latency": 50015.88,
+  "q_error": 34.84701870980763,
+  "inference_time": 0.28592538833618164
+}

@@ -1,0 +1,8 @@
+{
+    "query_name": "9d",
+    "sql": "SELECT MIN(an.name) AS alternative_name, MIN(chn.name) AS voiced_char_name, MIN(n.name) AS voicing_actress, MIN(t.title) AS american_movie FROM aka_name AS an, char_name AS chn, cast_info AS ci, company_name AS cn, movie_companies AS mc, name AS n, role_type AS rt, title AS t WHERE ci.note  in ('(voice)', '(voice: Japanese version)', '(voice) (uncredited)', '(voice: English version)') AND cn.country_code ='[us]' AND n.gender ='f' AND rt.role ='actress' AND ci.movie_id = t.id AND t.id = mc.movie_id AND ci.movie_id = mc.movie_id AND mc.company_id = cn.id AND ci.role_id = rt.id AND n.id = ci.person_id AND chn.id = ci.person_role_id AND an.person_id = n.id AND an.person_id = ci.person_id;",
+    "hint_str": "/*+ HashJoin(rt t n chn mc cn ci an)\n HashJoin(t n chn mc cn ci an)\n HashJoin(n chn mc cn ci an)\n MergeJoin(chn mc cn ci an)\n NestLoop(mc cn ci an)\n MergeJoin(mc cn ci)\n HashJoin(mc cn)\n IndexScan(rt)\n TidScan(t)\n BitmapScan(n)\n IndexScan(chn)\n TidScan(mc)\n BitmapScan(cn)\n TidScan(ci)\n IndexScan(an)\n Leading((rt (t (n (chn (((mc cn) ci) an)))))) */",
+    "predicted_latency_ms": 14129.9111328125,
+    "planning_time_ms": 5.427,
+    "actual_latency_ms": 18559.874
+}

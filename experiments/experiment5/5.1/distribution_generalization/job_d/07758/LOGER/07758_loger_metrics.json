@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mi_idx it) NoMergeJoin(it mi_idx t mc) NoMergeJoin(it mc mi_idx t ct) */ select min(mc.note) AS production_note,\nmin(t.title) AS movie_title,\nmin(t.production_year) AS movie_year\nfrom movie_info_idx AS mi_idx\ninner join info_type AS it\non it.id = mi_idx.info_type_id AND it.info = 'top 250 rank'\ninner join title AS t\non t.id = mi_idx.movie_id AND t.production_year > 2010\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = mi_idx.movie_id AND mc.note not like '%(as Metro-Goldwyn-Mayer Pictures)%' AND mc.note like '%(co-production)%'\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies';",
+  "predicted_latency": 429.1287362575531,
+  "actual_latency": 4.181,
+  "q_error": 102.63782259209593,
+  "inference_time": 0.2964358329772949
+}

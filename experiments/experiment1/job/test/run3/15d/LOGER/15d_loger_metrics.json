@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mi it1) NoMergeJoin(it1 mi t) NoHashJoin(it1 mi t at) NoNestLoop(at it1 mc mi t ct) NoNestLoop(at ct it1 mc mi mk t k) NoNestLoop(at ct it1 k mc mi mk t cn) */ select min(at.title) AS aka_title,\nmin(t.title) AS internet_movie_title\nfrom movie_info AS mi\ninner join info_type AS it1\non it1.id = mi.info_type_id AND mi.note like '%internet%' AND it1.info = 'release dates'\ninner join title AS t\non t.id = mi.movie_id AND t.production_year > 1990\ninner join aka_title AS at\non t.id = at.movie_id AND mi.movie_id = at.movie_id\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = at.movie_id AND mi.movie_id = mc.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join movie_keyword AS mk\non mk.movie_id = mc.movie_id AND t.id = mk.movie_id AND mk.movie_id = at.movie_id AND mk.movie_id = mi.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 410.24237871170044,
+  "actual_latency": 504.477,
+  "q_error": 1.2297047457267287,
+  "inference_time": 0.09561705589294434
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cc cct1 cct2 chn ci n mk) NoHashJoin(cc cct1 cct2 chn ci k mk n t kt) */ select min(t.title) AS complete_downey_ironman_movie\nfrom name AS n\ninner join cast_info AS ci\non n.id = ci.person_id AND n.name like '%Sisters,%'\ninner join complete_cast AS cc\non ci.movie_id = cc.movie_id\ninner join comp_cast_type AS cct1\non cct1.id = cc.subject_id AND cct1.kind = 'cast'\ninner join comp_cast_type AS cct2\non cct2.id = cc.status_id AND cct2.kind like '%complete%'\ninner join char_name AS chn\non chn.id = ci.person_role_id AND chn.name not like '%Sherlock%' AND chn.name like '%Three%'\ninner join movie_keyword AS mk\non mk.movie_id = cc.movie_id AND mk.movie_id = ci.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('gore',\n'marvel-comics',\n'death',\n'sequel',\n'fight',\n'tv-special',\n'revenge',\n'1001-nights')\ninner join title AS t\non t.id = cc.movie_id AND t.id = mk.movie_id AND t.id = ci.movie_id AND t.production_year > 1957\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie';",
+  "predicted_latency": 132.6114535331726,
+  "actual_latency": 1080.387,
+  "q_error": 8.14701122124223,
+  "inference_time": 0.06454229354858398
+}

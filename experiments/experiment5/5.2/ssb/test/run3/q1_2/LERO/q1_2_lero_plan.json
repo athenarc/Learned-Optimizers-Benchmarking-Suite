@@ -1,0 +1,174 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Plain",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Startup Cost": 143053.97,
+      "Total Cost": 143053.98,
+      "Plan Rows": 1,
+      "Plan Width": 32,
+      "Actual Startup Time": 2330.107,
+      "Actual Total Time": 2330.112,
+      "Actual Rows": 1,
+      "Actual Loops": 1,
+      "Output": [
+        "sum((l.l_extendedprice * l.l_discount))"
+      ],
+      "Plans": [
+        {
+          "Node Type": "Hash Join",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Join Type": "Inner",
+          "Startup Cost": 79.76,
+          "Total Cost": 143053.96,
+          "Plan Rows": 1,
+          "Plan Width": 32,
+          "Actual Startup Time": 4.559,
+          "Actual Total Time": 2327.8,
+          "Actual Rows": 4287,
+          "Actual Loops": 1,
+          "Output": [
+            "l.l_extendedprice",
+            "l.l_discount"
+          ],
+          "Inner Unique": true,
+          "Hash Cond": "((o.o_orderdate)::numeric = d.d_datekey)",
+          "Plans": [
+            {
+              "Node Type": "Nested Loop",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Join Type": "Inner",
+              "Startup Cost": 0.42,
+              "Total Cost": 142951.21,
+              "Plan Rows": 8500,
+              "Plan Width": 36,
+              "Actual Startup Time": 0.399,
+              "Actual Total Time": 2246.271,
+              "Actual Rows": 327924,
+              "Actual Loops": 1,
+              "Output": [
+                "l.l_extendedprice",
+                "l.l_discount",
+                "o.o_orderdate"
+              ],
+              "Inner Unique": true,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Relation Name": "lineitem",
+                  "Schema": "public",
+                  "Alias": "l",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 142233.6,
+                  "Plan Rows": 85,
+                  "Plan Width": 36,
+                  "Actual Startup Time": 0.047,
+                  "Actual Total Time": 1482.517,
+                  "Actual Rows": 327924,
+                  "Actual Loops": 1,
+                  "Output": [
+                    "l.l_orderkey",
+                    "l.l_linenumber",
+                    "l.l_partkey",
+                    "l.l_suppkey",
+                    "l.l_quantity",
+                    "l.l_extendedprice",
+                    "l.l_discount",
+                    "l.l_revenue",
+                    "l.l_supplycost",
+                    "l.l_tax",
+                    "l.l_commitdate",
+                    "l.l_shipmode"
+                  ],
+                  "Filter": "((l.l_discount >= '4'::numeric) AND (l.l_discount <= '6'::numeric) AND (l.l_quantity >= 26) AND (l.l_quantity <= 35))",
+                  "Rows Removed by Filter": 5673247
+                },
+                {
+                  "Node Type": "Index Scan",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": false,
+                  "Scan Direction": "Forward",
+                  "Index Name": "orders_pkey",
+                  "Relation Name": "orders",
+                  "Schema": "public",
+                  "Alias": "o",
+                  "Startup Cost": 0.42,
+                  "Total Cost": 8.44,
+                  "Plan Rows": 1,
+                  "Plan Width": 8,
+                  "Actual Startup Time": 0.002,
+                  "Actual Total Time": 0.002,
+                  "Actual Rows": 1,
+                  "Actual Loops": 327924,
+                  "Output": [
+                    "o.o_orderkey",
+                    "o.o_custkey",
+                    "o.o_orderpriority",
+                    "o.o_shippriority",
+                    "o.o_ordtotalprice",
+                    "o.o_orderdate"
+                  ],
+                  "Index Cond": "(o.o_orderkey = l.l_orderkey)",
+                  "Rows Removed by Index Recheck": 0
+                }
+              ]
+            },
+            {
+              "Node Type": "Hash",
+              "Parent Relationship": "Inner",
+              "Parallel Aware": false,
+              "Startup Cost": 78.95,
+              "Total Cost": 78.95,
+              "Plan Rows": 31,
+              "Plan Width": 7,
+              "Actual Startup Time": 1.914,
+              "Actual Total Time": 1.915,
+              "Actual Rows": 31,
+              "Actual Loops": 1,
+              "Output": [
+                "d.d_datekey"
+              ],
+              "Hash Buckets": 1024,
+              "Original Hash Buckets": 1024,
+              "Hash Batches": 1,
+              "Original Hash Batches": 1,
+              "Peak Memory Usage": 10,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Relation Name": "date",
+                  "Schema": "public",
+                  "Alias": "d",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 78.95,
+                  "Plan Rows": 31,
+                  "Plan Width": 7,
+                  "Actual Startup Time": 0.622,
+                  "Actual Total Time": 1.891,
+                  "Actual Rows": 31,
+                  "Actual Loops": 1,
+                  "Output": [
+                    "d.d_datekey"
+                  ],
+                  "Filter": "(d.d_yearmonthnum = '199401'::numeric)",
+                  "Rows Removed by Filter": 2525
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning Time": 938.523,
+    "Triggers": [],
+    "Execution Time": 2330.342
+  }
+]

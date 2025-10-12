@@ -1,0 +1,9 @@
+{
+    "query_name": "q3_2",
+    "sql": "SELECT c.c_city, s.s_city, d.d_year, SUM(l.l_revenue) AS revenue\nFROM customer AS c, lineitem AS l, orders AS o, supplier AS s, date AS d\nWHERE o.o_custkey = c.c_custkey\n  AND l.l_orderkey = o.o_orderkey\n  AND l.l_suppkey = s.s_suppkey\n  AND o.o_orderdate = d.d_datekey\n  AND c.c_nation = 'UNITED STATES'\n  AND s.s_nation = 'UNITED STATES'\n  AND d.d_year >= 1992 AND d.d_year <= 1997\nGROUP BY c.c_city, s.s_city, d.d_year\nORDER BY d.d_year ASC, revenue DESC;",
+    "hint_str": "/*+ HashJoin(o d c l s)\n HashJoin(o d c l)\n MergeJoin(o d c)\n MergeJoin(o d)\n BitmapScan(o)\n SeqScan(d)\n SeqScan(c)\n BitmapScan(l)\n BitmapScan(s)\n Leading(((((o d) c) l) s)) */",
+    "inference_time": 0.0999910831451416,
+    "planning_time": 1.669,
+    "predicted_latency": -80294.1640625,
+    "actual_latency": 5821.63
+}

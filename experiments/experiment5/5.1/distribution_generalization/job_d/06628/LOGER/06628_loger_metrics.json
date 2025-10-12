@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(t mi) NoHashJoin(mi t it) NoMergeJoin(it mi t mc) NoNestLoop(it mc mi t ct) */ select min(t.title) AS american_movie\nfrom title AS t\ninner join movie_info AS mi\non t.id = mi.movie_id AND t.production_year > 1999 AND mi.info IN ('Norway',\n'America',\n'Denish',\n'American',\n'Norwegian',\n'Sweden',\n'USA',\n'Germany',\n'English',\n'German')\ninner join info_type AS it\non it.id = mi.info_type_id\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = mi.movie_id AND mc.note not like '%(TV)%' AND mc.note like '%(USA)%'\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies';",
+  "predicted_latency": 513.4626626968384,
+  "actual_latency": 3782.677,
+  "q_error": 7.366995255570102,
+  "inference_time": 0.03271603584289551
+}

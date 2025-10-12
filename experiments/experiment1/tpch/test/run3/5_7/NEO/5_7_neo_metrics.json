@@ -1,0 +1,9 @@
+{
+    "query_name": "5_7",
+    "sql": "select\n    n.n_name,\n    sum(l.l_extendedprice * (1 - l.l_discount)) as revenue\nfrom\n    customer c,\n    orders o,\n    lineitem l,\n    supplier s,\n    nation n,\n    region r\nwhere\n    c.c_custkey = o.o_custkey\n    and l.l_orderkey = o.o_orderkey\n    and l.l_suppkey = s.s_suppkey\n    and c.c_nationkey = s.s_nationkey\n    and s.s_nationkey = n.n_nationkey\n    and n.n_regionkey = r.r_regionkey\n    and r.r_name = 'AMERICA'\n    and o.o_orderdate >= date '1993-01-01'\n    and o.o_orderdate < date '1993-01-01' + interval '1' year\ngroup by\n    n.n_name\norder by\n    revenue desc;",
+    "hint_str": "/*+ HashJoin(c r o l s n)\n HashJoin(r o l s n)\n MergeJoin(o l s n)\n MergeJoin(o l s)\n HashJoin(l s)\n BitmapScan(c)\n IndexScan(r)\n TidScan(o)\n BitmapScan(l)\n BitmapScan(s)\n IndexScan(n)\n Leading((c (r ((o (l s)) n)))) */",
+    "inference_time": 0.0623927116394043,
+    "planning_time": 2.152,
+    "predicted_latency": 1752597.0,
+    "actual_latency": 77355.912
+}

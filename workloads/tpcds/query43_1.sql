@@ -1,17 +1,29 @@
---start query 1 in stream 0 using template query43.tpl
-select  s_store_name, s_store_id,
-        sum(case when (d_day_name='Sunday') then ss_sales_price else null end) sun_sales,
-        sum(case when (d_day_name='Monday') then ss_sales_price else null end) mon_sales,
-        sum(case when (d_day_name='Tuesday') then ss_sales_price else  null end) tue_sales,
-        sum(case when (d_day_name='Wednesday') then ss_sales_price else null end) wed_sales,
-        sum(case when (d_day_name='Thursday') then ss_sales_price else null end) thu_sales,
-        sum(case when (d_day_name='Friday') then ss_sales_price else null end) fri_sales,
-        sum(case when (d_day_name='Saturday') then ss_sales_price else null end) sat_sales
- from date_dim, store_sales, store
- where d_date_sk = ss_sold_date_sk and
-       s_store_sk = ss_store_sk and
-       s_gmt_offset = -5 and
-       d_year = 1998 
- group by s_store_name, s_store_id
- order by s_store_name, s_store_id,sun_sales,mon_sales,tue_sales,wed_sales,thu_sales,fri_sales,sat_sales
- limit 100;
+SELECT
+  s.s_store_name,
+  s.s_store_id,
+  SUM(CASE WHEN (dd.d_day_name = 'Sunday') THEN ss.ss_sales_price ELSE NULL END) AS sun_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Monday') THEN ss.ss_sales_price ELSE NULL END) AS mon_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Tuesday') THEN ss.ss_sales_price ELSE NULL END) AS tue_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Wednesday') THEN ss.ss_sales_price ELSE NULL END) AS wed_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Thursday') THEN ss.ss_sales_price ELSE NULL END) AS thu_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Friday') THEN ss.ss_sales_price ELSE NULL END) AS fri_sales,
+  SUM(CASE WHEN (dd.d_day_name = 'Saturday') THEN ss.ss_sales_price ELSE NULL END) AS sat_sales
+FROM date_dim AS dd,
+  store_sales AS ss,
+  store AS s
+WHERE
+  dd.d_date_sk = ss.ss_sold_date_sk AND s.s_store_sk = ss.ss_store_sk AND s.s_gmt_offset = -5 AND dd.d_year = 1998
+GROUP BY
+  s.s_store_name,
+  s.s_store_id
+ORDER BY
+  s.s_store_name,
+  s.s_store_id,
+  sun_sales,
+  mon_sales,
+  tue_sales,
+  wed_sales,
+  thu_sales,
+  fri_sales,
+  sat_sales
+LIMIT 100;

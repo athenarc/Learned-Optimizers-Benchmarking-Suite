@@ -1,0 +1,9 @@
+{
+    "query_name": "query27_3",
+    "sql": "SELECT\n  i.i_item_id,\n  s.s_state,\n  GROUPING(s.s_state) AS g_state,\n  AVG(ss.ss_quantity) AS agg1,\n  AVG(ss.ss_list_price) AS agg2,\n  AVG(ss.ss_coupon_amt) AS agg3,\n  AVG(ss.ss_sales_price) AS agg4\nFROM store_sales AS ss,\n  customer_demographics AS cd,\n  date_dim AS dd,\n  store AS s,\n  item AS i\nWHERE\n  ss.ss_sold_date_sk = dd.d_date_sk AND ss.ss_item_sk = i.i_item_sk AND ss.ss_store_sk = s.s_store_sk AND ss.ss_cdemo_sk = cd.cd_demo_sk AND cd.cd_gender = 'F' AND cd.cd_marital_status = 'U' AND cd.cd_education_status = 'College' AND dd.d_year = 1999 AND s.s_state IN ('TN', 'TN', 'TN', 'TN', 'TN', 'TN')\nGROUP BY ROLLUP (i.i_item_id, s.s_state)\nORDER BY\n  i.i_item_id,\n  s.s_state\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(i dd cd ss s)\n MergeJoin(dd cd ss s)\n HashJoin(cd ss s)\n MergeJoin(ss s)\n SeqScan(i)\n IndexScan(dd)\n IndexScan(cd)\n SeqScan(ss)\n SeqScan(s)\n Leading((i (dd (cd (ss s))))) */",
+    "inference_time": 0.48163414001464844,
+    "planning_time": 1.913,
+    "predicted_latency": 207405.796875,
+    "actual_latency": 8833.277
+}

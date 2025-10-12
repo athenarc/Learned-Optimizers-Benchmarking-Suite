@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 s t1 tq1 q1) NoMergeJoin(a1 q1 s t1 tq1 u1) */ select t1.name,\ncount(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('academia',\n'diy') AND t1.name IN ('bathroom',\n'graduate-school',\n'journals',\n'lighting',\n'masters',\n'thesis')\ninner join tag_question AS tq1\non t1.id = tq1.tag_id AND s.site_id = tq1.site_id\ninner join answer AS a1\non s.site_id = a1.site_id\ninner join question AS q1\non q1.id = tq1.question_id AND a1.question_id = q1.id AND s.site_id = q1.site_id AND q1.score >= 1 AND q1.score <= 10\ninner join so_user AS u1\non q1.owner_user_id = u1.id AND s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND u1.reputation >= 0 AND u1.reputation <= 100 group by t1.name;",
+  "predicted_latency": 426.86158418655396,
+  "actual_latency": 58.041,
+  "q_error": 7.35448362685953,
+  "inference_time": 0.060263633728027344
+}

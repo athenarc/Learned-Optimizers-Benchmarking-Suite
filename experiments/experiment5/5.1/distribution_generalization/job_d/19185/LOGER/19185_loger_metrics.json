@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mi_idx it2) NoMergeJoin(it2 mi_idx t mc) NoMergeJoin(it2 mc mi_idx t ct) NoMergeJoin(cn ct it2 mc mi mi_idx t it1) */ select min(mi.info) AS budget,\nmin(t.title) AS unsuccsessful_movie\nfrom movie_info_idx AS mi_idx\ninner join info_type AS it2\non mi_idx.info_type_id = it2.id AND it2.info = 'bottom 10 rank'\ninner join title AS t\non t.id = mi_idx.movie_id AND ( t.title like 'Birdemic%' OR t.title like '%Movie%') AND t.production_year > 1994\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = mi_idx.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind IS NOT NULL AND ( ct.kind = 'production companies' OR ct.kind = 'distributors')\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mi_idx.movie_id AND mc.movie_id = mi.movie_id\ninner join info_type AS it1\non mi.info_type_id = it1.id AND it1.info = 'budget';",
+  "predicted_latency": 448.6209452152252,
+  "actual_latency": 5.945,
+  "q_error": 75.4618915416695,
+  "inference_time": 0.061086416244506836
+}

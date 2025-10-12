@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(dd ss) NoHashJoin(dd ss i) */ select i.i_item_id,\ni.i_item_desc,\ni.i_category,\ni.i_class,\ni.i_current_price,\nsum(ss.ss_ext_sales_price) AS itemrevenue,\nsum(ss.ss_ext_sales_price) * 100 / sum(sum(ss.ss_ext_sales_price)) over (partition by i.i_class ) AS revenueratio\nfrom date_dim AS dd\ninner join store_sales AS ss\non ss.ss_sold_date_sk = dd.d_date_sk AND dd.d_date BETWEEN '1998-03-21'::date AND '1998-04-20'::date\ninner join item AS i\non ss.ss_item_sk = i.i_item_sk AND i.i_category IN ('Books',\n'Shoes',\n'Electronics') group by i.i_item_id, i.i_item_desc, i.i_category, i.i_class, i.i_current_price order by i.i_category, i.i_class, i.i_item_id, i.i_item_desc, revenueratio;",
+  "predicted_latency": 390.06516337394714,
+  "actual_latency": 3082.815,
+  "q_error": 7.903333313168936,
+  "inference_time": 0.052985429763793945
+}

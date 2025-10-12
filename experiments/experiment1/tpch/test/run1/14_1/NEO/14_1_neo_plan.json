@@ -1,0 +1,125 @@
+{
+    "Plan": {
+        "Node Type": "Aggregate",
+        "Strategy": "Plain",
+        "Partial Mode": "Simple",
+        "Parallel Aware": false,
+        "Startup Cost": 20002288411.56,
+        "Total Cost": 20002288411.57,
+        "Plan Rows": 1,
+        "Plan Width": 32,
+        "Actual Startup Time": 13019.053,
+        "Actual Total Time": 13019.056,
+        "Actual Rows": 1,
+        "Actual Loops": 1,
+        "Output": [
+            "((100.00 * sum(CASE WHEN ((p.p_type)::text ~~ 'PROMO%'::text) THEN (l.l_extendedprice * ('1'::numeric - l.l_discount)) ELSE '0'::numeric END)) / sum((l.l_extendedprice * ('1'::numeric - l.l_discount))))"
+        ],
+        "Plans": [
+            {
+                "Node Type": "Hash Join",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Join Type": "Inner",
+                "Startup Cost": 20002093726.48,
+                "Total Cost": 20002275819.69,
+                "Plan Rows": 719535,
+                "Plan Width": 33,
+                "Actual Startup Time": 10710.922,
+                "Actual Total Time": 12590.21,
+                "Actual Rows": 697562,
+                "Actual Loops": 1,
+                "Output": [
+                    "p.p_type",
+                    "l.l_extendedprice",
+                    "l.l_discount"
+                ],
+                "Inner Unique": false,
+                "Hash Cond": "(p.p_partkey = l.l_partkey)",
+                "Plans": [
+                    {
+                        "Node Type": "Index Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Scan Direction": "Forward",
+                        "Index Name": "part_pkey",
+                        "Relation Name": "part",
+                        "Schema": "public",
+                        "Alias": "p",
+                        "Startup Cost": 10000000000.43,
+                        "Total Cost": 10000094904.21,
+                        "Plan Rows": 1999852,
+                        "Plan Width": 25,
+                        "Actual Startup Time": 0.077,
+                        "Actual Total Time": 788.228,
+                        "Actual Rows": 1999999,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "p.p_partkey",
+                            "p.p_name",
+                            "p.p_mfgr",
+                            "p.p_brand",
+                            "p.p_type",
+                            "p.p_size",
+                            "p.p_container",
+                            "p.p_retailprice",
+                            "p.p_comment",
+                            "p.p_dummy"
+                        ]
+                    },
+                    {
+                        "Node Type": "Hash",
+                        "Parent Relationship": "Inner",
+                        "Parallel Aware": false,
+                        "Startup Cost": 10002084711.58,
+                        "Total Cost": 10002084711.58,
+                        "Plan Rows": 721158,
+                        "Plan Width": 16,
+                        "Actual Startup Time": 10698.756,
+                        "Actual Total Time": 10698.757,
+                        "Actual Rows": 697562,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "l.l_extendedprice",
+                            "l.l_discount",
+                            "l.l_partkey"
+                        ],
+                        "Hash Buckets": 1048576,
+                        "Original Hash Buckets": 1048576,
+                        "Hash Batches": 1,
+                        "Original Hash Batches": 1,
+                        "Peak Memory Usage": 42939,
+                        "Plans": [
+                            {
+                                "Node Type": "Seq Scan",
+                                "Parent Relationship": "Outer",
+                                "Parallel Aware": false,
+                                "Relation Name": "lineitem",
+                                "Schema": "public",
+                                "Alias": "l",
+                                "Startup Cost": 10000000000.0,
+                                "Total Cost": 10002084711.58,
+                                "Plan Rows": 721158,
+                                "Plan Width": 16,
+                                "Actual Startup Time": 0.177,
+                                "Actual Total Time": 10283.352,
+                                "Actual Rows": 697562,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "l.l_extendedprice",
+                                    "l.l_discount",
+                                    "l.l_partkey"
+                                ],
+                                "Filter": "((l.l_shipdate >= '1995-02-01'::date) AND (l.l_shipdate < '1995-03-01 00:00:00'::timestamp without time zone))",
+                                "Rows Removed by Filter": 59288489
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Planning Time": 0.982,
+    "Triggers": [],
+    "Execution Time": 13019.376
+}

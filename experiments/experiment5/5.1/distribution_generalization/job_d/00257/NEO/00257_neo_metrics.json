@@ -1,0 +1,9 @@
+{
+    "query_name": "00257",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(voice)',\n'(executive producer)',\n'(producer)',\n'(as Ashley Marie Greiner)')\nAND n.name like '%Greiner,%'\nAND t.production_year BETWEEN 1997  AND 2009;",
+    "hint_str": "/*+ HashJoin(chn rt an n ci mc mi t it cn)\n HashJoin(chn rt an n ci mc mi t it)\n MergeJoin(chn rt an n ci mc mi t)\n HashJoin(rt an n ci mc mi t)\n NestLoop(an n ci mc mi t)\n HashJoin(an n ci mc mi)\n MergeJoin(n ci mc mi)\n HashJoin(ci mc mi)\n HashJoin(mc mi)\n SeqScan(chn)\n BitmapScan(rt)\n SeqScan(an)\n IndexScan(n)\n BitmapScan(ci)\n SeqScan(mc)\n BitmapScan(mi)\n IndexScan(t)\n SeqScan(it)\n BitmapScan(cn)\n Leading((((chn (rt ((an (n (ci (mc mi)))) t))) it) cn)) */",
+    "inference_time": 3.6872403621673584,
+    "planning_time": 25.124,
+    "predicted_latency": -11010.4208984375,
+    "actual_latency": 21207.244
+}

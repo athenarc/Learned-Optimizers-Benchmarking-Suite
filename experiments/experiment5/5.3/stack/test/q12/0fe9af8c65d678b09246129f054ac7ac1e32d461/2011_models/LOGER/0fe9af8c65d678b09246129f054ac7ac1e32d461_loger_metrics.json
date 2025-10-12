@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(q1 s t1 tq1 u1) NoHashJoin(q1 s t1 tq1 u1 a1) */ select t1.name,\ncount(*)\nfrom tag_question AS tq1\ninner join question AS q1\non q1.id = tq1.question_id AND q1.favorite_count >= 5 AND q1.favorite_count <= 5000\ninner join tag AS t1\non t1.id = tq1.tag_id AND t1.name IN ('asynchronous',\n'image-processing',\n'session',\n'spring-boot')\ninner join site AS s\non s.site_id = t1.site_id AND s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('stackoverflow',\n'superuser')\ninner join so_user AS u1\non s.site_id = u1.site_id AND q1.owner_user_id = u1.id AND u1.reputation >= 10 AND u1.reputation <= 100000\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND a1.question_id = q1.id group by t1.name;",
+  "predicted_latency": 1332.500696182251,
+  "actual_latency": 4468.701,
+  "q_error": 3.3536200114591157,
+  "inference_time": 0.04866337776184082
+}

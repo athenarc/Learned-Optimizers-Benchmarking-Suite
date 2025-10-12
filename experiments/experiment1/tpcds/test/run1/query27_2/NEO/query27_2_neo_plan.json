@@ -1,0 +1,504 @@
+{
+    "Plan": {
+        "Node Type": "Limit",
+        "Parallel Aware": false,
+        "Startup Cost": 20009237672.66,
+        "Total Cost": 20009237675.53,
+        "Plan Rows": 100,
+        "Plan Width": 152,
+        "Actual Startup Time": 104265.932,
+        "Actual Total Time": 104266.107,
+        "Actual Rows": 100,
+        "Actual Loops": 1,
+        "Output": [
+            "i.i_item_id",
+            "s.s_state",
+            "(GROUPING(s.s_state))",
+            "(avg(ss.ss_quantity))",
+            "(avg(ss.ss_list_price))",
+            "(avg(ss.ss_coupon_amt))",
+            "(avg(ss.ss_sales_price))"
+        ],
+        "Plans": [
+            {
+                "Node Type": "Aggregate",
+                "Strategy": "Sorted",
+                "Partial Mode": "Simple",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Startup Cost": 20009237672.66,
+                "Total Cost": 20009237764.91,
+                "Plan Rows": 3209,
+                "Plan Width": 152,
+                "Actual Startup Time": 104265.924,
+                "Actual Total Time": 104266.093,
+                "Actual Rows": 100,
+                "Actual Loops": 1,
+                "Output": [
+                    "i.i_item_id",
+                    "s.s_state",
+                    "GROUPING(s.s_state)",
+                    "avg(ss.ss_quantity)",
+                    "avg(ss.ss_list_price)",
+                    "avg(ss.ss_coupon_amt)",
+                    "avg(ss.ss_sales_price)"
+                ],
+                "Grouping Sets": [
+                    {
+                        "Group Keys": [
+                            [
+                                "i.i_item_id",
+                                "s.s_state"
+                            ],
+                            [
+                                "i.i_item_id"
+                            ],
+                            []
+                        ]
+                    }
+                ],
+                "Plans": [
+                    {
+                        "Node Type": "Sort",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Startup Cost": 20009237672.66,
+                        "Total Cost": 20009237676.67,
+                        "Plan Rows": 1604,
+                        "Plan Width": 39,
+                        "Actual Startup Time": 104265.873,
+                        "Actual Total Time": 104265.909,
+                        "Actual Rows": 60,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "i.i_item_id",
+                            "s.s_state",
+                            "ss.ss_quantity",
+                            "ss.ss_list_price",
+                            "ss.ss_coupon_amt",
+                            "ss.ss_sales_price"
+                        ],
+                        "Sort Key": [
+                            "i.i_item_id",
+                            "s.s_state"
+                        ],
+                        "Sort Method": "quicksort",
+                        "Sort Space Used": 2908,
+                        "Sort Space Type": "Memory",
+                        "Plans": [
+                            {
+                                "Node Type": "Nested Loop",
+                                "Parent Relationship": "Outer",
+                                "Parallel Aware": false,
+                                "Join Type": "Inner",
+                                "Startup Cost": 20007713886.6,
+                                "Total Cost": 20009237587.26,
+                                "Plan Rows": 1604,
+                                "Plan Width": 39,
+                                "Actual Startup Time": 103282.747,
+                                "Actual Total Time": 104185.747,
+                                "Actual Rows": 27381,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "i.i_item_id",
+                                    "s.s_state",
+                                    "ss.ss_quantity",
+                                    "ss.ss_list_price",
+                                    "ss.ss_coupon_amt",
+                                    "ss.ss_sales_price"
+                                ],
+                                "Inner Unique": true,
+                                "Plans": [
+                                    {
+                                        "Node Type": "Hash Join",
+                                        "Parent Relationship": "Outer",
+                                        "Parallel Aware": false,
+                                        "Join Type": "Inner",
+                                        "Startup Cost": 10007713886.29,
+                                        "Total Cost": 10007778681.08,
+                                        "Plan Rows": 338083,
+                                        "Plan Width": 43,
+                                        "Actual Startup Time": 103282.574,
+                                        "Actual Total Time": 103647.611,
+                                        "Actual Rows": 137130,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "ss.ss_quantity",
+                                            "ss.ss_list_price",
+                                            "ss.ss_coupon_amt",
+                                            "ss.ss_sales_price",
+                                            "ss.ss_sold_date_sk",
+                                            "s.s_state",
+                                            "i.i_item_id"
+                                        ],
+                                        "Inner Unique": false,
+                                        "Hash Cond": "(cd.cd_demo_sk = ss.ss_cdemo_sk)",
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Seq Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Relation Name": "customer_demographics",
+                                                "Schema": "public",
+                                                "Alias": "cd",
+                                                "Startup Cost": 10000000000.0,
+                                                "Total Cost": 10000055442.0,
+                                                "Plan Rows": 27616,
+                                                "Plan Width": 4,
+                                                "Actual Startup Time": 0.038,
+                                                "Actual Total Time": 259.306,
+                                                "Actual Rows": 27440,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "cd.cd_demo_sk",
+                                                    "cd.cd_gender",
+                                                    "cd.cd_marital_status",
+                                                    "cd.cd_education_status",
+                                                    "cd.cd_purchase_estimate",
+                                                    "cd.cd_credit_rating",
+                                                    "cd.cd_dep_count",
+                                                    "cd.cd_dep_employed_count",
+                                                    "cd.cd_dep_college_count"
+                                                ],
+                                                "Filter": "((cd.cd_gender = 'M'::bpchar) AND (cd.cd_marital_status = 'W'::bpchar) AND (cd.cd_education_status = 'College'::bpchar))",
+                                                "Rows Removed by Filter": 1893360
+                                            },
+                                            {
+                                                "Node Type": "Hash",
+                                                "Parent Relationship": "Inner",
+                                                "Parallel Aware": false,
+                                                "Startup Cost": 7406730.77,
+                                                "Total Cost": 7406730.77,
+                                                "Plan Rows": 24572442,
+                                                "Plan Width": 47,
+                                                "Actual Startup Time": 103135.81,
+                                                "Actual Total Time": 103135.822,
+                                                "Actual Rows": 9489399,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "ss.ss_quantity",
+                                                    "ss.ss_list_price",
+                                                    "ss.ss_coupon_amt",
+                                                    "ss.ss_sales_price",
+                                                    "ss.ss_sold_date_sk",
+                                                    "ss.ss_cdemo_sk",
+                                                    "s.s_state",
+                                                    "i.i_item_id"
+                                                ],
+                                                "Hash Buckets": 33554432,
+                                                "Original Hash Buckets": 33554432,
+                                                "Hash Batches": 1,
+                                                "Original Hash Batches": 1,
+                                                "Peak Memory Usage": 1042470,
+                                                "Plans": [
+                                                    {
+                                                        "Node Type": "Merge Join",
+                                                        "Parent Relationship": "Outer",
+                                                        "Parallel Aware": false,
+                                                        "Join Type": "Inner",
+                                                        "Startup Cost": 7023274.14,
+                                                        "Total Cost": 7406730.77,
+                                                        "Plan Rows": 24572442,
+                                                        "Plan Width": 47,
+                                                        "Actual Startup Time": 93234.078,
+                                                        "Actual Total Time": 99134.512,
+                                                        "Actual Rows": 9717976,
+                                                        "Actual Loops": 1,
+                                                        "Output": [
+                                                            "ss.ss_quantity",
+                                                            "ss.ss_list_price",
+                                                            "ss.ss_coupon_amt",
+                                                            "ss.ss_sales_price",
+                                                            "ss.ss_sold_date_sk",
+                                                            "ss.ss_cdemo_sk",
+                                                            "s.s_state",
+                                                            "i.i_item_id"
+                                                        ],
+                                                        "Inner Unique": false,
+                                                        "Merge Cond": "(s.s_store_sk = ss.ss_store_sk)",
+                                                        "Plans": [
+                                                            {
+                                                                "Node Type": "Index Scan",
+                                                                "Parent Relationship": "Outer",
+                                                                "Parallel Aware": false,
+                                                                "Scan Direction": "Forward",
+                                                                "Index Name": "store_pkey",
+                                                                "Relation Name": "store",
+                                                                "Schema": "public",
+                                                                "Alias": "s",
+                                                                "Startup Cost": 0.14,
+                                                                "Total Cost": 18.44,
+                                                                "Plan Rows": 91,
+                                                                "Plan Width": 7,
+                                                                "Actual Startup Time": 0.039,
+                                                                "Actual Total Time": 0.331,
+                                                                "Actual Rows": 32,
+                                                                "Actual Loops": 1,
+                                                                "Output": [
+                                                                    "s.s_store_sk",
+                                                                    "s.s_store_id",
+                                                                    "s.s_rec_start_date",
+                                                                    "s.s_rec_end_date",
+                                                                    "s.s_closed_date_sk",
+                                                                    "s.s_store_name",
+                                                                    "s.s_number_employees",
+                                                                    "s.s_floor_space",
+                                                                    "s.s_hours",
+                                                                    "s.s_manager",
+                                                                    "s.s_market_id",
+                                                                    "s.s_geography_class",
+                                                                    "s.s_market_desc",
+                                                                    "s.s_market_manager",
+                                                                    "s.s_division_id",
+                                                                    "s.s_division_name",
+                                                                    "s.s_company_id",
+                                                                    "s.s_company_name",
+                                                                    "s.s_street_number",
+                                                                    "s.s_street_name",
+                                                                    "s.s_street_type",
+                                                                    "s.s_suite_number",
+                                                                    "s.s_city",
+                                                                    "s.s_county",
+                                                                    "s.s_state",
+                                                                    "s.s_zip",
+                                                                    "s.s_country",
+                                                                    "s.s_gmt_offset",
+                                                                    "s.s_tax_precentage"
+                                                                ],
+                                                                "Filter": "(s.s_state = ANY ('{TN,TN,TN,TN,TN,TN}'::bpchar[]))",
+                                                                "Rows Removed by Filter": 70
+                                                            },
+                                                            {
+                                                                "Node Type": "Sort",
+                                                                "Parent Relationship": "Inner",
+                                                                "Parallel Aware": false,
+                                                                "Startup Cost": 7023274.0,
+                                                                "Total Cost": 7095277.39,
+                                                                "Plan Rows": 28801356,
+                                                                "Plan Width": 48,
+                                                                "Actual Startup Time": 93034.694,
+                                                                "Actual Total Time": 96364.492,
+                                                                "Actual Rows": 26967171,
+                                                                "Actual Loops": 1,
+                                                                "Output": [
+                                                                    "ss.ss_quantity",
+                                                                    "ss.ss_list_price",
+                                                                    "ss.ss_coupon_amt",
+                                                                    "ss.ss_sales_price",
+                                                                    "ss.ss_sold_date_sk",
+                                                                    "ss.ss_store_sk",
+                                                                    "ss.ss_cdemo_sk",
+                                                                    "i.i_item_id"
+                                                                ],
+                                                                "Sort Key": [
+                                                                    "ss.ss_store_sk"
+                                                                ],
+                                                                "Sort Method": "external sort",
+                                                                "Sort Space Used": 1856840,
+                                                                "Sort Space Type": "Disk",
+                                                                "Plans": [
+                                                                    {
+                                                                        "Node Type": "Merge Join",
+                                                                        "Parent Relationship": "Outer",
+                                                                        "Parallel Aware": false,
+                                                                        "Join Type": "Inner",
+                                                                        "Startup Cost": 16809.27,
+                                                                        "Total Cost": 3454838.78,
+                                                                        "Plan Rows": 28801356,
+                                                                        "Plan Width": 48,
+                                                                        "Actual Startup Time": 44.922,
+                                                                        "Actual Total Time": 64138.102,
+                                                                        "Actual Rows": 28800991,
+                                                                        "Actual Loops": 1,
+                                                                        "Output": [
+                                                                            "ss.ss_quantity",
+                                                                            "ss.ss_list_price",
+                                                                            "ss.ss_coupon_amt",
+                                                                            "ss.ss_sales_price",
+                                                                            "ss.ss_sold_date_sk",
+                                                                            "ss.ss_store_sk",
+                                                                            "ss.ss_cdemo_sk",
+                                                                            "i.i_item_id"
+                                                                        ],
+                                                                        "Inner Unique": false,
+                                                                        "Merge Cond": "(ss.ss_item_sk = i.i_item_sk)",
+                                                                        "Plans": [
+                                                                            {
+                                                                                "Node Type": "Index Scan",
+                                                                                "Parent Relationship": "Outer",
+                                                                                "Parallel Aware": false,
+                                                                                "Scan Direction": "Forward",
+                                                                                "Index Name": "store_sales_pkey",
+                                                                                "Relation Name": "store_sales",
+                                                                                "Schema": "public",
+                                                                                "Alias": "ss",
+                                                                                "Startup Cost": 0.44,
+                                                                                "Total Cost": 2934345.62,
+                                                                                "Plan Rows": 28801356,
+                                                                                "Plan Width": 35,
+                                                                                "Actual Startup Time": 0.015,
+                                                                                "Actual Total Time": 53287.748,
+                                                                                "Actual Rows": 28800991,
+                                                                                "Actual Loops": 1,
+                                                                                "Output": [
+                                                                                    "ss.ss_sold_date_sk",
+                                                                                    "ss.ss_sold_time_sk",
+                                                                                    "ss.ss_item_sk",
+                                                                                    "ss.ss_customer_sk",
+                                                                                    "ss.ss_cdemo_sk",
+                                                                                    "ss.ss_hdemo_sk",
+                                                                                    "ss.ss_addr_sk",
+                                                                                    "ss.ss_store_sk",
+                                                                                    "ss.ss_promo_sk",
+                                                                                    "ss.ss_ticket_number",
+                                                                                    "ss.ss_quantity",
+                                                                                    "ss.ss_wholesale_cost",
+                                                                                    "ss.ss_list_price",
+                                                                                    "ss.ss_sales_price",
+                                                                                    "ss.ss_ext_discount_amt",
+                                                                                    "ss.ss_ext_sales_price",
+                                                                                    "ss.ss_ext_wholesale_cost",
+                                                                                    "ss.ss_ext_list_price",
+                                                                                    "ss.ss_ext_tax",
+                                                                                    "ss.ss_coupon_amt",
+                                                                                    "ss.ss_net_paid",
+                                                                                    "ss.ss_net_paid_inc_tax",
+                                                                                    "ss.ss_net_profit"
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Node Type": "Sort",
+                                                                                "Parent Relationship": "Inner",
+                                                                                "Parallel Aware": false,
+                                                                                "Startup Cost": 16469.49,
+                                                                                "Total Cost": 16724.49,
+                                                                                "Plan Rows": 102000,
+                                                                                "Plan Width": 21,
+                                                                                "Actual Startup Time": 44.895,
+                                                                                "Actual Total Time": 1472.19,
+                                                                                "Actual Rows": 28800888,
+                                                                                "Actual Loops": 1,
+                                                                                "Output": [
+                                                                                    "i.i_item_id",
+                                                                                    "i.i_item_sk"
+                                                                                ],
+                                                                                "Sort Key": [
+                                                                                    "i.i_item_sk"
+                                                                                ],
+                                                                                "Sort Method": "quicksort",
+                                                                                "Sort Space Used": 11041,
+                                                                                "Sort Space Type": "Memory",
+                                                                                "Plans": [
+                                                                                    {
+                                                                                        "Node Type": "Seq Scan",
+                                                                                        "Parent Relationship": "Outer",
+                                                                                        "Parallel Aware": false,
+                                                                                        "Relation Name": "item",
+                                                                                        "Schema": "public",
+                                                                                        "Alias": "i",
+                                                                                        "Startup Cost": 0.0,
+                                                                                        "Total Cost": 7984.0,
+                                                                                        "Plan Rows": 102000,
+                                                                                        "Plan Width": 21,
+                                                                                        "Actual Startup Time": 0.012,
+                                                                                        "Actual Total Time": 25.082,
+                                                                                        "Actual Rows": 102000,
+                                                                                        "Actual Loops": 1,
+                                                                                        "Output": [
+                                                                                            "i.i_item_id",
+                                                                                            "i.i_item_sk"
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "Node Type": "Bitmap Heap Scan",
+                                        "Parent Relationship": "Inner",
+                                        "Parallel Aware": false,
+                                        "Relation Name": "date_dim",
+                                        "Schema": "public",
+                                        "Alias": "dd",
+                                        "Startup Cost": 0.3,
+                                        "Total Cost": 4.32,
+                                        "Plan Rows": 1,
+                                        "Plan Width": 4,
+                                        "Actual Startup Time": 0.002,
+                                        "Actual Total Time": 0.002,
+                                        "Actual Rows": 0,
+                                        "Actual Loops": 137130,
+                                        "Output": [
+                                            "dd.d_date_sk",
+                                            "dd.d_date_id",
+                                            "dd.d_date",
+                                            "dd.d_month_seq",
+                                            "dd.d_week_seq",
+                                            "dd.d_quarter_seq",
+                                            "dd.d_year",
+                                            "dd.d_dow",
+                                            "dd.d_moy",
+                                            "dd.d_dom",
+                                            "dd.d_qoy",
+                                            "dd.d_fy_year",
+                                            "dd.d_fy_quarter_seq",
+                                            "dd.d_fy_week_seq",
+                                            "dd.d_day_name",
+                                            "dd.d_quarter_name",
+                                            "dd.d_holiday",
+                                            "dd.d_weekend",
+                                            "dd.d_following_holiday",
+                                            "dd.d_first_dom",
+                                            "dd.d_last_dom",
+                                            "dd.d_same_day_ly",
+                                            "dd.d_same_day_lq",
+                                            "dd.d_current_day",
+                                            "dd.d_current_week",
+                                            "dd.d_current_month",
+                                            "dd.d_current_quarter",
+                                            "dd.d_current_year"
+                                        ],
+                                        "Recheck Cond": "(dd.d_date_sk = ss.ss_sold_date_sk)",
+                                        "Rows Removed by Index Recheck": 0,
+                                        "Filter": "(dd.d_year = 2000)",
+                                        "Rows Removed by Filter": 1,
+                                        "Exact Heap Blocks": 135537,
+                                        "Lossy Heap Blocks": 0,
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Bitmap Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Index Name": "date_dim_pkey",
+                                                "Startup Cost": 0.0,
+                                                "Total Cost": 0.3,
+                                                "Plan Rows": 1,
+                                                "Plan Width": 0,
+                                                "Actual Startup Time": 0.001,
+                                                "Actual Total Time": 0.001,
+                                                "Actual Rows": 1,
+                                                "Actual Loops": 137130,
+                                                "Index Cond": "(dd.d_date_sk = ss.ss_sold_date_sk)"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Planning Time": 2.174,
+    "Triggers": [],
+    "Execution Time": 104496.996
+}

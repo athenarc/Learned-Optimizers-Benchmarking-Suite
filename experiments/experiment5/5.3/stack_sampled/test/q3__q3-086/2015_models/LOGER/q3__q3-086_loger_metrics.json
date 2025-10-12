@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(t1 s1) NoHashJoin(s1 t1 tq1 q1) NoHashJoin(q1 s1 t1 tq1 a1) NoMergeJoin(a1 account q1 s1 t1 tq1 u1 u2) NoMergeJoin(a1 account q1 q2 s1 t1 t2 tq1 tq2 u1 u2 s2) */ select count(account.display_name)\nfrom tag AS t1\ninner join site AS s1\non t1.site_id = s1.site_id AND t1.name = 'java' AND s1.site_name = 'ru'\ninner join tag_question AS tq1\non tq1.tag_id = t1.id AND tq1.site_id = s1.site_id\ninner join question AS q1\non tq1.question_id = q1.id AND q1.site_id = s1.site_id\ninner join answer AS a1\non a1.site_id = q1.site_id AND a1.question_id = q1.id\ninner join so_user AS u1\non a1.owner_user_id = u1.id AND a1.site_id = u1.site_id\ninner join account AS account\non account.id = u1.account_id\ninner join so_user AS u2\non u1.account_id = u2.account_id\ninner join question AS q2\non q2.owner_user_id = u2.id AND q2.site_id = u2.site_id\ninner join tag_question AS tq2\non tq2.question_id = q2.id\ninner join tag AS t2\non tq2.tag_id = t2.id AND t2.name = 'internet-explorer'\ninner join site AS s2\non tq2.site_id = s2.site_id AND t2.site_id = s2.site_id AND q2.site_id = s2.site_id AND s2.site_name = 'stackoverflow';",
+  "predicted_latency": 1344.1054821014404,
+  "actual_latency": 8235.127,
+  "q_error": 6.126845779339281,
+  "inference_time": 0.13577985763549805
+}

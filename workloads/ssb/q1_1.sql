@@ -1,4 +1,4 @@
-SELECT SUM(lo_extendedprice * lo_discount) AS revenue
+SELECT SUM(lo_extendedprice * lo_discount) AS revenue, d_year
 FROM lineorder, date
 WHERE lo_orderdate = d_datekey
 AND d_year = 1993

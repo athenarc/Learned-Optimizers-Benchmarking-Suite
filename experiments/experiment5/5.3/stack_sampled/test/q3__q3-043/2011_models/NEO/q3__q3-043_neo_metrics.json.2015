@@ -1,0 +1,9 @@
+{
+    "query_name": "q3__q3-043",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, answer a1, tag_question tq1, so_user u1,\ntag t2, site s2, question q2, tag_question tq2, so_user u2,\naccount\nwhere\n-- answerers\ns1.site_name='stackoverflow' and\nt1.name  = 'memory-management' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\na1.site_id = q1.site_id and\na1.question_id = q1.id and\na1.owner_user_id = u1.id and\na1.site_id = u1.site_id and\n\n-- askers\ns2.site_name='math' and\nt2.name  = 'real-analysis' and\nt2.site_id = s2.site_id and\nq2.site_id = s2.site_id and\ntq2.site_id = s2.site_id and\ntq2.question_id = q2.id and\ntq2.tag_id = t2.id and\nq2.owner_user_id = u2.id and\nq2.site_id = u2.site_id and\n\n\n-- intersect\nu1.account_id = u2.account_id and\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(t2 u1 account tq2 u2 q2 s2 a1 q1 t1 tq1 s1)\n HashJoin(t2 u1 account tq2 u2 q2 s2 a1 q1 t1 tq1)\n HashJoin(t1 tq1)\n HashJoin(t2 u1 account tq2 u2 q2 s2 a1 q1)\n HashJoin(t2 u1 account tq2 u2 q2 s2 a1)\n HashJoin(t2 u1 account tq2 u2 q2 s2)\n HashJoin(u1 account tq2 u2 q2 s2)\n HashJoin(tq2 u2 q2 s2)\n HashJoin(tq2 u2 q2)\n HashJoin(u2 q2)\n HashJoin(u1 account)\n BitmapScan(t2)\n BitmapScan(u1)\n TidScan(account)\n BitmapScan(tq2)\n BitmapScan(u2)\n TidScan(q2)\n SeqScan(s2)\n BitmapScan(a1)\n BitmapScan(q1)\n TidScan(t1)\n IndexScan(tq1)\n BitmapScan(s1)\n Leading((((((t2 ((u1 account) ((tq2 (u2 q2)) s2))) a1) q1) (t1 tq1)) s1)) */",
+    "inference_time": 1.3733415603637695,
+    "planning_time": 98.864,
+    "predicted_latency": 10332.654296875,
+    "actual_latency": 156747.965
+}

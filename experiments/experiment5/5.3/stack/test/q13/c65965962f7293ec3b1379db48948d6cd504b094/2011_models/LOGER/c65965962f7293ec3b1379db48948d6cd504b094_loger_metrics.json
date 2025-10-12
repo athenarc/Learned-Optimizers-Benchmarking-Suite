@@ -1,0 +1,7 @@
+{
+  "query": "/*+  */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 10 AND q1.view_count <= 1000\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('askubuntu',\n'dba',\n'english',\n'pt')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('ati',\n'delphi',\n'dns',\n'ethernet',\n'network-manager',\n'password',\n'software-center',\n'software-recommendation')\ninner join answer AS a1\non s.site_id = a1.site_id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.name IN ('Caucus',\n'Citizen Patrol',\n'Commentator',\n'Custodian',\n'Editor',\n'Excavator',\n'Famous Question',\n'Necromancer',\n'Nice Answer',\n'Nice Question',\n'Popular Question',\n'Scholar',\n'Yearling')\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND b.user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 1\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1732.2194576263428,
+  "actual_latency": 5864.444,
+  "q_error": 3.3855086745394476,
+  "inference_time": 0.07854795455932617
+}

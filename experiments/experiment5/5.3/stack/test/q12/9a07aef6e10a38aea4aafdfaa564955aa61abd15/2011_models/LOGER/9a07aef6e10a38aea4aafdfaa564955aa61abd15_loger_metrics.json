@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 q1 s t1 u1) NoMergeJoin(a1 q1 s t1 u1 tq1) */ select t1.name,\ncount(*)\nfrom answer AS a1\ninner join site AS s\non s.site_id = a1.site_id AND s.site_name IN ('askubuntu',\n'math')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.name IN ('extension-field',\n'factoring',\n'improper-integrals',\n'lie-groups',\n'networking',\n'notation',\n'partitioning',\n'server')\ninner join question AS q1\non s.site_id = q1.site_id AND a1.question_id = q1.id AND q1.view_count >= 10 AND q1.view_count <= 1000\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND q1.owner_user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 1\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id AND q1.id = tq1.question_id group by t1.name;",
+  "predicted_latency": 597.5774526596069,
+  "actual_latency": 1442.857,
+  "q_error": 2.4145104430870865,
+  "inference_time": 0.05134701728820801
+}

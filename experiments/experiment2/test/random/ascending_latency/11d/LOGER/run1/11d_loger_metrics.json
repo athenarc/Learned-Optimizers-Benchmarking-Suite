@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(ml t) NoHashJoin(mk ml t k) NoMergeJoin(k mk ml t mc) NoHashJoin(k mc mk ml t ct) NoMergeJoin(ct k mc mk ml t cn) */ select min(cn.name) AS from_company,\nmin(mc.note) AS production_note,\nmin(t.title) AS movie_based_on_book\nfrom movie_link AS ml\ninner join title AS t\non ml.movie_id = t.id AND t.production_year > 1950\ninner join movie_keyword AS mk\non ml.movie_id = mk.movie_id AND t.id = mk.movie_id\ninner join keyword AS k\non mk.keyword_id = k.id AND k.keyword IN ('sequel',\n'revenge',\n'based-on-novel')\ninner join movie_companies AS mc\non mk.movie_id = mc.movie_id AND ml.movie_id = mc.movie_id AND t.id = mc.movie_id AND mc.note IS NOT NULL\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind <> 'production companies' AND ct.kind IS NOT NULL\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]'\ninner join link_type AS lt\non lt.id = ml.link_type_id;",
+  "predicted_latency": 370.3667223453522,
+  "actual_latency": 365.276,
+  "q_error": 1.0139366461123978,
+  "inference_time": 0.4659581184387207
+}

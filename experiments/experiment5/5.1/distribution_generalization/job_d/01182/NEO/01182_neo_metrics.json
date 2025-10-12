@@ -1,0 +1,9 @@
+{
+    "query_name": "01182",
+    "sql": "SELECT MIN(cn.name) AS company_name,\n       MIN(lt.link) AS link_type,\n       MIN(t.title) AS western_follow_up\nFROM company_name AS cn,\n     company_type AS ct,\n     keyword AS k,\n     link_type AS lt,\n     movie_companies AS mc,\n     movie_info AS mi,\n     movie_keyword AS mk,\n     movie_link AS ml,\n     title AS t\nWHERE cn.country_code !='[pl]'\n  AND (cn.name LIKE '%Film%'\n       OR cn.name LIKE '%Warner%')\n  AND ct.kind ='production companies'\n  AND k.keyword ='sequel'\n  AND lt.link LIKE '%follow%'\n  AND mc.note IS NULL\n  AND lt.id = ml.link_type_id\n  AND ml.movie_id = t.id\n  AND t.id = mk.movie_id\n  AND mk.keyword_id = k.id\n  AND t.id = mc.movie_id\n  AND mc.company_type_id = ct.id\n  AND mc.company_id = cn.id\n  AND mi.movie_id = t.id\n  AND ml.movie_id = mk.movie_id\n  AND ml.movie_id = mc.movie_id\n  AND mk.movie_id = mc.movie_id\n  AND ml.movie_id = mi.movie_id\n  AND mk.movie_id = mi.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.info IN ('German',\n'American',\n'Denish',\n'Norway',\n'English',\n'Danish',\n'America',\n'Denmark',\n'USA')\nAND t.production_year BETWEEN 1995  AND 2005;",
+    "hint_str": "/*+ HashJoin(t lt mc ml ct cn mi mk k)\n HashJoin(t lt mc ml ct cn mi mk)\n MergeJoin(t lt mc ml ct cn mi)\n MergeJoin(lt mc ml ct cn mi)\n MergeJoin(lt mc ml ct cn)\n MergeJoin(lt mc ml ct)\n HashJoin(lt mc ml)\n HashJoin(mc ml)\n SeqScan(t)\n BitmapScan(lt)\n IndexScan(mc)\n IndexScan(ml)\n TidScan(ct)\n SeqScan(cn)\n SeqScan(mi)\n BitmapScan(mk)\n BitmapScan(k)\n Leading((((t ((((lt (mc ml)) ct) cn) mi)) mk) k)) */",
+    "inference_time": 4.809087753295898,
+    "planning_time": 15.084,
+    "predicted_latency": -10943.46875,
+    "actual_latency": 4859.178
+}

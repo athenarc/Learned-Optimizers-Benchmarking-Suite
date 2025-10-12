@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(q1 tq1 s) NoHashJoin(a1 q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 0 AND q1.view_count <= 100\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('askubuntu',\n'electronics',\n'english',\n'magento')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('drivers',\n'dual-boot',\n'grub2',\n'magento2',\n'networking',\n'wireless')\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.reputation >= 10 AND u1.reputation <= 100000\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Announcer',\n'Commentator',\n'Constituent',\n'Critic',\n'Nice Answer',\n'Revival',\n'Scholar')\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1064.2629861831665,
+  "actual_latency": 192998.435,
+  "q_error": 181.34468407302452,
+  "inference_time": 0.08499383926391602
+}

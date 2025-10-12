@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(s1 t1) NoMergeJoin(q1 s1 t1 tq1 a1) NoMergeJoin(a1 q1 s1 t1 tq1 u1) NoMergeJoin(a1 account q1 s1 t1 tq1 u1 u2 q2) NoNestLoop(a1 account q1 q2 s1 t1 t2 tq1 tq2 u1 u2 s2) */ select count(account.display_name)\nfrom site AS s1\ninner join tag AS t1\non t1.site_id = s1.site_id AND s1.site_name = 'mathoverflow' AND t1.name like 'gr%'\ninner join tag_question AS tq1\non tq1.tag_id = t1.id AND tq1.site_id = s1.site_id\ninner join question AS q1\non tq1.question_id = q1.id AND q1.site_id = s1.site_id\ninner join answer AS a1\non a1.site_id = q1.site_id AND a1.question_id = q1.id\ninner join so_user AS u1\non a1.owner_user_id = u1.id AND a1.site_id = u1.site_id\ninner join account AS account\non account.id = u1.account_id\ninner join so_user AS u2\non u1.account_id = u2.account_id\ninner join question AS q2\non q2.owner_user_id = u2.id AND q2.site_id = u2.site_id\ninner join tag_question AS tq2\non tq2.question_id = q2.id\ninner join tag AS t2\non tq2.tag_id = t2.id AND t2.name = 'nginx'\ninner join site AS s2\non tq2.site_id = s2.site_id AND t2.site_id = s2.site_id AND q2.site_id = s2.site_id AND s2.site_name = 'serverfault';",
+  "predicted_latency": 1372.0890283584595,
+  "actual_latency": 2504.684,
+  "q_error": 1.8254529758878366,
+  "inference_time": 0.11911916732788086
+}

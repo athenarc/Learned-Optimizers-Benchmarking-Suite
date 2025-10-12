@@ -1,6 +1,6 @@
-SELECT SUM(l_revenue), d.d_year, p.p_brand1
-FROM orders o, lineitem l, date d, part p, supplier s
-WHERE o.o_orderkey = l.l_orderkey
+SELECT SUM(l.l_revenue), d.d_year, p.p_brand1
+FROM lineitem AS l, orders AS o, date AS d, part AS p, supplier AS s
+WHERE l.l_orderkey = o.o_orderkey
   AND o.o_orderdate = d.d_datekey
   AND l.l_partkey = p.p_partkey
   AND l.l_suppkey = s.s_suppkey

@@ -1,0 +1,9 @@
+{
+    "query_name": "q4__q4-002",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, answer a1, tag_question tq1, so_user u1,\naccount\nwhere\n-- answerers posted at least 1 yr after the question was asked\ns1.site_name='math' and\nt1.name = 'optimization' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\na1.site_id = q1.site_id and\na1.question_id = q1.id and\na1.owner_user_id = u1.id and\na1.site_id = u1.site_id and\na1.creation_date >= q1.creation_date + '1 year'::interval and\n\n-- to get the display name\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(account a1 u1 q1 s1 tq1 t1)\n HashJoin(account a1 u1 q1 s1 tq1)\n MergeJoin(a1 u1 q1 s1 tq1)\n HashJoin(a1 u1 q1 s1)\n MergeJoin(q1 s1)\n MergeJoin(a1 u1)\n BitmapScan(account)\n BitmapScan(a1)\n TidScan(u1)\n BitmapScan(q1)\n IndexScan(s1)\n TidScan(tq1)\n BitmapScan(t1)\n Leading(((account (((a1 u1) (q1 s1)) tq1)) t1)) */",
+    "inference_time": 0.337083101272583,
+    "planning_time": 13.218,
+    "predicted_latency": 10598.583984375,
+    "actual_latency": 42415.39
+}

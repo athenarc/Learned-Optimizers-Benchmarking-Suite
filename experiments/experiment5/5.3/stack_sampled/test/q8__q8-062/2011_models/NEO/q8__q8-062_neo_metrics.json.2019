@@ -1,0 +1,9 @@
+{
+    "query_name": "q8__q8-062",
+    "sql": "select count(distinct q1.id) from\nsite, post_link pl, question q1, question q2, comment c1, comment c2,\ntag, tag_question tq1, tag_question tq2\nwhere\nsite.site_name = 'german' and\npl.site_id = site.site_id and\n\npl.site_id = q1.site_id and\npl.post_id_from = q1.id and\npl.site_id = q2.site_id and\npl.post_id_to = q2.id and\n\nc1.site_id = q1.site_id and\nc1.post_id = q1.id and\n\nc2.site_id = q2.site_id and\nc2.post_id = q2.id and\n\nc1.date < c2.date and\n\ntag.name in ('ios', '.net', 'c', 'database') and\ntag.id = tq1.tag_id and\ntag.site_id = tq1.site_id and\ntag.id = tq2.tag_id and\ntag.site_id = tq1.site_id and\n\ntag.site_id = pl.site_id and\n\ntq1.site_id = q1.site_id and\ntq1.question_id = q1.id and\ntq2.site_id = q2.site_id and\ntq2.question_id = q2.id;",
+    "hint_str": "/*+ HashJoin(q2 q1 pl tq1 tag tq2 c2 site c1)\n NestLoop(q2 q1 pl tq1 tag tq2 c2 site)\n MergeJoin(q2 q1 pl tq1 tag tq2 c2)\n MergeJoin(q2 q1 pl tq1 tag tq2)\n HashJoin(q2 q1 pl tq1 tag)\n HashJoin(q1 pl tq1 tag)\n NestLoop(q1 pl tq1)\n HashJoin(q1 pl)\n BitmapScan(q2)\n BitmapScan(q1)\n SeqScan(pl)\n IndexScan(tq1)\n IndexScan(tag)\n IndexScan(tq2)\n SeqScan(c2)\n IndexScan(site)\n BitmapScan(c1)\n Leading((((((q2 (((q1 pl) tq1) tag)) tq2) c2) site) c1)) */",
+    "inference_time": 1.0303852558135986,
+    "planning_time": 76.385,
+    "predicted_latency": 10318.689453125,
+    "actual_latency": 65985.668
+}

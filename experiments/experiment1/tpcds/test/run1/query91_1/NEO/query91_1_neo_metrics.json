@@ -1,0 +1,9 @@
+{
+    "query_name": "query91_1",
+    "sql": "SELECT\n  cc.cc_call_center_id AS Call_Center,\n  cc.cc_name AS Call_Center_Name,\n  cc.cc_manager AS Manager,\n  SUM(cr.cr_net_loss) AS Returns_Loss\nFROM call_center AS cc,\n  catalog_returns AS cr,\n  date_dim AS dd,\n  customer AS c,\n  customer_address AS ca,\n  customer_demographics AS cd,\n  household_demographics AS hd\nWHERE\n  cr.cr_call_center_sk = cc.cc_call_center_sk AND cr.cr_returned_date_sk = dd.d_date_sk AND cr.cr_returning_customer_sk = c.c_customer_sk AND cd.cd_demo_sk = c.c_current_cdemo_sk AND hd.hd_demo_sk = c.c_current_hdemo_sk AND ca.ca_address_sk = c.c_current_addr_sk AND dd.d_year = 1999 AND dd.d_moy = 11 AND ((cd.cd_marital_status = 'M' AND cd.cd_education_status = 'Unknown') OR (cd.cd_marital_status = 'W' AND cd.cd_education_status = 'Advanced Degree')) AND hd.hd_buy_potential LIKE '0-500%' AND ca.ca_gmt_offset = -7\nGROUP BY\n  cc.cc_call_center_id,\n  cc.cc_name,\n  cc.cc_manager,\n  cd.cd_marital_status,\n  cd.cd_education_status\nORDER BY\n  SUM(cr.cr_net_loss) DESC;",
+    "hint_str": "/*+ HashJoin(cd cc hd ca cr dd c)\n MergeJoin(cc hd ca cr dd c)\n HashJoin(hd ca cr dd c)\n HashJoin(ca cr dd c)\n HashJoin(cr dd c)\n HashJoin(cr dd)\n BitmapScan(cd)\n IndexScan(cc)\n BitmapScan(hd)\n BitmapScan(ca)\n BitmapScan(cr)\n BitmapScan(dd)\n BitmapScan(c)\n Leading((cd (cc (hd (ca ((cr dd) c)))))) */",
+    "inference_time": 0.11852312088012695,
+    "planning_time": 4.128,
+    "predicted_latency": 57716.01953125,
+    "actual_latency": 927.865
+}

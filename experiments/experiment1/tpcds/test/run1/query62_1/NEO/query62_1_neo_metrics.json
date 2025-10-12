@@ -1,0 +1,9 @@
+{
+    "query_name": "query62_1",
+    "sql": "SELECT\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  wsite.web_name,\n  SUM(CASE WHEN (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 30) THEN 1 ELSE 0 END) AS \"30 days\",\n  SUM(CASE WHEN (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 30) AND (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 60) THEN 1 ELSE 0 END) AS \"31-60 days\",\n  SUM(CASE WHEN (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 60) AND (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 90) THEN 1 ELSE 0 END) AS \"61-90 days\",\n  SUM(CASE WHEN (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 90) AND (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 120) THEN 1 ELSE 0 END) AS \"91-120 days\",\n  SUM(CASE WHEN (wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 120) THEN 1 ELSE 0 END) AS \">120 days\"\nFROM web_sales AS wsale,\n  warehouse AS w,\n  ship_mode AS sm,\n  web_site AS wsite,\n  date_dim AS dd\nWHERE\n  dd.d_month_seq BETWEEN 1212 AND 1212 + 11 AND wsale.ws_ship_date_sk = dd.d_date_sk AND wsale.ws_warehouse_sk = w.w_warehouse_sk AND wsale.ws_ship_mode_sk = sm.sm_ship_mode_sk AND wsale.ws_web_site_sk = wsite.web_site_sk\nGROUP BY\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  wsite.web_name\nORDER BY\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  wsite.web_name\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(w wsite sm dd wsale)\n MergeJoin(wsite sm dd wsale)\n MergeJoin(sm dd wsale)\n MergeJoin(dd wsale)\n SeqScan(w)\n BitmapScan(wsite)\n IndexScan(sm)\n BitmapScan(dd)\n BitmapScan(wsale)\n Leading((w (wsite (sm (dd wsale))))) */",
+    "inference_time": 0.6749780178070068,
+    "planning_time": 3.867,
+    "predicted_latency": 207405.796875,
+    "actual_latency": 40825.211
+}

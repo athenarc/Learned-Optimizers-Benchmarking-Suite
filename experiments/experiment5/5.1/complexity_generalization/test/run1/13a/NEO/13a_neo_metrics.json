@@ -1,0 +1,9 @@
+{
+    "query_name": "13a",
+    "sql": "SELECT MIN(mi.info) AS release_date, MIN(mi_idx.info) AS rating, MIN(t.title) AS german_movie FROM company_name AS cn, company_type AS ct, info_type AS it, info_type AS it2, kind_type AS kt, movie_companies AS mc, movie_info AS mi, movie_info_idx AS mi_idx, title AS t WHERE cn.country_code ='[de]' AND ct.kind ='production companies' AND it.info ='rating' AND it2.info ='release dates' AND kt.kind ='movie' AND mi.movie_id = t.id AND it2.id = mi.info_type_id AND kt.id = t.kind_id AND mc.movie_id = t.id AND cn.id = mc.company_id AND ct.id = mc.company_type_id AND mi_idx.movie_id = t.id AND it.id = mi_idx.info_type_id AND mi.movie_id = mi_idx.movie_id AND mi.movie_id = mc.movie_id AND mi_idx.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(mi_idx it mc ct cn t kt mi it2)\n HashJoin(mc ct cn t kt mi it2)\n HashJoin(t kt mi it2)\n HashJoin(mi it2)\n HashJoin(t kt)\n HashJoin(mc ct cn)\n HashJoin(mc ct)\n HashJoin(mi_idx it)\n BitmapScan(mi_idx)\n BitmapScan(it)\n BitmapScan(mc)\n TidScan(ct)\n SeqScan(cn)\n BitmapScan(t)\n BitmapScan(kt)\n IndexScan(mi)\n TidScan(it2)\n Leading(((mi_idx it) (((mc ct) cn) ((t kt) (mi it2))))) */",
+    "inference_time": 0.8111953735351562,
+    "planning_time": 12.619,
+    "predicted_latency": -9107.3525390625,
+    "actual_latency": 45103.588
+}

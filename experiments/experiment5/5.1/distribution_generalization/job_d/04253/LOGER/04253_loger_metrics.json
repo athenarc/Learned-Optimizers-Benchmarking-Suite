@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(n ci) NoHashJoin(an ci mi n rt) NoHashJoin(an ci mi n rt t) NoHashJoin(an ci mi n rt t it) NoHashJoin(an ci it mi n rt t chn) NoMergeJoin(an chn ci it mi n rt t mc) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS voiced_movie\nfrom name AS n\ninner join cast_info AS ci\non n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Madonna%' AND ci.note IN ('(executive producer)',\n'(uncredited)',\n'(voice)',\n'(archive footage)')\ninner join aka_name AS an\non n.id = an.person_id AND ci.person_id = an.person_id\ninner join movie_info AS mi\non mi.movie_id = ci.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join title AS t\non t.id = ci.movie_id AND t.id = mi.movie_id AND t.production_year BETWEEN 1997 AND 2011\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = ci.movie_id AND mc.movie_id = mi.movie_id AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 282.65348076820374,
+  "actual_latency": 397.174,
+  "q_error": 1.4051622464388165,
+  "inference_time": 0.19384193420410156
+}

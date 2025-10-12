@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(tq2 q2) NoHashJoin(q2 t2 tq2 u2 u1) NoHashJoin(a1 q1 q2 s2 t2 tq2 u1 u2 s1) NoHashJoin(a1 q1 q2 s1 s2 t2 tq2 u1 u2 t1) */ select count(account.display_name)\nfrom tag_question AS tq2\ninner join question AS q2\non tq2.question_id = q2.id\ninner join so_user AS u2\non q2.owner_user_id = u2.id AND q2.site_id = u2.site_id\ninner join tag AS t2\non tq2.tag_id = t2.id AND t2.name = 'internet-explorer'\ninner join so_user AS u1\non u1.account_id = u2.account_id\ninner join site AS s2\non t2.site_id = s2.site_id AND tq2.site_id = s2.site_id AND q2.site_id = s2.site_id AND s2.site_name = 'stackoverflow'\ninner join answer AS a1\non a1.owner_user_id = u1.id AND a1.site_id = u1.site_id\ninner join question AS q1\non a1.site_id = q1.site_id AND a1.question_id = q1.id\ninner join site AS s1\non q1.site_id = s1.site_id AND s1.site_name = 'ru'\ninner join tag AS t1\non t1.site_id = s1.site_id AND t1.name = 'java'\ninner join tag_question AS tq1\non tq1.question_id = q1.id AND tq1.tag_id = t1.id AND tq1.site_id = s1.site_id\ninner join account AS account\non account.id = u1.account_id;",
+  "predicted_latency": 1565.943956375122,
+  "actual_latency": 650301.748,
+  "q_error": 415.2777916173522,
+  "inference_time": 0.16927623748779297
+}

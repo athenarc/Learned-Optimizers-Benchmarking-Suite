@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(k mk mi_idx) NoHashJoin(it2 k mi_idx mk mi) NoHashJoin(it2 k mi mi_idx mk it1) NoHashJoin(it1 it2 k mi mi_idx mk t) NoMergeJoin(it1 it2 k mi mi_idx mk t kt) */ select min(mi_idx.info) AS rating,\nmin(t.title) AS north_european_dark_production\nfrom keyword AS k\ninner join movie_keyword AS mk\non k.id = mk.keyword_id AND k.keyword IS NOT NULL AND k.keyword IN ('superhero',\n'superhero',\n'hand-to-hand-combat',\n'anthology')\ninner join movie_info_idx AS mi_idx\non mk.movie_id = mi_idx.movie_id AND mi_idx.info < '7.6'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'rating'\ninner join movie_info AS mi\non mi.movie_id = mi_idx.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Denish',\n'America',\n'Danish',\n'Germany',\n'Sweden',\n'German',\n'Norway',\n'Norwegian',\n'Swedish',\n'USA')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'countries'\ninner join title AS t\non t.id = mi_idx.movie_id AND t.id = mk.movie_id AND t.id = mi.movie_id AND t.production_year > 1959\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind IN ('episode',\n'tv series');",
+  "predicted_latency": 641.0463452339172,
+  "actual_latency": 237.717,
+  "q_error": 2.696678593596239,
+  "inference_time": 0.04126882553100586
+}

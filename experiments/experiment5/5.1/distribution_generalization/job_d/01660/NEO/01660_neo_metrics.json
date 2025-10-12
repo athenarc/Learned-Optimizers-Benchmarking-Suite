@@ -1,0 +1,9 @@
+{
+    "query_name": "01660",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(producer)',\n'(writer)',\n'(executive producer)',\n'(voice)')\nAND n.name like '%Julie%'\nAND t.production_year BETWEEN 1999  AND 2010;",
+    "hint_str": "/*+ HashJoin(rt an n ci t chn mc mi it cn)\n MergeJoin(rt an n ci t chn mc mi it)\n MergeJoin(rt an n ci t chn mc mi)\n HashJoin(an n ci t chn mc mi)\n MergeJoin(an n ci t chn mc)\n MergeJoin(n ci t chn mc)\n HashJoin(n ci t chn)\n HashJoin(n ci t)\n HashJoin(ci t)\n TidScan(rt)\n BitmapScan(an)\n BitmapScan(n)\n IndexScan(ci)\n IndexScan(t)\n IndexScan(chn)\n SeqScan(mc)\n BitmapScan(mi)\n TidScan(it)\n BitmapScan(cn)\n Leading((((rt ((an (((n (ci t)) chn) mc)) mi)) it) cn)) */",
+    "inference_time": 3.7406506538391113,
+    "planning_time": 22.766,
+    "predicted_latency": -10979.9677734375,
+    "actual_latency": 22487.979
+}

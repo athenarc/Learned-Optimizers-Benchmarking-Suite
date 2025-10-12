@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(rt ci) NoHashJoin(ci rt an) NoHashJoin(an ci cn mc mi rt t chn) NoMergeJoin(an chn ci cn mc mi rt t it) NoHashJoin(an chn ci cn it mc mi rt t n) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS jap_engl_voiced_movie\nfrom role_type AS rt\ninner join cast_info AS ci\non rt.id = ci.role_id AND rt.role = 'actress' AND ci.note IN ('(voice)',\n'(uncredited)',\n'(writer)',\n'(voice)')\ninner join aka_name AS an\non ci.person_id = an.person_id\ninner join title AS t\non t.id = ci.movie_id AND t.production_year > 2005\ninner join movie_companies AS mc\non mc.movie_id = ci.movie_id AND t.id = mc.movie_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.movie_id = ci.movie_id\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates'\ninner join name AS n\non n.id = an.person_id AND n.id = ci.person_id AND n.gender = 'f';",
+  "predicted_latency": 755.4646134376526,
+  "actual_latency": 18380.215,
+  "q_error": 24.32968357890782,
+  "inference_time": 0.056237220764160156
+}

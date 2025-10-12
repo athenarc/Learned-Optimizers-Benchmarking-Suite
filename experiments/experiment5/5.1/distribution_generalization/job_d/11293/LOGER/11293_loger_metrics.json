@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(k mk t) NoMergeJoin(cn k mc mk t ci) NoHashJoin(ci cn k mc mk t n) */ select min(an.name) AS cool_actor_pseudonym,\nmin(t.title) AS series_named_after_char\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'\ninner join title AS t\non t.id = mk.movie_id AND t.episode_nr < 12\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = mk.movie_id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[us]'\ninner join cast_info AS ci\non ci.movie_id = t.id AND ci.movie_id = mc.movie_id AND ci.movie_id = mk.movie_id\ninner join name AS n\non n.id = ci.person_id\ninner join aka_name AS an\non an.person_id = ci.person_id AND an.person_id = n.id;",
+  "predicted_latency": 648.4284400939941,
+  "actual_latency": 898.446,
+  "q_error": 1.38557463622318,
+  "inference_time": 0.05248594284057617
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(s2 t2) NoMergeJoin(a1 account q1 q2 s2 t2 tq1 tq2 u1 u2 t1) NoMergeJoin(a1 account q1 q2 s2 t1 t2 tq1 tq2 u1 u2 s1) */ select count(account.display_name)\nfrom site AS s2\ninner join tag AS t2\non t2.site_id = s2.site_id AND s2.site_name = 'physics' AND t2.name = 'quantum-mechanics'\ninner join tag_question AS tq2\non tq2.site_id = s2.site_id AND tq2.tag_id = t2.id\ninner join question AS q2\non q2.site_id = s2.site_id AND tq2.question_id = q2.id\ninner join so_user AS u2\non q2.owner_user_id = u2.id AND q2.site_id = u2.site_id\ninner join so_user AS u1\non u1.account_id = u2.account_id\ninner join account AS account\non account.id = u1.account_id\ninner join answer AS a1\non a1.owner_user_id = u1.id AND a1.site_id = u1.site_id\ninner join question AS q1\non a1.site_id = q1.site_id AND a1.question_id = q1.id\ninner join tag_question AS tq1\non tq1.question_id = q1.id\ninner join tag AS t1\non tq1.tag_id = t1.id AND t1.name = 'plot'\ninner join site AS s1\non q1.site_id = s1.site_id AND tq1.site_id = s1.site_id AND t1.site_id = s1.site_id AND s1.site_name = 'stackoverflow';",
+  "predicted_latency": 1224.3026494979858,
+  "actual_latency": 2841.176,
+  "q_error": 2.3206484125187496,
+  "inference_time": 0.15383648872375488
+}

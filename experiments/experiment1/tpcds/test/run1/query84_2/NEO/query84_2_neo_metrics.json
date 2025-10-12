@@ -1,0 +1,9 @@
+{
+    "query_name": "query84_2",
+    "sql": "SELECT\n  c.c_customer_id AS customer_id,\n  COALESCE(c.c_last_name, '') || ', ' || COALESCE(c.c_first_name, '') AS customername\nFROM customer AS c,\n  customer_address AS ca,\n  customer_demographics AS cd,\n  household_demographics AS hd,\n  income_band AS ib,\n  store_returns AS sr\nWHERE\n  ca.ca_city = 'Hamilton' AND c.c_current_addr_sk = ca.ca_address_sk AND ib.ib_lower_bound >= 69245 AND ib.ib_upper_bound <= 69245 + 50000 AND ib.ib_income_band_sk = hd.hd_income_band_sk AND cd.cd_demo_sk = c.c_current_cdemo_sk AND hd.hd_demo_sk = c.c_current_hdemo_sk AND sr.sr_cdemo_sk = cd.cd_demo_sk\nORDER BY\n  c.c_customer_id\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(ib cd c hd sr ca)\n HashJoin(cd c hd sr ca)\n HashJoin(cd c hd sr)\n NestLoop(cd c hd)\n MergeJoin(cd c)\n BitmapScan(ib)\n BitmapScan(cd)\n IndexScan(c)\n IndexScan(hd)\n TidScan(sr)\n BitmapScan(ca)\n Leading((ib ((((cd c) hd) sr) ca))) */",
+    "inference_time": 0.0713653564453125,
+    "planning_time": 2.012,
+    "predicted_latency": 57796.4375,
+    "actual_latency": 7070.453
+}

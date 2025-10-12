@@ -1,0 +1,9 @@
+{
+    "query_name": "00959",
+    "sql": "SELECT MIN(mi_idx.info) AS rating,\n       MIN(t.title) AS western_dark_production\nFROM info_type AS it1,\n     info_type AS it2,\n     keyword AS k,\n     kind_type AS kt,\n     movie_info AS mi,\n     movie_info_idx AS mi_idx,\n     movie_keyword AS mk,\n     title AS t\nWHERE it1.info = 'countries'\n  AND it2.info = 'rating'\n  AND kt.id = t.kind_id\n  AND t.id = mi.movie_id\n  AND t.id = mk.movie_id\n  AND t.id = mi_idx.movie_id\n  AND mk.movie_id = mi.movie_id\n  AND mk.movie_id = mi_idx.movie_id\n  AND mi.movie_id = mi_idx.movie_id\n  AND k.id = mk.keyword_id\n  AND it1.id = mi.info_type_id\n  AND (t.title LIKE '%murder%'\n       OR t.title LIKE '%Murder%'\n       OR t.title LIKE '%Mord%')\n  AND it2.id = mi_idx.info_type_id\n  AND k.keyword IN ('based-on-comic',\n'whodunit')\nAND kt.kind = 'episode'\nAND mi.info IN ('Germany',\n'Norway',\n'Norwegian',\n'Sweden',\n'English',\n'America',\n'Denmark',\n'Danish',\n'American',\n'Malta')\nAND mi_idx.info > '7'\nAND t.production_year > 2008;",
+    "hint_str": "/*+ HashJoin(kt t mk k mi_idx it2 mi it1)\n HashJoin(kt t mk k mi_idx it2 mi)\n NestLoop(kt t mk k mi_idx it2)\n HashJoin(kt t mk k mi_idx)\n HashJoin(t mk k mi_idx)\n HashJoin(t mk k)\n MergeJoin(mk k)\n BitmapScan(kt)\n BitmapScan(t)\n SeqScan(mk)\n TidScan(k)\n BitmapScan(mi_idx)\n IndexScan(it2)\n BitmapScan(mi)\n BitmapScan(it1)\n Leading(((((kt ((t (mk k)) mi_idx)) it2) mi) it1)) */",
+    "inference_time": 4.9855170249938965,
+    "planning_time": 7.045,
+    "predicted_latency": -10927.6474609375,
+    "actual_latency": 1786.983
+}

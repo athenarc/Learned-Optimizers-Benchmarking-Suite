@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(q1 s t1 tq1 a1) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select count(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('askubuntu') AND t1.name IN ('kernel',\n'login',\n'scripts',\n'system-installation',\n'updates',\n'wireless')\ninner join question AS q1\non s.site_id = q1.site_id AND q1.view_count >= 10 AND q1.view_count <= 1000\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND s.site_id = tq1.site_id AND t1.id = tq1.tag_id\ninner join answer AS a1\non q1.id = a1.question_id AND s.site_id = a1.site_id\ninner join so_user AS u1\non a1.owner_user_id = u1.id AND s.site_id = u1.site_id AND u1.reputation >= 10 AND u1.reputation <= 100000\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name ilike '%tag%';",
+  "predicted_latency": 1402.3594856262207,
+  "actual_latency": 5938.054,
+  "q_error": 4.234330826627079,
+  "inference_time": 0.13102030754089355
+}

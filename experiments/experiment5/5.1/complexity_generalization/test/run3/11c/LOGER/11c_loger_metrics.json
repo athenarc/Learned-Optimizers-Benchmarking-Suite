@@ -1,0 +1,7 @@
+{
+  "query": "/*+  */ select min(cn.name) AS from_company,\nmin(mc.note) AS production_note,\nmin(t.title) AS movie_based_on_book\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword IN ('sequel',\n'revenge',\n'based-on-novel')\ninner join movie_companies AS mc\non mk.movie_id = mc.movie_id AND mc.note IS NOT NULL\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '20th Century Fox%' OR cn.name like 'Twentieth Century Fox%')\ninner join title AS t\non t.id = mk.movie_id AND t.id = mc.movie_id AND t.production_year > 1950\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind <> 'production companies' AND ct.kind IS NOT NULL\ninner join movie_link AS ml\non ml.movie_id = mc.movie_id AND ml.movie_id = t.id AND ml.movie_id = mk.movie_id\ninner join link_type AS lt\non lt.id = ml.link_type_id;",
+  "predicted_latency": 536.2375378608704,
+  "actual_latency": 567.506,
+  "q_error": 1.058310841616691,
+  "inference_time": 0.406998872756958
+}

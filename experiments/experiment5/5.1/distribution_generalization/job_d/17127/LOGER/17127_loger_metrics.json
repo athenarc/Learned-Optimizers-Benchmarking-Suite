@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(t mc) NoMergeJoin(cn ct it2 mc mi mi_idx t it1) */ select min(cn.name) AS movie_company,\nmin(mi_idx.info) AS rating,\nmin(t.title) AS drama_horror_movie\nfrom title AS t\ninner join movie_companies AS mc\non t.id = mc.movie_id AND t.production_year BETWEEN 1997 AND 2013\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join movie_info_idx AS mi_idx\non t.id = mi_idx.movie_id AND mc.movie_id = mi_idx.movie_id AND mi_idx.info > '6.3'\ninner join info_type AS it2\non mi_idx.info_type_id = it2.id AND it2.info = 'rating'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.movie_id = mi_idx.movie_id AND mi.info IN ('War',\n'Western')\ninner join info_type AS it1\non mi.info_type_id = it1.id AND it1.info = 'genres';",
+  "predicted_latency": 474.94739294052124,
+  "actual_latency": 2065.577,
+  "q_error": 4.349064824235549,
+  "inference_time": 0.056572914123535156
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "query99_3",
+    "sql": "SELECT\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  cc.cc_name,\n  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 30) THEN 1 ELSE 0 END) AS \"30 days\",\n  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 30) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 60) THEN 1 ELSE 0 END) AS \"31-60 days\",\n  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 60) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 90) THEN 1 ELSE 0 END) AS \"61-90 days\",\n  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 90) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 120) THEN 1 ELSE 0 END) AS \"91-120 days\",\n  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 120) THEN 1 ELSE 0 END) AS \">120 days\"\nFROM catalog_sales AS cs,\n  warehouse AS w,\n  ship_mode AS sm,\n  call_center AS cc,\n  date_dim AS dd\nWHERE\n  dd.d_month_seq BETWEEN 1178 AND 1178 + 11 AND cs.cs_ship_date_sk = dd.d_date_sk AND cs.cs_warehouse_sk = w.w_warehouse_sk AND cs.cs_ship_mode_sk = sm.sm_ship_mode_sk AND cs.cs_call_center_sk = cc.cc_call_center_sk\nGROUP BY\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  cc.cc_name\nORDER BY\n  SUBSTR(w.w_warehouse_name, 1, 20),\n  sm.sm_type,\n  cc.cc_name\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(dd w sm cs cc)\n MergeJoin(w sm cs cc)\n MergeJoin(sm cs cc)\n NestLoop(cs cc)\n BitmapScan(dd)\n SeqScan(w)\n TidScan(sm)\n IndexScan(cs)\n IndexScan(cc)\n Leading((dd (w (sm (cs cc))))) */",
+    "inference_time": 0.659233570098877,
+    "planning_time": 1.391,
+    "predicted_latency": 207405.796875,
+    "actual_latency": 97959.716
+}

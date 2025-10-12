@@ -1,0 +1,9 @@
+{
+    "query_name": "q8__q8-025",
+    "sql": "select count(distinct q1.id) from\nsite, post_link pl, question q1, question q2, comment c1, comment c2,\ntag, tag_question tq1, tag_question tq2\nwhere\nsite.site_name = 'german' and\npl.site_id = site.site_id and\n\npl.site_id = q1.site_id and\npl.post_id_from = q1.id and\npl.site_id = q2.site_id and\npl.post_id_to = q2.id and\n\nc1.site_id = q1.site_id and\nc1.post_id = q1.id and\n\nc2.site_id = q2.site_id and\nc2.post_id = q2.id and\n\nc1.date > c2.date and\n\ntag.name in ('python', 'c++', 'linux') and\ntag.id = tq1.tag_id and\ntag.site_id = tq1.site_id and\ntag.id = tq2.tag_id and\ntag.site_id = tq1.site_id and\n\ntag.site_id = pl.site_id and\n\ntq1.site_id = q1.site_id and\ntq1.question_id = q1.id and\ntq2.site_id = q2.site_id and\ntq2.question_id = q2.id;",
+    "hint_str": "/*+ HashJoin(site c2 tq1 tag pl q2 tq2 q1 c1)\n HashJoin(site c2 tq1 tag pl q2 tq2 q1)\n HashJoin(site c2 tq1 tag pl q2 tq2)\n MergeJoin(c2 tq1 tag pl q2 tq2)\n HashJoin(c2 tq1 tag pl q2)\n HashJoin(tq1 tag pl q2)\n MergeJoin(tq1 tag pl)\n HashJoin(tag pl)\n BitmapScan(site)\n SeqScan(c2)\n IndexScan(tq1)\n SeqScan(tag)\n BitmapScan(pl)\n IndexScan(q2)\n SeqScan(tq2)\n BitmapScan(q1)\n BitmapScan(c1)\n Leading((((site ((c2 ((tq1 (tag pl)) q2)) tq2)) q1) c1)) */",
+    "inference_time": 0.46352124214172363,
+    "planning_time": 92.685,
+    "predicted_latency": 10318.689453125,
+    "actual_latency": 151979.497
+}

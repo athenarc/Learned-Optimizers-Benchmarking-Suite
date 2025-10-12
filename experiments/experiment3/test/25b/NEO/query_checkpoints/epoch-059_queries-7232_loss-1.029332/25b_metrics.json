@@ -1,0 +1,8 @@
+{
+    "query_name": "25b",
+    "sql": "SELECT MIN(mi.info) AS movie_budget, MIN(mi_idx.info) AS movie_votes, MIN(n.name) AS male_writer, MIN(t.title) AS violent_movie_title FROM cast_info AS ci, info_type AS it1, info_type AS it2, keyword AS k, movie_info AS mi, movie_info_idx AS mi_idx, movie_keyword AS mk, name AS n, title AS t WHERE ci.note  in ('(writer)', '(head writer)', '(written by)', '(story)', '(story editor)') AND it1.info  = 'genres' AND it2.info  = 'votes' AND k.keyword  in ('murder', 'blood', 'gore', 'death', 'female-nudity') AND mi.info  = 'Horror' AND n.gender   = 'm' AND t.production_year  > 2010 AND t.title  like 'Vampire%' AND t.id = mi.movie_id AND t.id = mi_idx.movie_id AND t.id = ci.movie_id AND t.id = mk.movie_id AND ci.movie_id = mi.movie_id AND ci.movie_id = mi_idx.movie_id AND ci.movie_id = mk.movie_id AND mi.movie_id = mi_idx.movie_id AND mi.movie_id = mk.movie_id AND mi_idx.movie_id = mk.movie_id AND n.id = ci.person_id AND it1.id = mi.info_type_id AND it2.id = mi_idx.info_type_id AND k.id = mk.keyword_id;",
+    "hint_str": "/*+ HashJoin(mi n mk k t ci mi_idx it1 it2)\n HashJoin(mi n mk k t ci mi_idx it1)\n HashJoin(mi n mk k t ci mi_idx)\n MergeJoin(n mk k t ci mi_idx)\n HashJoin(mk k t ci mi_idx)\n MergeJoin(mk k t ci)\n HashJoin(mk k t)\n MergeJoin(mk k)\n BitmapScan(mi)\n TidScan(n)\n IndexScan(mk)\n TidScan(k)\n BitmapScan(t)\n BitmapScan(ci)\n TidScan(mi_idx)\n BitmapScan(it1)\n BitmapScan(it2)\n Leading((((mi (n ((((mk k) t) ci) mi_idx))) it1) it2)) */",
+    "predicted_latency_ms": 10620.1767578125,
+    "planning_time_ms": 14.647,
+    "actual_latency_ms": 9714.216
+}

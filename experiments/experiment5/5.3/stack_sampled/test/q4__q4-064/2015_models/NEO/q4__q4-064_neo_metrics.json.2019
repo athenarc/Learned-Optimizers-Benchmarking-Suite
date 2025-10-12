@@ -1,0 +1,9 @@
+{
+    "query_name": "q4__q4-064",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, answer a1, tag_question tq1, so_user u1,\naccount\nwhere\n-- answerers posted at least 1 yr after the question was asked\ns1.site_name='drupal' and\nt1.name = 'theming' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\na1.site_id = q1.site_id and\na1.question_id = q1.id and\na1.owner_user_id = u1.id and\na1.site_id = u1.site_id and\na1.creation_date >= q1.creation_date + '1 year'::interval and\n\n-- to get the display name\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(s1 t1 tq1 q1 a1 u1 account)\n HashJoin(a1 u1 account)\n HashJoin(a1 u1)\n HashJoin(s1 t1 tq1 q1)\n HashJoin(tq1 q1)\n HashJoin(s1 t1)\n IndexScan(s1)\n BitmapScan(t1)\n IndexScan(tq1)\n SeqScan(q1)\n BitmapScan(a1)\n SeqScan(u1)\n BitmapScan(account)\n Leading((((s1 t1) (tq1 q1)) ((a1 u1) account))) */",
+    "inference_time": 0.6484549045562744,
+    "planning_time": 12.062,
+    "predicted_latency": 5937.583984375,
+    "actual_latency": 82156.968
+}

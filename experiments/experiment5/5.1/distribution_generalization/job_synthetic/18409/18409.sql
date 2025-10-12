@@ -1,0 +1,3 @@
+SELECT COUNT(*)
+FROM cast_info ci
+WHERE ci.person_id  >  345331 AND ci.role_id  <  9

@@ -1,0 +1,489 @@
+{
+    "Plan": {
+        "Node Type": "Aggregate",
+        "Strategy": "Plain",
+        "Partial Mode": "Simple",
+        "Parallel Aware": false,
+        "Startup Cost": 30010617011.77,
+        "Total Cost": 30010617011.78,
+        "Plan Rows": 1,
+        "Plan Width": 8,
+        "Actual Startup Time": 82077.543,
+        "Actual Total Time": 82077.552,
+        "Actual Rows": 1,
+        "Actual Loops": 1,
+        "Output": [
+            "count(DISTINCT account.display_name)"
+        ],
+        "Plans": [
+            {
+                "Node Type": "Hash Join",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Join Type": "Inner",
+                "Startup Cost": 30010613264.68,
+                "Total Cost": 30010617011.77,
+                "Plan Rows": 1,
+                "Plan Width": 11,
+                "Actual Startup Time": 82072.167,
+                "Actual Total Time": 82077.394,
+                "Actual Rows": 187,
+                "Actual Loops": 1,
+                "Output": [
+                    "account.display_name"
+                ],
+                "Inner Unique": false,
+                "Hash Cond": "((t1.site_id = a1.site_id) AND (tq1.question_id = a1.question_id))",
+                "Join Filter": "(a1.creation_date >= (q1.creation_date + '1 year'::interval))",
+                "Rows Removed by Join Filter": 2272,
+                "Plans": [
+                    {
+                        "Node Type": "Hash Join",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Join Type": "Inner",
+                        "Startup Cost": 10005989705.91,
+                        "Total Cost": 10005993452.97,
+                        "Plan Rows": 1,
+                        "Plan Width": 32,
+                        "Actual Startup Time": 35733.168,
+                        "Actual Total Time": 35735.866,
+                        "Actual Rows": 5427,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "t1.site_id",
+                            "s1.site_id",
+                            "q1.site_id",
+                            "q1.id",
+                            "q1.creation_date",
+                            "tq1.site_id",
+                            "tq1.question_id"
+                        ],
+                        "Inner Unique": false,
+                        "Hash Cond": "((t1.site_id = q1.site_id) AND (t1.id = tq1.tag_id))",
+                        "Plans": [
+                            {
+                                "Node Type": "Nested Loop",
+                                "Parent Relationship": "Outer",
+                                "Parallel Aware": false,
+                                "Join Type": "Inner",
+                                "Startup Cost": 10000003931.54,
+                                "Total Cost": 10000005148.09,
+                                "Plan Rows": 1,
+                                "Plan Width": 12,
+                                "Actual Startup Time": 2.959,
+                                "Actual Total Time": 2.994,
+                                "Actual Rows": 1,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "t1.site_id",
+                                    "t1.id",
+                                    "s1.site_id"
+                                ],
+                                "Inner Unique": false,
+                                "Plans": [
+                                    {
+                                        "Node Type": "Index Scan",
+                                        "Parent Relationship": "Outer",
+                                        "Parallel Aware": false,
+                                        "Scan Direction": "Forward",
+                                        "Index Name": "site_pkey",
+                                        "Relation Name": "site",
+                                        "Schema": "public",
+                                        "Alias": "s1",
+                                        "Startup Cost": 0.14,
+                                        "Total Cost": 15.17,
+                                        "Plan Rows": 1,
+                                        "Plan Width": 4,
+                                        "Actual Startup Time": 0.029,
+                                        "Actual Total Time": 0.044,
+                                        "Actual Rows": 1,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "s1.site_id",
+                                            "s1.site_name"
+                                        ],
+                                        "Filter": "((s1.site_name)::text = 'drupal'::text)",
+                                        "Rows Removed by Filter": 172
+                                    },
+                                    {
+                                        "Node Type": "Bitmap Heap Scan",
+                                        "Parent Relationship": "Inner",
+                                        "Parallel Aware": false,
+                                        "Relation Name": "tag",
+                                        "Schema": "public",
+                                        "Alias": "t1",
+                                        "Startup Cost": 3931.4,
+                                        "Total Cost": 5132.91,
+                                        "Plan Rows": 1,
+                                        "Plan Width": 8,
+                                        "Actual Startup Time": 2.916,
+                                        "Actual Total Time": 2.932,
+                                        "Actual Rows": 1,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "t1.id",
+                                            "t1.site_id",
+                                            "t1.name"
+                                        ],
+                                        "Recheck Cond": "(t1.site_id = s1.site_id)",
+                                        "Rows Removed by Index Recheck": 0,
+                                        "Filter": "((t1.name)::text = 'theming'::text)",
+                                        "Rows Removed by Filter": 163,
+                                        "Exact Heap Blocks": 2,
+                                        "Lossy Heap Blocks": 0,
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Bitmap Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Index Name": "tag_pkey",
+                                                "Startup Cost": 0.0,
+                                                "Total Cost": 3931.39,
+                                                "Plan Rows": 1069,
+                                                "Plan Width": 0,
+                                                "Actual Startup Time": 2.86,
+                                                "Actual Total Time": 2.86,
+                                                "Actual Rows": 164,
+                                                "Actual Loops": 1,
+                                                "Index Cond": "(t1.site_id = s1.site_id)"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "Node Type": "Hash",
+                                "Parent Relationship": "Inner",
+                                "Parallel Aware": false,
+                                "Startup Cost": 5432517.07,
+                                "Total Cost": 5432517.07,
+                                "Plan Rows": 36883820,
+                                "Plan Width": 28,
+                                "Actual Startup Time": 35585.017,
+                                "Actual Total Time": 35585.019,
+                                "Actual Rows": 36883819,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "q1.site_id",
+                                    "q1.id",
+                                    "q1.creation_date",
+                                    "tq1.site_id",
+                                    "tq1.question_id",
+                                    "tq1.tag_id"
+                                ],
+                                "Hash Buckets": 67108864,
+                                "Original Hash Buckets": 67108864,
+                                "Hash Batches": 1,
+                                "Original Hash Batches": 1,
+                                "Peak Memory Usage": 2685450,
+                                "Plans": [
+                                    {
+                                        "Node Type": "Hash Join",
+                                        "Parent Relationship": "Outer",
+                                        "Parallel Aware": false,
+                                        "Join Type": "Inner",
+                                        "Startup Cost": 1980678.09,
+                                        "Total Cost": 5432517.07,
+                                        "Plan Rows": 36883820,
+                                        "Plan Width": 28,
+                                        "Actual Startup Time": 8614.348,
+                                        "Actual Total Time": 28328.381,
+                                        "Actual Rows": 36883819,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "q1.site_id",
+                                            "q1.id",
+                                            "q1.creation_date",
+                                            "tq1.site_id",
+                                            "tq1.question_id",
+                                            "tq1.tag_id"
+                                        ],
+                                        "Inner Unique": false,
+                                        "Hash Cond": "((tq1.site_id = q1.site_id) AND (tq1.question_id = q1.id))",
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Scan Direction": "Forward",
+                                                "Index Name": "tag_question_pkey",
+                                                "Relation Name": "tag_question",
+                                                "Schema": "public",
+                                                "Alias": "tq1",
+                                                "Startup Cost": 0.56,
+                                                "Total Cost": 1582079.3,
+                                                "Plan Rows": 36883820,
+                                                "Plan Width": 12,
+                                                "Actual Startup Time": 0.047,
+                                                "Actual Total Time": 6030.4,
+                                                "Actual Rows": 36883819,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "tq1.question_id",
+                                                    "tq1.tag_id",
+                                                    "tq1.site_id"
+                                                ]
+                                            },
+                                            {
+                                                "Node Type": "Hash",
+                                                "Parent Relationship": "Inner",
+                                                "Parallel Aware": false,
+                                                "Startup Cost": 1790636.21,
+                                                "Total Cost": 1790636.21,
+                                                "Plan Rows": 12669421,
+                                                "Plan Width": 16,
+                                                "Actual Startup Time": 8596.148,
+                                                "Actual Total Time": 8596.149,
+                                                "Actual Rows": 12666441,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "q1.site_id",
+                                                    "q1.id",
+                                                    "q1.creation_date"
+                                                ],
+                                                "Hash Buckets": 16777216,
+                                                "Original Hash Buckets": 16777216,
+                                                "Hash Batches": 1,
+                                                "Original Hash Batches": 1,
+                                                "Peak Memory Usage": 724812,
+                                                "Plans": [
+                                                    {
+                                                        "Node Type": "Seq Scan",
+                                                        "Parent Relationship": "Outer",
+                                                        "Parallel Aware": false,
+                                                        "Relation Name": "question",
+                                                        "Schema": "public",
+                                                        "Alias": "q1",
+                                                        "Startup Cost": 0.0,
+                                                        "Total Cost": 1790636.21,
+                                                        "Plan Rows": 12669421,
+                                                        "Plan Width": 16,
+                                                        "Actual Startup Time": 0.026,
+                                                        "Actual Total Time": 4744.386,
+                                                        "Actual Rows": 12666441,
+                                                        "Actual Loops": 1,
+                                                        "Output": [
+                                                            "q1.site_id",
+                                                            "q1.id",
+                                                            "q1.creation_date"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Node Type": "Hash",
+                        "Parent Relationship": "Inner",
+                        "Parallel Aware": false,
+                        "Startup Cost": 20004528386.48,
+                        "Total Cost": 20004528386.48,
+                        "Plan Rows": 6344819,
+                        "Plan Width": 31,
+                        "Actual Startup Time": 46329.292,
+                        "Actual Total Time": 46329.295,
+                        "Actual Rows": 6347553,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "a1.site_id",
+                            "a1.question_id",
+                            "a1.creation_date",
+                            "u1.site_id",
+                            "account.display_name"
+                        ],
+                        "Hash Buckets": 8388608,
+                        "Original Hash Buckets": 8388608,
+                        "Hash Batches": 1,
+                        "Original Hash Batches": 1,
+                        "Peak Memory Usage": 452949,
+                        "Plans": [
+                            {
+                                "Node Type": "Hash Join",
+                                "Parent Relationship": "Outer",
+                                "Parallel Aware": false,
+                                "Join Type": "Inner",
+                                "Startup Cost": 20001758297.53,
+                                "Total Cost": 20004528386.48,
+                                "Plan Rows": 6344819,
+                                "Plan Width": 31,
+                                "Actual Startup Time": 31703.998,
+                                "Actual Total Time": 44237.632,
+                                "Actual Rows": 6347553,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "a1.site_id",
+                                    "a1.question_id",
+                                    "a1.creation_date",
+                                    "u1.site_id",
+                                    "account.display_name"
+                                ],
+                                "Inner Unique": true,
+                                "Hash Cond": "(u1.account_id = account.id)",
+                                "Plans": [
+                                    {
+                                        "Node Type": "Hash Join",
+                                        "Parent Relationship": "Outer",
+                                        "Parallel Aware": false,
+                                        "Join Type": "Inner",
+                                        "Startup Cost": 10000724607.53,
+                                        "Total Cost": 10003478041.34,
+                                        "Plan Rows": 6344819,
+                                        "Plan Width": 24,
+                                        "Actual Startup Time": 8625.433,
+                                        "Actual Total Time": 17919.037,
+                                        "Actual Rows": 6347553,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "a1.site_id",
+                                            "a1.question_id",
+                                            "a1.creation_date",
+                                            "u1.site_id",
+                                            "u1.account_id"
+                                        ],
+                                        "Inner Unique": false,
+                                        "Hash Cond": "((a1.site_id = u1.site_id) AND (a1.owner_user_id = u1.id))",
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Scan Direction": "Forward",
+                                                "Index Name": "answer_site_id_question_id_idx",
+                                                "Relation Name": "answer",
+                                                "Schema": "public",
+                                                "Alias": "a1",
+                                                "Startup Cost": 10000000000.43,
+                                                "Total Cost": 10001935089.22,
+                                                "Plan Rows": 6344819,
+                                                "Plan Width": 20,
+                                                "Actual Startup Time": 0.02,
+                                                "Actual Total Time": 4452.345,
+                                                "Actual Rows": 6347553,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "a1.id",
+                                                    "a1.site_id",
+                                                    "a1.question_id",
+                                                    "a1.creation_date",
+                                                    "a1.deletion_date",
+                                                    "a1.score",
+                                                    "a1.view_count",
+                                                    "a1.body",
+                                                    "a1.owner_user_id",
+                                                    "a1.last_editor_id",
+                                                    "a1.last_edit_date",
+                                                    "a1.last_activity_date",
+                                                    "a1.title"
+                                                ]
+                                            },
+                                            {
+                                                "Node Type": "Hash",
+                                                "Parent Relationship": "Inner",
+                                                "Parallel Aware": false,
+                                                "Startup Cost": 408146.04,
+                                                "Total Cost": 408146.04,
+                                                "Plan Rows": 21097404,
+                                                "Plan Width": 12,
+                                                "Actual Startup Time": 8588.129,
+                                                "Actual Total Time": 8588.13,
+                                                "Actual Rows": 21097302,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "u1.id",
+                                                    "u1.site_id",
+                                                    "u1.account_id"
+                                                ],
+                                                "Hash Buckets": 33554432,
+                                                "Original Hash Buckets": 33554432,
+                                                "Hash Batches": 1,
+                                                "Original Hash Batches": 1,
+                                                "Peak Memory Usage": 1168669,
+                                                "Plans": [
+                                                    {
+                                                        "Node Type": "Seq Scan",
+                                                        "Parent Relationship": "Outer",
+                                                        "Parallel Aware": false,
+                                                        "Relation Name": "so_user",
+                                                        "Schema": "public",
+                                                        "Alias": "u1",
+                                                        "Startup Cost": 0.0,
+                                                        "Total Cost": 408146.04,
+                                                        "Plan Rows": 21097404,
+                                                        "Plan Width": 12,
+                                                        "Actual Startup Time": 0.025,
+                                                        "Actual Total Time": 2348.64,
+                                                        "Actual Rows": 21097302,
+                                                        "Actual Loops": 1,
+                                                        "Output": [
+                                                            "u1.id",
+                                                            "u1.site_id",
+                                                            "u1.account_id"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "Node Type": "Hash",
+                                        "Parent Relationship": "Inner",
+                                        "Parallel Aware": false,
+                                        "Startup Cost": 10000860216.28,
+                                        "Total Cost": 10000860216.28,
+                                        "Plan Rows": 13877897,
+                                        "Plan Width": 15,
+                                        "Actual Startup Time": 23059.166,
+                                        "Actual Total Time": 23059.166,
+                                        "Actual Rows": 13872153,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "account.display_name",
+                                            "account.id"
+                                        ],
+                                        "Hash Buckets": 16777216,
+                                        "Original Hash Buckets": 16777216,
+                                        "Hash Batches": 1,
+                                        "Original Hash Batches": 1,
+                                        "Peak Memory Usage": 791370,
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Scan Direction": "Forward",
+                                                "Index Name": "account_pkey",
+                                                "Relation Name": "account",
+                                                "Schema": "public",
+                                                "Alias": "account",
+                                                "Startup Cost": 10000000000.43,
+                                                "Total Cost": 10000860216.28,
+                                                "Plan Rows": 13877897,
+                                                "Plan Width": 15,
+                                                "Actual Startup Time": 0.043,
+                                                "Actual Total Time": 17876.393,
+                                                "Actual Rows": 13872153,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "account.display_name",
+                                                    "account.id"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Planning Time": 12.062,
+    "Triggers": [],
+    "Execution Time": 82156.968
+}

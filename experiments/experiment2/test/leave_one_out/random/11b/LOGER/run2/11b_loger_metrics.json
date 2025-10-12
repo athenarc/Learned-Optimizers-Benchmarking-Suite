@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(k mk t) NoHashJoin(k mk ml t mc) NoHashJoin(k mc mk ml t cn) NoMergeJoin(cn k mc mk ml t ct) NoMergeJoin(cn ct k mc mk ml t lt) */ select min(cn.name) AS from_company,\nmin(lt.link) AS movie_link_type,\nmin(t.title) AS sequel_movie\nfrom movie_keyword AS mk\ninner join keyword AS k\non mk.keyword_id = k.id AND k.keyword = 'sequel'\ninner join title AS t\non t.id = mk.movie_id AND t.production_year = 1998 AND t.title like '%Money%'\ninner join movie_link AS ml\non ml.movie_id = mk.movie_id AND ml.movie_id = t.id\ninner join movie_companies AS mc\non mk.movie_id = mc.movie_id AND ml.movie_id = mc.movie_id AND t.id = mc.movie_id AND mc.note IS NULL\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind = 'production companies'\ninner join link_type AS lt\non lt.id = ml.link_type_id AND lt.link like '%follows%';",
+  "predicted_latency": 245.43535709381104,
+  "actual_latency": 71.169,
+  "q_error": 3.4486273109613883,
+  "inference_time": 0.6088094711303711
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(dd ss s) NoNestLoop(dd s ss i) */ select i.i_item_id,\ns.s_state,\ngrouping(s.s_state) AS g_state,\navg(ss.ss_quantity) AS agg1,\navg(ss.ss_list_price) AS agg2,\navg(ss.ss_coupon_amt) AS agg3,\navg(ss.ss_sales_price) AS agg4\nfrom date_dim AS dd\ninner join store_sales AS ss\non ss.ss_sold_date_sk = dd.d_date_sk AND dd.d_year = 1999\ninner join store AS s\non ss.ss_store_sk = s.s_store_sk AND s.s_state IN ('TN',\n'TN',\n'TN',\n'TN',\n'TN',\n'TN')\ninner join item AS i\non ss.ss_item_sk = i.i_item_sk\ninner join customer_demographics AS cd\non ss.ss_cdemo_sk = cd.cd_demo_sk AND cd.cd_gender = 'F' AND cd.cd_marital_status = 'U' AND cd.cd_education_status = 'College' group by rollup(i.i_item_id, s.s_state) order by i.i_item_id, s.s_state LIMIT 100;",
+  "predicted_latency": 523.7869620323181,
+  "actual_latency": 5453.632,
+  "q_error": 10.411927740315738,
+  "inference_time": 0.05482912063598633
+}

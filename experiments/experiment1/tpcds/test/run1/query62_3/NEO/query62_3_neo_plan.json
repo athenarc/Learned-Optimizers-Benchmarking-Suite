@@ -1,0 +1,709 @@
+{
+    "Plan": {
+        "Node Type": "Limit",
+        "Parallel Aware": false,
+        "Startup Cost": 30031783658.86,
+        "Total Cost": 30031783666.36,
+        "Plan Rows": 100,
+        "Plan Width": 314,
+        "Actual Startup Time": 41513.308,
+        "Actual Total Time": 41646.073,
+        "Actual Rows": 100,
+        "Actual Loops": 1,
+        "Output": [
+            "(substr((w.w_warehouse_name)::text, 1, 20))",
+            "sm.sm_type",
+            "wsite.web_name",
+            "(sum(CASE WHEN ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 30) THEN 1 ELSE 0 END))",
+            "(sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 30) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 60)) THEN 1 ELSE 0 END))",
+            "(sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 60) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 90)) THEN 1 ELSE 0 END))",
+            "(sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 90) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 120)) THEN 1 ELSE 0 END))",
+            "(sum(CASE WHEN ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 120) THEN 1 ELSE 0 END))"
+        ],
+        "Plans": [
+            {
+                "Node Type": "Aggregate",
+                "Strategy": "Sorted",
+                "Partial Mode": "Simple",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Startup Cost": 30031783658.86,
+                "Total Cost": 30031786218.53,
+                "Plan Rows": 34129,
+                "Plan Width": 314,
+                "Actual Startup Time": 41513.306,
+                "Actual Total Time": 41646.052,
+                "Actual Rows": 100,
+                "Actual Loops": 1,
+                "Output": [
+                    "(substr((w.w_warehouse_name)::text, 1, 20))",
+                    "sm.sm_type",
+                    "wsite.web_name",
+                    "sum(CASE WHEN ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 30) THEN 1 ELSE 0 END)",
+                    "sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 30) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 60)) THEN 1 ELSE 0 END)",
+                    "sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 60) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 90)) THEN 1 ELSE 0 END)",
+                    "sum(CASE WHEN (((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 90) AND ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) <= 120)) THEN 1 ELSE 0 END)",
+                    "sum(CASE WHEN ((wsale.ws_ship_date_sk - wsale.ws_sold_date_sk) > 120) THEN 1 ELSE 0 END)"
+                ],
+                "Group Key": [
+                    "(substr((w.w_warehouse_name)::text, 1, 20))",
+                    "sm.sm_type",
+                    "wsite.web_name"
+                ],
+                "Plans": [
+                    {
+                        "Node Type": "Sort",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Startup Cost": 30031783658.86,
+                        "Total Cost": 30031783744.18,
+                        "Plan Rows": 34129,
+                        "Plan Width": 282,
+                        "Actual Startup Time": 41511.561,
+                        "Actual Total Time": 41549.762,
+                        "Actual Rows": 314331,
+                        "Actual Loops": 1,
+                        "Output": [
+                            "(substr((w.w_warehouse_name)::text, 1, 20))",
+                            "sm.sm_type",
+                            "wsite.web_name",
+                            "wsale.ws_ship_date_sk",
+                            "wsale.ws_sold_date_sk"
+                        ],
+                        "Sort Key": [
+                            "(substr((w.w_warehouse_name)::text, 1, 20))",
+                            "sm.sm_type",
+                            "wsite.web_name"
+                        ],
+                        "Sort Method": "quicksort",
+                        "Sort Space Used": 224434,
+                        "Sort Space Type": "Memory",
+                        "Plans": [
+                            {
+                                "Node Type": "Nested Loop",
+                                "Parent Relationship": "Outer",
+                                "Parallel Aware": false,
+                                "Join Type": "Inner",
+                                "Startup Cost": 30002116480.03,
+                                "Total Cost": 30031781089.16,
+                                "Plan Rows": 34129,
+                                "Plan Width": 282,
+                                "Actual Startup Time": 7982.419,
+                                "Actual Total Time": 39681.588,
+                                "Actual Rows": 1304482,
+                                "Actual Loops": 1,
+                                "Output": [
+                                    "substr((w.w_warehouse_name)::text, 1, 20)",
+                                    "sm.sm_type",
+                                    "wsite.web_name",
+                                    "wsale.ws_ship_date_sk",
+                                    "wsale.ws_sold_date_sk"
+                                ],
+                                "Inner Unique": true,
+                                "Plans": [
+                                    {
+                                        "Node Type": "Hash Join",
+                                        "Parent Relationship": "Outer",
+                                        "Parallel Aware": false,
+                                        "Join Type": "Inner",
+                                        "Startup Cost": 20002116479.73,
+                                        "Total Cost": 20002202723.34,
+                                        "Plan Rows": 6850301,
+                                        "Plan Width": 308,
+                                        "Actual Startup Time": 7982.333,
+                                        "Actual Total Time": 11211.065,
+                                        "Actual Rows": 7194488,
+                                        "Actual Loops": 1,
+                                        "Output": [
+                                            "wsale.ws_ship_date_sk",
+                                            "wsale.ws_sold_date_sk",
+                                            "w.w_warehouse_name",
+                                            "sm.sm_type",
+                                            "wsite.web_name"
+                                        ],
+                                        "Inner Unique": false,
+                                        "Hash Cond": "(wsite.web_site_sk = wsale.ws_web_site_sk)",
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Seq Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Relation Name": "web_site",
+                                                "Schema": "public",
+                                                "Alias": "wsite",
+                                                "Startup Cost": 10000000000.0,
+                                                "Total Cost": 10000000010.4,
+                                                "Plan Rows": 40,
+                                                "Plan Width": 122,
+                                                "Actual Startup Time": 0.04,
+                                                "Actual Total Time": 0.141,
+                                                "Actual Rows": 42,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "wsite.web_site_sk",
+                                                    "wsite.web_site_id",
+                                                    "wsite.web_rec_start_date",
+                                                    "wsite.web_rec_end_date",
+                                                    "wsite.web_name",
+                                                    "wsite.web_open_date_sk",
+                                                    "wsite.web_close_date_sk",
+                                                    "wsite.web_class",
+                                                    "wsite.web_manager",
+                                                    "wsite.web_mkt_id",
+                                                    "wsite.web_mkt_class",
+                                                    "wsite.web_mkt_desc",
+                                                    "wsite.web_market_manager",
+                                                    "wsite.web_company_id",
+                                                    "wsite.web_company_name",
+                                                    "wsite.web_street_number",
+                                                    "wsite.web_street_name",
+                                                    "wsite.web_street_type",
+                                                    "wsite.web_suite_number",
+                                                    "wsite.web_city",
+                                                    "wsite.web_county",
+                                                    "wsite.web_state",
+                                                    "wsite.web_zip",
+                                                    "wsite.web_country",
+                                                    "wsite.web_gmt_offset",
+                                                    "wsite.web_tax_percentage"
+                                                ]
+                                            },
+                                            {
+                                                "Node Type": "Hash",
+                                                "Parent Relationship": "Inner",
+                                                "Parallel Aware": false,
+                                                "Startup Cost": 10002026539.55,
+                                                "Total Cost": 10002026539.55,
+                                                "Plan Rows": 7195214,
+                                                "Plan Width": 194,
+                                                "Actual Startup Time": 7926.098,
+                                                "Actual Total Time": 7926.301,
+                                                "Actual Rows": 7194488,
+                                                "Actual Loops": 1,
+                                                "Output": [
+                                                    "wsale.ws_ship_date_sk",
+                                                    "wsale.ws_sold_date_sk",
+                                                    "wsale.ws_web_site_sk",
+                                                    "w.w_warehouse_name",
+                                                    "sm.sm_type"
+                                                ],
+                                                "Hash Buckets": 8388608,
+                                                "Original Hash Buckets": 8388608,
+                                                "Hash Batches": 1,
+                                                "Original Hash Batches": 1,
+                                                "Peak Memory Usage": 702113,
+                                                "Plans": [
+                                                    {
+                                                        "Node Type": "Merge Join",
+                                                        "Parent Relationship": "Outer",
+                                                        "Parallel Aware": false,
+                                                        "Join Type": "Inner",
+                                                        "Startup Cost": 10001918602.45,
+                                                        "Total Cost": 10002026539.55,
+                                                        "Plan Rows": 7195214,
+                                                        "Plan Width": 194,
+                                                        "Actual Startup Time": 3788.811,
+                                                        "Actual Total Time": 6014.542,
+                                                        "Actual Rows": 7194955,
+                                                        "Actual Loops": 1,
+                                                        "Output": [
+                                                            "wsale.ws_ship_date_sk",
+                                                            "wsale.ws_sold_date_sk",
+                                                            "wsale.ws_web_site_sk",
+                                                            "w.w_warehouse_name",
+                                                            "sm.sm_type"
+                                                        ],
+                                                        "Inner Unique": false,
+                                                        "Merge Cond": "(w.w_warehouse_sk = wsale.ws_warehouse_sk)",
+                                                        "Plans": [
+                                                            {
+                                                                "Node Type": "Sort",
+                                                                "Parent Relationship": "Outer",
+                                                                "Parallel Aware": false,
+                                                                "Startup Cost": 10000000014.32,
+                                                                "Total Cost": 10000000014.57,
+                                                                "Plan Rows": 100,
+                                                                "Plan Width": 62,
+                                                                "Actual Startup Time": 0.044,
+                                                                "Actual Total Time": 0.054,
+                                                                "Actual Rows": 10,
+                                                                "Actual Loops": 1,
+                                                                "Output": [
+                                                                    "w.w_warehouse_name",
+                                                                    "w.w_warehouse_sk"
+                                                                ],
+                                                                "Sort Key": [
+                                                                    "w.w_warehouse_sk"
+                                                                ],
+                                                                "Sort Method": "quicksort",
+                                                                "Sort Space Used": 25,
+                                                                "Sort Space Type": "Memory",
+                                                                "Plans": [
+                                                                    {
+                                                                        "Node Type": "Seq Scan",
+                                                                        "Parent Relationship": "Outer",
+                                                                        "Parallel Aware": false,
+                                                                        "Relation Name": "warehouse",
+                                                                        "Schema": "public",
+                                                                        "Alias": "w",
+                                                                        "Startup Cost": 10000000000.0,
+                                                                        "Total Cost": 10000000011.0,
+                                                                        "Plan Rows": 100,
+                                                                        "Plan Width": 62,
+                                                                        "Actual Startup Time": 0.026,
+                                                                        "Actual Total Time": 0.028,
+                                                                        "Actual Rows": 10,
+                                                                        "Actual Loops": 1,
+                                                                        "Output": [
+                                                                            "w.w_warehouse_name",
+                                                                            "w.w_warehouse_sk"
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "Node Type": "Sort",
+                                                                "Parent Relationship": "Inner",
+                                                                "Parallel Aware": false,
+                                                                "Startup Cost": 1918588.12,
+                                                                "Total Cost": 1936580.36,
+                                                                "Plan Rows": 7196893,
+                                                                "Plan Width": 140,
+                                                                "Actual Startup Time": 3788.757,
+                                                                "Actual Total Time": 4993.773,
+                                                                "Actual Rows": 7194956,
+                                                                "Actual Loops": 1,
+                                                                "Output": [
+                                                                    "wsale.ws_ship_date_sk",
+                                                                    "wsale.ws_sold_date_sk",
+                                                                    "wsale.ws_warehouse_sk",
+                                                                    "wsale.ws_web_site_sk",
+                                                                    "sm.sm_type"
+                                                                ],
+                                                                "Sort Key": [
+                                                                    "wsale.ws_warehouse_sk"
+                                                                ],
+                                                                "Sort Method": "quicksort",
+                                                                "Sort Space Used": 758781,
+                                                                "Sort Space Type": "Memory",
+                                                                "Plans": [
+                                                                    {
+                                                                        "Node Type": "Gather",
+                                                                        "Parent Relationship": "Outer",
+                                                                        "Parallel Aware": false,
+                                                                        "Startup Cost": 350421.73,
+                                                                        "Total Cost": 1098900.05,
+                                                                        "Plan Rows": 7196893,
+                                                                        "Plan Width": 140,
+                                                                        "Actual Startup Time": 928.694,
+                                                                        "Actual Total Time": 2597.616,
+                                                                        "Actual Rows": 7195809,
+                                                                        "Actual Loops": 1,
+                                                                        "Output": [
+                                                                            "wsale.ws_ship_date_sk",
+                                                                            "wsale.ws_sold_date_sk",
+                                                                            "wsale.ws_warehouse_sk",
+                                                                            "wsale.ws_web_site_sk",
+                                                                            "sm.sm_type"
+                                                                        ],
+                                                                        "Workers Planned": 5,
+                                                                        "Workers Launched": 5,
+                                                                        "Single Copy": false,
+                                                                        "Plans": [
+                                                                            {
+                                                                                "Node Type": "Merge Join",
+                                                                                "Parent Relationship": "Outer",
+                                                                                "Parallel Aware": false,
+                                                                                "Join Type": "Inner",
+                                                                                "Startup Cost": 349421.73,
+                                                                                "Total Cost": 378210.75,
+                                                                                "Plan Rows": 1439379,
+                                                                                "Plan Width": 140,
+                                                                                "Actual Startup Time": 897.361,
+                                                                                "Actual Total Time": 1603.553,
+                                                                                "Actual Rows": 1199302,
+                                                                                "Actual Loops": 6,
+                                                                                "Output": [
+                                                                                    "wsale.ws_ship_date_sk",
+                                                                                    "wsale.ws_sold_date_sk",
+                                                                                    "wsale.ws_warehouse_sk",
+                                                                                    "wsale.ws_web_site_sk",
+                                                                                    "sm.sm_type"
+                                                                                ],
+                                                                                "Inner Unique": false,
+                                                                                "Merge Cond": "(wsale.ws_ship_mode_sk = sm.sm_ship_mode_sk)",
+                                                                                "Workers": [
+                                                                                    {
+                                                                                        "Worker Number": 0,
+                                                                                        "Actual Startup Time": 891.303,
+                                                                                        "Actual Total Time": 1520.935,
+                                                                                        "Actual Rows": 991141,
+                                                                                        "Actual Loops": 1
+                                                                                    },
+                                                                                    {
+                                                                                        "Worker Number": 1,
+                                                                                        "Actual Startup Time": 891.315,
+                                                                                        "Actual Total Time": 1538.656,
+                                                                                        "Actual Rows": 1006891,
+                                                                                        "Actual Loops": 1
+                                                                                    },
+                                                                                    {
+                                                                                        "Worker Number": 2,
+                                                                                        "Actual Startup Time": 891.193,
+                                                                                        "Actual Total Time": 1529.428,
+                                                                                        "Actual Rows": 999035,
+                                                                                        "Actual Loops": 1
+                                                                                    },
+                                                                                    {
+                                                                                        "Worker Number": 3,
+                                                                                        "Actual Startup Time": 891.354,
+                                                                                        "Actual Total Time": 1534.68,
+                                                                                        "Actual Rows": 1005172,
+                                                                                        "Actual Loops": 1
+                                                                                    },
+                                                                                    {
+                                                                                        "Worker Number": 4,
+                                                                                        "Actual Startup Time": 890.769,
+                                                                                        "Actual Total Time": 1519.637,
+                                                                                        "Actual Rows": 990625,
+                                                                                        "Actual Loops": 1
+                                                                                    }
+                                                                                ],
+                                                                                "Plans": [
+                                                                                    {
+                                                                                        "Node Type": "Sort",
+                                                                                        "Parent Relationship": "Outer",
+                                                                                        "Parallel Aware": false,
+                                                                                        "Startup Cost": 349403.19,
+                                                                                        "Total Cost": 353002.36,
+                                                                                        "Plan Rows": 1439667,
+                                                                                        "Plan Width": 20,
+                                                                                        "Actual Startup Time": 897.248,
+                                                                                        "Actual Total Time": 1187.407,
+                                                                                        "Actual Rows": 1199302,
+                                                                                        "Actual Loops": 6,
+                                                                                        "Output": [
+                                                                                            "wsale.ws_ship_date_sk",
+                                                                                            "wsale.ws_sold_date_sk",
+                                                                                            "wsale.ws_warehouse_sk",
+                                                                                            "wsale.ws_ship_mode_sk",
+                                                                                            "wsale.ws_web_site_sk"
+                                                                                        ],
+                                                                                        "Sort Key": [
+                                                                                            "wsale.ws_ship_mode_sk"
+                                                                                        ],
+                                                                                        "Sort Method": "quicksort",
+                                                                                        "Sort Space Used": 270419,
+                                                                                        "Sort Space Type": "Memory",
+                                                                                        "Workers": [
+                                                                                            {
+                                                                                                "Worker Number": 0,
+                                                                                                "Actual Startup Time": 891.21,
+                                                                                                "Actual Total Time": 1136.441,
+                                                                                                "Actual Rows": 991142,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 1,
+                                                                                                "Actual Startup Time": 891.187,
+                                                                                                "Actual Total Time": 1148.581,
+                                                                                                "Actual Rows": 1006892,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 2,
+                                                                                                "Actual Startup Time": 891.1,
+                                                                                                "Actual Total Time": 1141.94,
+                                                                                                "Actual Rows": 999036,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 3,
+                                                                                                "Actual Startup Time": 891.221,
+                                                                                                "Actual Total Time": 1143.61,
+                                                                                                "Actual Rows": 1005173,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 4,
+                                                                                                "Actual Startup Time": 890.603,
+                                                                                                "Actual Total Time": 1136.476,
+                                                                                                "Actual Rows": 990626,
+                                                                                                "Actual Loops": 1
+                                                                                            }
+                                                                                        ],
+                                                                                        "Plans": [
+                                                                                            {
+                                                                                                "Node Type": "Seq Scan",
+                                                                                                "Parent Relationship": "Outer",
+                                                                                                "Parallel Aware": true,
+                                                                                                "Relation Name": "web_sales",
+                                                                                                "Schema": "public",
+                                                                                                "Alias": "wsale",
+                                                                                                "Startup Cost": 0.0,
+                                                                                                "Total Cost": 202144.67,
+                                                                                                "Plan Rows": 1439667,
+                                                                                                "Plan Width": 20,
+                                                                                                "Actual Startup Time": 0.065,
+                                                                                                "Actual Total Time": 551.384,
+                                                                                                "Actual Rows": 1199594,
+                                                                                                "Actual Loops": 6,
+                                                                                                "Output": [
+                                                                                                    "wsale.ws_ship_date_sk",
+                                                                                                    "wsale.ws_sold_date_sk",
+                                                                                                    "wsale.ws_warehouse_sk",
+                                                                                                    "wsale.ws_ship_mode_sk",
+                                                                                                    "wsale.ws_web_site_sk"
+                                                                                                ],
+                                                                                                "Workers": [
+                                                                                                    {
+                                                                                                        "Worker Number": 0,
+                                                                                                        "Actual Startup Time": 0.076,
+                                                                                                        "Actual Total Time": 569.289,
+                                                                                                        "Actual Rows": 991362,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 1,
+                                                                                                        "Actual Startup Time": 0.081,
+                                                                                                        "Actual Total Time": 567.071,
+                                                                                                        "Actual Rows": 1007133,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 2,
+                                                                                                        "Actual Startup Time": 0.061,
+                                                                                                        "Actual Total Time": 567.556,
+                                                                                                        "Actual Rows": 999275,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 3,
+                                                                                                        "Actual Startup Time": 0.093,
+                                                                                                        "Actual Total Time": 569.115,
+                                                                                                        "Actual Rows": 1005423,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 4,
+                                                                                                        "Actual Startup Time": 0.064,
+                                                                                                        "Actual Total Time": 572.504,
+                                                                                                        "Actual Rows": 990872,
+                                                                                                        "Actual Loops": 1
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "Node Type": "Sort",
+                                                                                        "Parent Relationship": "Inner",
+                                                                                        "Parallel Aware": false,
+                                                                                        "Startup Cost": 18.54,
+                                                                                        "Total Cost": 18.99,
+                                                                                        "Plan Rows": 180,
+                                                                                        "Plan Width": 128,
+                                                                                        "Actual Startup Time": 0.103,
+                                                                                        "Actual Total Time": 58.133,
+                                                                                        "Actual Rows": 1139324,
+                                                                                        "Actual Loops": 6,
+                                                                                        "Output": [
+                                                                                            "sm.sm_type",
+                                                                                            "sm.sm_ship_mode_sk"
+                                                                                        ],
+                                                                                        "Sort Key": [
+                                                                                            "sm.sm_ship_mode_sk"
+                                                                                        ],
+                                                                                        "Sort Method": "quicksort",
+                                                                                        "Sort Space Used": 26,
+                                                                                        "Sort Space Type": "Memory",
+                                                                                        "Workers": [
+                                                                                            {
+                                                                                                "Worker Number": 0,
+                                                                                                "Actual Startup Time": 0.083,
+                                                                                                "Actual Total Time": 54.584,
+                                                                                                "Actual Rows": 941626,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 1,
+                                                                                                "Actual Startup Time": 0.119,
+                                                                                                "Actual Total Time": 55.196,
+                                                                                                "Actual Rows": 956532,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 2,
+                                                                                                "Actual Startup Time": 0.084,
+                                                                                                "Actual Total Time": 54.587,
+                                                                                                "Actual Rows": 949145,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 3,
+                                                                                                "Actual Startup Time": 0.122,
+                                                                                                "Actual Total Time": 55.054,
+                                                                                                "Actual Rows": 955075,
+                                                                                                "Actual Loops": 1
+                                                                                            },
+                                                                                            {
+                                                                                                "Worker Number": 4,
+                                                                                                "Actual Startup Time": 0.155,
+                                                                                                "Actual Total Time": 54.36,
+                                                                                                "Actual Rows": 940890,
+                                                                                                "Actual Loops": 1
+                                                                                            }
+                                                                                        ],
+                                                                                        "Plans": [
+                                                                                            {
+                                                                                                "Node Type": "Seq Scan",
+                                                                                                "Parent Relationship": "Outer",
+                                                                                                "Parallel Aware": false,
+                                                                                                "Relation Name": "ship_mode",
+                                                                                                "Schema": "public",
+                                                                                                "Alias": "sm",
+                                                                                                "Startup Cost": 0.0,
+                                                                                                "Total Cost": 11.8,
+                                                                                                "Plan Rows": 180,
+                                                                                                "Plan Width": 128,
+                                                                                                "Actual Startup Time": 0.08,
+                                                                                                "Actual Total Time": 0.084,
+                                                                                                "Actual Rows": 20,
+                                                                                                "Actual Loops": 6,
+                                                                                                "Output": [
+                                                                                                    "sm.sm_type",
+                                                                                                    "sm.sm_ship_mode_sk"
+                                                                                                ],
+                                                                                                "Workers": [
+                                                                                                    {
+                                                                                                        "Worker Number": 0,
+                                                                                                        "Actual Startup Time": 0.065,
+                                                                                                        "Actual Total Time": 0.069,
+                                                                                                        "Actual Rows": 20,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 1,
+                                                                                                        "Actual Startup Time": 0.1,
+                                                                                                        "Actual Total Time": 0.104,
+                                                                                                        "Actual Rows": 20,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 2,
+                                                                                                        "Actual Startup Time": 0.067,
+                                                                                                        "Actual Total Time": 0.07,
+                                                                                                        "Actual Rows": 20,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 3,
+                                                                                                        "Actual Startup Time": 0.099,
+                                                                                                        "Actual Total Time": 0.103,
+                                                                                                        "Actual Rows": 20,
+                                                                                                        "Actual Loops": 1
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Worker Number": 4,
+                                                                                                        "Actual Startup Time": 0.131,
+                                                                                                        "Actual Total Time": 0.136,
+                                                                                                        "Actual Rows": 20,
+                                                                                                        "Actual Loops": 1
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "Node Type": "Bitmap Heap Scan",
+                                        "Parent Relationship": "Inner",
+                                        "Parallel Aware": false,
+                                        "Relation Name": "date_dim",
+                                        "Schema": "public",
+                                        "Alias": "dd",
+                                        "Startup Cost": 0.3,
+                                        "Total Cost": 4.32,
+                                        "Plan Rows": 1,
+                                        "Plan Width": 4,
+                                        "Actual Startup Time": 0.002,
+                                        "Actual Total Time": 0.002,
+                                        "Actual Rows": 0,
+                                        "Actual Loops": 7194488,
+                                        "Output": [
+                                            "dd.d_date_sk",
+                                            "dd.d_date_id",
+                                            "dd.d_date",
+                                            "dd.d_month_seq",
+                                            "dd.d_week_seq",
+                                            "dd.d_quarter_seq",
+                                            "dd.d_year",
+                                            "dd.d_dow",
+                                            "dd.d_moy",
+                                            "dd.d_dom",
+                                            "dd.d_qoy",
+                                            "dd.d_fy_year",
+                                            "dd.d_fy_quarter_seq",
+                                            "dd.d_fy_week_seq",
+                                            "dd.d_day_name",
+                                            "dd.d_quarter_name",
+                                            "dd.d_holiday",
+                                            "dd.d_weekend",
+                                            "dd.d_following_holiday",
+                                            "dd.d_first_dom",
+                                            "dd.d_last_dom",
+                                            "dd.d_same_day_ly",
+                                            "dd.d_same_day_lq",
+                                            "dd.d_current_day",
+                                            "dd.d_current_week",
+                                            "dd.d_current_month",
+                                            "dd.d_current_quarter",
+                                            "dd.d_current_year"
+                                        ],
+                                        "Recheck Cond": "(dd.d_date_sk = wsale.ws_ship_date_sk)",
+                                        "Rows Removed by Index Recheck": 0,
+                                        "Filter": "((dd.d_month_seq >= 1178) AND (dd.d_month_seq <= 1189))",
+                                        "Rows Removed by Filter": 1,
+                                        "Exact Heap Blocks": 7194259,
+                                        "Lossy Heap Blocks": 0,
+                                        "Plans": [
+                                            {
+                                                "Node Type": "Bitmap Index Scan",
+                                                "Parent Relationship": "Outer",
+                                                "Parallel Aware": false,
+                                                "Index Name": "date_dim_pkey",
+                                                "Startup Cost": 0.0,
+                                                "Total Cost": 0.3,
+                                                "Plan Rows": 1,
+                                                "Plan Width": 0,
+                                                "Actual Startup Time": 0.001,
+                                                "Actual Total Time": 0.001,
+                                                "Actual Rows": 1,
+                                                "Actual Loops": 7194488,
+                                                "Index Cond": "(dd.d_date_sk = wsale.ws_ship_date_sk)"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Planning Time": 1.395,
+    "Triggers": [],
+    "Execution Time": 41695.758
+}

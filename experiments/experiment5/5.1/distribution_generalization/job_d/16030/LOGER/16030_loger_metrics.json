@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(cn mc t mi) NoHashJoin(cn mc mi t it1) NoMergeJoin(cn it1 mc mi t mk) NoHashJoin(cn it1 mc mi mk t at) NoMergeJoin(at cn it1 mc mi mk t k) NoNestLoop(at cn it1 k mc mi mk t ct) */ select min(mi.info) AS release_date,\nmin(t.title) AS youtube_movie\nfrom company_name AS cn\ninner join movie_companies AS mc\non cn.id = mc.company_id AND cn.country_code = '[us]' AND cn.name = 'Peter Joseph' AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%'\ninner join title AS t\non t.id = mc.movie_id AND t.production_year BETWEEN 1996 AND 2012\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mc.movie_id AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates'\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND mk.movie_id = mc.movie_id AND mk.movie_id = mi.movie_id\ninner join aka_title AS at\non t.id = at.movie_id AND mc.movie_id = at.movie_id AND mk.movie_id = at.movie_id AND mi.movie_id = at.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id\ninner join company_type AS ct\non ct.id = mc.company_type_id;",
+  "predicted_latency": 580.3000926971436,
+  "actual_latency": 41.204,
+  "q_error": 14.083586367759041,
+  "inference_time": 0.04077601432800293
+}

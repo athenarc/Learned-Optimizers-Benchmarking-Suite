@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(cn mc) NoMergeJoin(at cn mc t mk) NoMergeJoin(at cn mc mk t ct) NoHashJoin(at cn ct mc mi mk t it1) NoMergeJoin(at cn ct it1 mc mi mk t k) */ select min(mi.info) AS release_date,\nmin(t.title) AS youtube_movie\nfrom company_name AS cn\ninner join movie_companies AS mc\non cn.id = mc.company_id AND cn.country_code = '[us]' AND cn.name = 'Sony Pictures Entertainment (SPE)' AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%'\ninner join title AS t\non t.id = mc.movie_id AND t.production_year BETWEEN 1995 AND 2008\ninner join aka_title AS at\non t.id = at.movie_id AND mc.movie_id = at.movie_id\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND mk.movie_id = mc.movie_id AND mk.movie_id = at.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mc.movie_id AND mi.movie_id = at.movie_id AND mk.movie_id = mi.movie_id AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates'\ninner join keyword AS k\non k.id = mk.keyword_id;",
+  "predicted_latency": 658.581793308258,
+  "actual_latency": 1613.574,
+  "q_error": 2.450073804643951,
+  "inference_time": 0.06464886665344238
+}

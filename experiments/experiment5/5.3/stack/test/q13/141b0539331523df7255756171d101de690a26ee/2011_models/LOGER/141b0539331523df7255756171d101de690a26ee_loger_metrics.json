@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 q1 t1 tq1 s) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 100 AND q1.view_count <= 100000\ninner join tag AS t1\non t1.id = tq1.tag_id AND t1.name IN ('5.0-lollipop',\n'balance',\n'google-analytics',\n'google-search',\n'homebrew',\n'redirects',\n'root-access',\n'security',\n'url',\n'weapons')\ninner join answer AS a1\non q1.id = a1.question_id\ninner join site AS s\non s.site_id = t1.site_id AND s.site_id = a1.site_id AND s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('android',\n'rpg',\n'webmasters')\ninner join badge AS b\non s.site_id = b.site_id AND b.name IN ('Caucus',\n'Curious',\n'Enthusiast',\n'Excavator',\n'Necromancer',\n'Organizer',\n'Peer Pressure',\n'Promoter',\n'Quorum',\n'Self-Learner')\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND b.user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 10\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1291.3110256195068,
+  "actual_latency": 6945.571,
+  "q_error": 5.378697201681415,
+  "inference_time": 0.12852191925048828
+}

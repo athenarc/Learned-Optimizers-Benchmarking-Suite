@@ -1,0 +1,168 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Plain",
+      "Partial Mode": "Finalize",
+      "Parallel Aware": false,
+      "Startup Cost": 84361.02,
+      "Total Cost": 84361.03,
+      "Plan Rows": 1,
+      "Plan Width": 8,
+      "Actual Startup Time": 442.566,
+      "Actual Total Time": 497.138,
+      "Actual Rows": 1,
+      "Actual Loops": 1,
+      "Plans": [
+        {
+          "Node Type": "Gather",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Startup Cost": 84360.8,
+          "Total Cost": 84361.01,
+          "Plan Rows": 2,
+          "Plan Width": 8,
+          "Actual Startup Time": 441.986,
+          "Actual Total Time": 497.128,
+          "Actual Rows": 3,
+          "Actual Loops": 1,
+          "Workers Planned": 2,
+          "Workers Launched": 2,
+          "Single Copy": false,
+          "Plans": [
+            {
+              "Node Type": "Aggregate",
+              "Strategy": "Plain",
+              "Partial Mode": "Partial",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Startup Cost": 83360.8,
+              "Total Cost": 83360.81,
+              "Plan Rows": 1,
+              "Plan Width": 8,
+              "Actual Startup Time": 435.884,
+              "Actual Total Time": 435.888,
+              "Actual Rows": 1,
+              "Actual Loops": 3,
+              "Plans": [
+                {
+                  "Node Type": "Nested Loop",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 45602.36,
+                  "Total Cost": 83249.1,
+                  "Plan Rows": 44680,
+                  "Plan Width": 0,
+                  "Actual Startup Time": 124.712,
+                  "Actual Total Time": 431.902,
+                  "Actual Rows": 62585,
+                  "Actual Loops": 3,
+                  "Inner Unique": false,
+                  "Join Filter": "(t.id = ci.movie_id)",
+                  "Rows Removed by Join Filter": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Hash Join",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": true,
+                      "Join Type": "Inner",
+                      "Startup Cost": 45601.8,
+                      "Total Cost": 60796.36,
+                      "Plan Rows": 8894,
+                      "Plan Width": 8,
+                      "Actual Startup Time": 124.617,
+                      "Actual Total Time": 209.634,
+                      "Actual Rows": 6753,
+                      "Actual Loops": 3,
+                      "Inner Unique": true,
+                      "Hash Cond": "(mi_idx.movie_id = t.id)",
+                      "Plans": [
+                        {
+                          "Node Type": "Seq Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": true,
+                          "Relation Name": "movie_info_idx",
+                          "Alias": "mi_idx",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 13685.15,
+                          "Plan Rows": 575015,
+                          "Plan Width": 4,
+                          "Actual Startup Time": 0.013,
+                          "Actual Total Time": 39.323,
+                          "Actual Rows": 460012,
+                          "Actual Loops": 3
+                        },
+                        {
+                          "Node Type": "Hash",
+                          "Parent Relationship": "Inner",
+                          "Parallel Aware": true,
+                          "Startup Cost": 45479.59,
+                          "Total Cost": 45479.59,
+                          "Plan Rows": 9777,
+                          "Plan Width": 4,
+                          "Actual Startup Time": 123.643,
+                          "Actual Total Time": 123.644,
+                          "Actual Rows": 14329,
+                          "Actual Loops": 3,
+                          "Hash Buckets": 65536,
+                          "Original Hash Buckets": 65536,
+                          "Hash Batches": 1,
+                          "Original Hash Batches": 1,
+                          "Peak Memory Usage": 2240,
+                          "Plans": [
+                            {
+                              "Node Type": "Seq Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": true,
+                              "Relation Name": "title",
+                              "Alias": "t",
+                              "Startup Cost": 0.0,
+                              "Total Cost": 45479.59,
+                              "Plan Rows": 9777,
+                              "Plan Width": 4,
+                              "Actual Startup Time": 0.044,
+                              "Actual Total Time": 117.361,
+                              "Actual Rows": 14329,
+                              "Actual Loops": 3,
+                              "Filter": "((kind_id > 1) AND (production_year = 1999))",
+                              "Rows Removed by Filter": 828442
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "Node Type": "Index Scan",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Scan Direction": "Forward",
+                      "Index Name": "movie_id_cast_info",
+                      "Relation Name": "cast_info",
+                      "Alias": "ci",
+                      "Startup Cost": 0.56,
+                      "Total Cost": 2.37,
+                      "Plan Rows": 12,
+                      "Plan Width": 4,
+                      "Actual Startup Time": 0.006,
+                      "Actual Total Time": 0.032,
+                      "Actual Rows": 9,
+                      "Actual Loops": 20259,
+                      "Index Cond": "(movie_id = mi_idx.movie_id)",
+                      "Rows Removed by Index Recheck": 0,
+                      "Filter": "(role_id < 2)",
+                      "Rows Removed by Filter": 20
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning Time": 0.891,
+    "Triggers": [],
+    "Execution Time": 497.223
+  }
+]

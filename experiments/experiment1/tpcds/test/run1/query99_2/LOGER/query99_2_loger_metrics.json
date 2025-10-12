@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(cs dd cc) NoHashJoin(cc cs dd sm) NoHashJoin(cc cs dd sm w) */ select substr(w.w_warehouse_name, 1, 20),\nsm.sm_type,\ncc.cc_name,\nsum(case when cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 30 then 1 else 0 end) AS \"30 days\",\nsum(case when cs.cs_ship_date_sk - cs.cs_sold_date_sk > 30 AND cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 60 then 1 else 0 end) AS \"31-60 days\",\nsum(case when cs.cs_ship_date_sk - cs.cs_sold_date_sk > 60 AND cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 90 then 1 else 0 end) AS \"61-90 days\",\nsum(case when cs.cs_ship_date_sk - cs.cs_sold_date_sk > 90 AND cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 120 then 1 else 0 end) AS \"91-120 days\",\nsum(case when cs.cs_ship_date_sk - cs.cs_sold_date_sk > 120 then 1 else 0 end) AS \">120 days\"\nfrom date_dim AS dd\ninner join catalog_sales AS cs\non cs.cs_ship_date_sk = dd.d_date_sk AND dd.d_month_seq BETWEEN 1190 AND 1190 + 11\ninner join call_center AS cc\non cs.cs_call_center_sk = cc.cc_call_center_sk\ninner join ship_mode AS sm\non cs.cs_ship_mode_sk = sm.sm_ship_mode_sk\ninner join warehouse AS w\non cs.cs_warehouse_sk = w.w_warehouse_sk group by substr(w.w_warehouse_name, 1, 20), sm.sm_type, cc.cc_name order by substr(w.w_warehouse_name, 1, 20), sm.sm_type, cc.cc_name LIMIT 100;",
+  "predicted_latency": 247.38430976867676,
+  "actual_latency": 7155.607,
+  "q_error": 28.925064029691452,
+  "inference_time": 0.07521176338195801
+}

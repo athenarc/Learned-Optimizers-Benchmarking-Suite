@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(q1 s t1 tq1 u1) NoMergeJoin(acc q1 s t1 tq1 u1 a1) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 0 AND q1.view_count <= 100\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('dba',\n'math',\n'tex')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('absolute-value',\n'conditional-expectation',\n'differential-topology',\n'expectation',\n'expected-value',\n'finite-fields',\n'fourier-transform',\n'laplace-transform',\n'polar-coordinates',\n'radicals')\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.upvotes >= 0 AND u1.upvotes <= 1\ninner join account AS acc\non acc.id = u1.account_id\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Cleanup',\n'Curious',\n'Enthusiast',\n'Excavator',\n'Famous Question',\n'Nice Answer',\n'Revival',\n'Yearling') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1801.7041683197021,
+  "actual_latency": 785603.716,
+  "q_error": 436.03368955552037,
+  "inference_time": 0.12758159637451172
+}

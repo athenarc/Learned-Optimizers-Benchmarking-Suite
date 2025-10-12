@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 q1 s t1 u1) NoMergeJoin(a1 q1 s t1 u1 tq1) */ select t1.name,\ncount(*)\nfrom answer AS a1\ninner join site AS s\non s.site_id = a1.site_id AND s.site_name IN ('dba',\n'gis',\n'serverfault')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.name IN ('active-directory',\n'arcgis-10.2',\n'debian',\n'geojson',\n'openstreetmap',\n'r',\n'sql',\n'ssl',\n'symbology')\ninner join question AS q1\non s.site_id = q1.site_id AND a1.question_id = q1.id AND q1.score >= 1 AND q1.score <= 10\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND q1.owner_user_id = u1.id AND u1.upvotes >= 0 AND u1.upvotes <= 100\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id AND q1.id = tq1.question_id group by t1.name;",
+  "predicted_latency": 680.6093454360962,
+  "actual_latency": 1877.41,
+  "q_error": 2.758425244362552,
+  "inference_time": 0.06285738945007324
+}

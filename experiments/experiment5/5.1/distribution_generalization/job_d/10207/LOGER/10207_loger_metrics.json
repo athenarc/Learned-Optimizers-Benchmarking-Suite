@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(k mi_idx mk t) NoMergeJoin(k mi mi_idx mk t it1) NoMergeJoin(it1 k mi mi_idx mk t it2) */ select min(mi_idx.info) AS rating,\nmin(t.title) AS north_european_dark_production\nfrom keyword AS k\ninner join movie_keyword AS mk\non k.id = mk.keyword_id AND k.keyword IS NOT NULL AND k.keyword IN ('web',\n'superhero',\n'marvel-comics',\n'marriage')\ninner join movie_info_idx AS mi_idx\non mk.movie_id = mi_idx.movie_id AND mi_idx.info < '6.3'\ninner join title AS t\non t.id = mi_idx.movie_id AND t.id = mk.movie_id AND t.production_year > 2004\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mi_idx.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('Denmark',\n'Sweden',\n'USA',\n'America',\n'Norway',\n'English',\n'Swedish',\n'Danish',\n'Bulgaria',\n'USA')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'countries'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'rating'\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind IN ('tv movie',\n'tv series');",
+  "predicted_latency": 491.8191432952881,
+  "actual_latency": 217.228,
+  "q_error": 2.2640688276616645,
+  "inference_time": 0.035625457763671875
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 q1 s t1 tq1 u1) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom tag_question AS tq1\ninner join question AS q1\non q1.id = tq1.question_id AND q1.score >= 0 AND q1.score <= 1000\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('askubuntu')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('12.10',\n'ati',\n'dpkg',\n'login',\n'multiple-monitors',\n'permissions',\n'php',\n'server',\n'shortcut-keys',\n'software-recommendation',\n'ubuntu-touch')\ninner join answer AS a1\non s.site_id = a1.site_id AND q1.id = a1.question_id\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND u1.downvotes >= 10 AND u1.downvotes <= 100000\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Editor',\n'Famous Question',\n'Good Answer',\n'Nice Answer',\n'Supporter',\n'Teacher') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 683.5790872573853,
+  "actual_latency": 9001.155,
+  "q_error": 13.167686325972744,
+  "inference_time": 0.272524356842041
+}

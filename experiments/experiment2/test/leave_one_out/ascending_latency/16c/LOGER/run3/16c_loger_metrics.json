@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(k mc mk t cn) NoNestLoop(ci cn k mc mk t n) */ select min(an.name) AS cool_actor_pseudonym,\nmin(t.title) AS series_named_after_char\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'\ninner join title AS t\non t.id = mk.movie_id AND t.episode_nr < 100\ninner join movie_companies AS mc\non mc.movie_id = mk.movie_id AND t.id = mc.movie_id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[us]'\ninner join cast_info AS ci\non ci.movie_id = mc.movie_id AND ci.movie_id = mk.movie_id AND ci.movie_id = t.id\ninner join name AS n\non n.id = ci.person_id\ninner join aka_name AS an\non an.person_id = n.id AND an.person_id = ci.person_id;",
+  "predicted_latency": 617.9750561714172,
+  "actual_latency": 2231.087,
+  "q_error": 3.6103188595060853,
+  "inference_time": 0.37456321716308594
+}

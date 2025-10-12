@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(dd ss s) */ select s.s_store_name,\ns.s_store_id,\nsum(case when dd.d_day_name = 'Sunday' then ss.ss_sales_price else null end) AS sun_sales,\nsum(case when dd.d_day_name = 'Monday' then ss.ss_sales_price else null end) AS mon_sales,\nsum(case when dd.d_day_name = 'Tuesday' then ss.ss_sales_price else null end) AS tue_sales,\nsum(case when dd.d_day_name = 'Wednesday' then ss.ss_sales_price else null end) AS wed_sales,\nsum(case when dd.d_day_name = 'Thursday' then ss.ss_sales_price else null end) AS thu_sales,\nsum(case when dd.d_day_name = 'Friday' then ss.ss_sales_price else null end) AS fri_sales,\nsum(case when dd.d_day_name = 'Saturday' then ss.ss_sales_price else null end) AS sat_sales\nfrom date_dim AS dd\ninner join store_sales AS ss\non dd.d_date_sk = ss.ss_sold_date_sk AND dd.d_year = 1998\ninner join store AS s\non s.s_store_sk = ss.ss_store_sk AND s.s_gmt_offset = -5 group by s.s_store_name, s.s_store_id order by s.s_store_name, s.s_store_id, sun_sales, mon_sales, tue_sales, wed_sales, thu_sales, fri_sales, sat_sales LIMIT 100;",
+  "predicted_latency": 451.9224166870117,
+  "actual_latency": 3609.37,
+  "q_error": 7.986702731986283,
+  "inference_time": 0.034155845642089844
+}

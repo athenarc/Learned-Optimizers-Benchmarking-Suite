@@ -1,21 +1,20 @@
---start query 1 in stream 1 using template query27.tpl
-select  i_item_id,
-        s_state, grouping(s_state) g_state,
-        avg(ss_quantity) agg1,
-        avg(ss_list_price) agg2,
-        avg(ss_coupon_amt) agg3,
-        avg(ss_sales_price) agg4
- from store_sales, customer_demographics, date_dim, store, item
- where ss_sold_date_sk = d_date_sk and
-       ss_item_sk = i_item_sk and
-       ss_store_sk = s_store_sk and
-       ss_cdemo_sk = cd_demo_sk and
-       cd_gender = 'M' and
-       cd_marital_status = 'W' and
-       cd_education_status = 'College' and
-       d_year = 2000 and
-       s_state in ('TN','TN', 'TN', 'TN', 'TN', 'TN')
- group by rollup (i_item_id, s_state)
- order by i_item_id
-         ,s_state
- limit 100;
+SELECT
+  i.i_item_id,
+  s.s_state,
+  GROUPING(s.s_state) AS g_state,
+  AVG(ss.ss_quantity) AS agg1,
+  AVG(ss.ss_list_price) AS agg2,
+  AVG(ss.ss_coupon_amt) AS agg3,
+  AVG(ss.ss_sales_price) AS agg4
+FROM store_sales AS ss,
+  customer_demographics AS cd,
+  date_dim AS dd,
+  store AS s,
+  item AS i
+WHERE
+  ss.ss_sold_date_sk = dd.d_date_sk AND ss.ss_item_sk = i.i_item_sk AND ss.ss_store_sk = s.s_store_sk AND ss.ss_cdemo_sk = cd.cd_demo_sk AND cd.cd_gender = 'M' AND cd.cd_marital_status = 'W' AND cd.cd_education_status = 'College' AND dd.d_year = 2000 AND s.s_state IN ('TN', 'TN', 'TN', 'TN', 'TN', 'TN')
+GROUP BY ROLLUP (i.i_item_id, s.s_state)
+ORDER BY
+  i.i_item_id,
+  s.s_state
+LIMIT 100;

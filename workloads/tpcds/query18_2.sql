@@ -1,32 +1,28 @@
---start query 1 in stream 1 using template query18.tpl
-select  i_item_id,
-        ca_country,
-        ca_state, 
-        ca_county,
-        avg( cast(cs_quantity as decimal(12,2))) agg1,
-        avg( cast(cs_list_price as decimal(12,2))) agg2,
-        avg( cast(cs_coupon_amt as decimal(12,2))) agg3,
-        avg( cast(cs_sales_price as decimal(12,2))) agg4,
-        avg( cast(cs_net_profit as decimal(12,2))) agg5,
-        avg( cast(c_birth_year as decimal(12,2))) agg6,
-        avg( cast(cd1.cd_dep_count as decimal(12,2))) agg7
- from catalog_sales, customer_demographics cd1, 
-      customer_demographics cd2, customer, customer_address, date_dim, item
- where cs_sold_date_sk = d_date_sk and
-       cs_item_sk = i_item_sk and
-       cs_bill_cdemo_sk = cd1.cd_demo_sk and
-       cs_bill_customer_sk = c_customer_sk and
-       cd1.cd_gender = 'M' and 
-       cd1.cd_education_status = '4 yr Degree' and
-       c_current_cdemo_sk = cd2.cd_demo_sk and
-       c_current_addr_sk = ca_address_sk and
-       c_birth_month in (6,1,11,5,7,10) and
-       d_year = 1999 and
-       ca_state in ('NC','SD','NY'
-                   ,'IL','CO','MS','TX')
- group by rollup (i_item_id, ca_country, ca_state, ca_county)
- order by ca_country,
-        ca_state, 
-        ca_county,
-	i_item_id
- limit 100;
+SELECT
+  i.i_item_id,
+  ca.ca_country,
+  ca.ca_state,
+  ca.ca_county,
+  AVG(CAST(cs.cs_quantity AS DECIMAL(12, 2))) AS agg1,
+  AVG(CAST(cs.cs_list_price AS DECIMAL(12, 2))) AS agg2,
+  AVG(CAST(cs.cs_coupon_amt AS DECIMAL(12, 2))) AS agg3,
+  AVG(CAST(cs.cs_sales_price AS DECIMAL(12, 2))) AS agg4,
+  AVG(CAST(cs.cs_net_profit AS DECIMAL(12, 2))) AS agg5,
+  AVG(CAST(c.c_birth_year AS DECIMAL(12, 2))) AS agg6,
+  AVG(CAST(cd1.cd_dep_count AS DECIMAL(12, 2))) AS agg7
+FROM catalog_sales AS cs,
+  customer_demographics AS cd1,
+  customer_demographics AS cd2,
+  customer AS c,
+  customer_address AS ca,
+  date_dim AS dd,
+  item AS i
+WHERE
+  cs.cs_sold_date_sk = dd.d_date_sk AND cs.cs_item_sk = i.i_item_sk AND cs.cs_bill_cdemo_sk = cd1.cd_demo_sk AND cs.cs_bill_customer_sk = c.c_customer_sk AND cd1.cd_gender = 'M' AND cd1.cd_education_status = '4 yr Degree' AND c.c_current_cdemo_sk = cd2.cd_demo_sk AND c.c_current_addr_sk = ca.ca_address_sk AND c.c_birth_month IN (6, 1, 11, 5, 7, 10) AND dd.d_year = 1999 AND ca.ca_state IN ('NC', 'SD', 'NY', 'IL', 'CO', 'MS', 'TX')
+GROUP BY ROLLUP (i.i_item_id, ca.ca_country, ca.ca_state, ca.ca_county)
+ORDER BY
+  ca.ca_country,
+  ca.ca_state,
+  ca.ca_county,
+  i.i_item_id
+LIMIT 100;

@@ -1,0 +1,11 @@
+SELECT c.c_city, s.s_city, d.d_year, SUM(l.l_revenue) AS revenue
+FROM customer AS c, lineitem AS l, orders AS o, supplier AS s, date AS d
+WHERE o.o_custkey = c.c_custkey
+  AND l.l_orderkey = o.o_orderkey
+  AND l.l_suppkey = s.s_suppkey
+  AND o.o_orderdate = d.d_datekey
+  AND (c.c_city = 'UNITED KI1' OR c.c_city = 'UNITED KI5')
+  AND (s.s_city = 'UNITED KI1' OR s.s_city = 'UNITED KI5')
+  AND d.d_year >= 1992 AND d.d_year <= 1997
+GROUP BY c.c_city, s.s_city, d.d_year
+ORDER BY d.d_year ASC, revenue DESC;

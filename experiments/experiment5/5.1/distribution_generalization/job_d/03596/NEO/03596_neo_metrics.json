@@ -1,0 +1,9 @@
+{
+    "query_name": "03596",
+    "sql": "SELECT MIN(mi.info) AS movie_budget,\n       MIN(mi_idx.info) AS movie_votes,\n       MIN(n.name) AS male_writer,\n       MIN(t.title) AS violent_movie_title\nFROM cast_info AS ci,\n     info_type AS it1,\n     info_type AS it2,\n     keyword AS k,\n     movie_info AS mi,\n     movie_info_idx AS mi_idx,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE ci.note IN ('(writer)',\n                  '(head writer)',\n                  '(written by)',\n                  '(story)',\n                  '(story editor)')\n  AND it1.info = 'genres'\n  AND it2.info = 'votes'\n  AND t.id = mi.movie_id\n  AND t.id = mi_idx.movie_id\n  AND t.id = ci.movie_id\n  AND t.id = mk.movie_id\n  AND ci.movie_id = mi.movie_id\n  AND ci.movie_id = mi_idx.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND mi.movie_id = mi_idx.movie_id\n  AND mi.movie_id = mk.movie_id\n  AND mi_idx.movie_id = mk.movie_id\n  AND n.id = ci.person_id\n  AND it1.id = mi.info_type_id\n  AND it2.id = mi_idx.info_type_id\n  AND k.id = mk.keyword_id\n  AND t.title like 'Deep%'\nAND k.keyword IN ('based-on-comic',\n'fight',\n'claw',\n'superhero',\n'cold')\nAND mi.info = 'Short'\nAND n.gender = 'm'\nAND t.production_year > 2007;",
+    "hint_str": "/*+ HashJoin(it2 ci k mk t mi_idx n mi it1)\n HashJoin(it2 ci k mk t mi_idx n mi)\n HashJoin(it2 ci k mk t mi_idx n)\n MergeJoin(it2 ci k mk t mi_idx)\n MergeJoin(ci k mk t mi_idx)\n HashJoin(k mk t mi_idx)\n HashJoin(k mk t)\n HashJoin(mk t)\n TidScan(it2)\n IndexScan(ci)\n BitmapScan(k)\n SeqScan(mk)\n BitmapScan(t)\n SeqScan(mi_idx)\n SeqScan(n)\n BitmapScan(mi)\n BitmapScan(it1)\n Leading(((((it2 (ci ((k (mk t)) mi_idx))) n) mi) it1)) */",
+    "inference_time": 5.195082426071167,
+    "planning_time": 14.056,
+    "predicted_latency": -10954.455078125,
+    "actual_latency": 5544.8
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 b q1 s t1 tq1 u1) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 100 AND q1.view_count <= 100000\ninner join tag AS t1\non t1.id = tq1.tag_id AND t1.name IN ('alternative-proof',\n'factoring',\n'gparted',\n'irrational-numbers',\n'ram',\n'ssd',\n'transformation',\n'windows-7')\ninner join answer AS a1\non q1.id = a1.question_id\ninner join site AS s\non s.site_id = t1.site_id AND s.site_id = a1.site_id AND s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('askubuntu',\n'math')\ninner join badge AS b\non s.site_id = b.site_id AND b.name IN ('Autobiographer',\n'Citizen Patrol',\n'Commentator',\n'Curious',\n'Custodian',\n'Editor',\n'Informed',\n'Nice Answer',\n'Promoter',\n'Student')\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND b.user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 1\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1875.4174709320068,
+  "actual_latency": 6766.738,
+  "q_error": 3.6081235804192464,
+  "inference_time": 0.08040714263916016
+}

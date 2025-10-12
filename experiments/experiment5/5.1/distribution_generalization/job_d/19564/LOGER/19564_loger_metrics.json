@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cc cct1 k mk t) NoHashJoin(cc cct1 k kt mi mk t it1) NoMergeJoin(cc cct1 it1 k kt mi mk t mc) NoNestLoop(cc cct1 it1 k kt mc mi mk t ct) NoNestLoop(cc cct1 ct it1 k kt mc mi mk t cn) */ select min(kt.kind) AS movie_kind,\nmin(t.title) AS complete_nerdy_internet_movie\nfrom complete_cast AS cc\ninner join comp_cast_type AS cct1\non cct1.id = cc.status_id AND cct1.kind = 'complete+verified'\ninner join movie_keyword AS mk\non mk.movie_id = cc.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('nerd',\n'loner',\n'alienation',\n'dignity')\ninner join title AS t\non t.id = cc.movie_id AND t.id = mk.movie_id AND t.production_year > 2001\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind IN ('movie')\ninner join movie_info AS mi\non mi.movie_id = cc.movie_id AND t.id = mi.movie_id AND mk.movie_id = mi.movie_id AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates'\ninner join movie_companies AS mc\non mc.movie_id = cc.movie_id AND t.id = mc.movie_id AND mk.movie_id = mc.movie_id AND mi.movie_id = mc.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 568.7452554702759,
+  "actual_latency": 565.149,
+  "q_error": 1.0063633758004984,
+  "inference_time": 0.054979801177978516
+}

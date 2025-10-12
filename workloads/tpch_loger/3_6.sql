@@ -1,26 +1,22 @@
--- using 1739183666 as a seed to the RNG
-
-
 select
-	l_orderkey,
-	sum(l_extendedprice * (1 - l_discount)) as revenue,
-	o_orderdate,
-	o_shippriority
+    l.l_orderkey,
+    sum(l.l_extendedprice * (1 - l.l_discount)) as revenue,
+    o.o_orderdate,
+    o.o_shippriority
 from
-	customer,
-	orders,
-	lineitem
+    customer c,
+    orders o,
+    lineitem l
 where
-	c_mktsegment = 'MACHINERY'
-	and c_custkey = o_custkey
-	and l_orderkey = o_orderkey
-	and o_orderdate < date '1995-03-03'
-	and l_shipdate > date '1995-03-03'
+    c.c_mktsegment = 'MACHINERY'
+    and c.c_custkey = o.o_custkey
+    and l.l_orderkey = o.o_orderkey
+    and o.o_orderdate < date '1995-03-03'
+    and l.l_shipdate > date '1995-03-03'
 group by
-	l_orderkey,
-	o_orderdate,
-	o_shippriority
+    l.l_orderkey,
+    o.o_orderdate,
+    o.o_shippriority
 order by
-	revenue desc,
-	o_orderdate;
-
+    revenue desc,
+    o.o_orderdate;

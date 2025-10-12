@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(cn ct mc miidx t kt) NoNestLoop(cn ct it kt mc mi miidx t it2) */ select min(cn.name) AS producing_company,\nmin(miidx.info) AS rating,\nmin(t.title) AS movie_about_winning\nfrom company_name AS cn\ninner join movie_companies AS mc\non cn.id = mc.company_id AND cn.country_code = '[ar]'\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'distributors'\ninner join title AS t\non mc.movie_id = t.id AND t.title <> '' AND ( t.title like 'Champion%' OR t.title like 'Loser%')\ninner join movie_info_idx AS miidx\non miidx.movie_id = t.id AND miidx.movie_id = mc.movie_id\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie'\ninner join info_type AS it\non it.id = miidx.info_type_id AND it.info = 'rating'\ninner join movie_info AS mi\non mi.movie_id = t.id AND mi.movie_id = mc.movie_id AND mi.movie_id = miidx.movie_id\ninner join info_type AS it2\non it2.id = mi.info_type_id AND it2.info = 'release dates';",
+  "predicted_latency": 146.45375311374664,
+  "actual_latency": 105.507,
+  "q_error": 1.388095132206836,
+  "inference_time": 0.04508852958679199
+}

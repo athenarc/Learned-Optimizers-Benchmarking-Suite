@@ -1,0 +1,7 @@
+{
+  "query": "/*+  */ select acc.location,\ncount(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('drupal',\n'electronics',\n'math') AND t1.name IN ('binomial-theorem',\n'convolution',\n'covering-spaces',\n'infinite-product',\n'laurent-series',\n'uniform-continuity')\ninner join answer AS a1\non s.site_id = a1.site_id\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id\ninner join question AS q1\non s.site_id = q1.site_id AND q1.id = a1.question_id AND q1.id = tq1.question_id AND q1.score >= 0 AND q1.score <= 1000\ninner join so_user AS u1\non s.site_id = u1.site_id AND a1.owner_user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 1\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Announcer',\n'Constituent',\n'Enlightened',\n'Excavator',\n'Explainer',\n'Fanatic',\n'Good Answer',\n'Inquisitive',\n'Self-Learner',\n'Suffrage')\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1291.337490081787,
+  "actual_latency": 2442.112,
+  "q_error": 1.8911493074094274,
+  "inference_time": 0.12391424179077148
+}

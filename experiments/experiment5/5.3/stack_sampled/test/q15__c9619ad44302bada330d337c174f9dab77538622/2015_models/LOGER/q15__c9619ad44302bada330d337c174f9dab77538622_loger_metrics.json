@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(acc q1 s t1 tq1 u1 b1) */ select b1.name,\ncount(*)\nfrom tag AS t1\ninner join site AS s\non s.site_id = t1.site_id AND t1.name IN ('boot',\n'hard-drive',\n'memory',\n'microsoft-excel',\n'security',\n'shell',\n'terminal',\n'unix',\n'usb',\n'windows-xp',\n'wireless-networking') AND s.site_name IN ('superuser')\ninner join tag_question AS tq1\non t1.id = tq1.tag_id AND s.site_id = tq1.site_id\ninner join question AS q1\non q1.id = tq1.question_id AND s.site_id = q1.site_id AND q1.favorite_count >= 5 AND q1.favorite_count <= 5000\ninner join so_user AS u1\non q1.owner_user_id = u1.id AND s.site_id = u1.site_id\ninner join account AS acc\non acc.id = u1.account_id AND acc.website_url ilike '%code%'\ninner join badge AS b1\non s.site_id = b1.site_id AND b1.user_id = u1.id group by b1.name order by count(*) desc LIMIT 100;",
+  "predicted_latency": 129.2993724346161,
+  "actual_latency": 293.828,
+  "q_error": 2.2724626923350497,
+  "inference_time": 0.060883522033691406
+}

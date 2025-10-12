@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(acc s t1 u1 tq1) NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom account AS acc\ninner join so_user AS u1\non acc.id = u1.account_id AND u1.reputation >= 0 AND u1.reputation <= 10\ninner join site AS s\non s.site_id = u1.site_id AND s.site_name IN ('academia',\n'graphicdesign',\n'scifi',\n'softwareengineering',\n'webapps')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.name IN ('adobe-illustrator',\n'adobe-photoshop',\n'c#',\n'google-sheets',\n'graduate-school',\n'marvel',\n'star-trek',\n'story-identification')\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id\ninner join question AS q1\non s.site_id = q1.site_id AND q1.id = tq1.question_id AND q1.score >= 0 AND q1.score <= 1000\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Autobiographer',\n'Editor',\n'Informed',\n'Scholar',\n'Student') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 836.169183254242,
+  "actual_latency": 488383.521,
+  "q_error": 584.0726144669509,
+  "inference_time": 0.08356976509094238
+}

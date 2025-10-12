@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(ci rt t) NoMergeJoin(ci rt t mc) NoHashJoin(ci mc rt t cn) NoHashJoin(ci cn mc rt t n) NoHashJoin(ci cn mc n rt t chn) NoMergeJoin(chn ci cn mc n rt t an) */ select min(an.name) AS alternative_name,\nmin(chn.name) AS voiced_char_name,\nmin(n.name) AS voicing_actress,\nmin(t.title) AS american_movie\nfrom role_type AS rt\ninner join cast_info AS ci\non ci.role_id = rt.id AND rt.role = 'actress' AND ci.note IN ('(uncredited)',\n'(writer)',\n'(executive producer)',\n'(voice)')\ninner join title AS t\non ci.movie_id = t.id\ninner join movie_companies AS mc\non ci.movie_id = mc.movie_id AND t.id = mc.movie_id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[us]'\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'f'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join aka_name AS an\non an.person_id = ci.person_id AND an.person_id = n.id;",
+  "predicted_latency": 540.5589938163757,
+  "actual_latency": 5479.875,
+  "q_error": 10.137422672984842,
+  "inference_time": 0.05310177803039551
+}
