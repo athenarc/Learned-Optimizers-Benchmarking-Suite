@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(s2 t2) NoHashJoin(s2 t2 tq2) NoMergeJoin(q2 s2 t2 tq2 u2) NoNestLoop(account q1 q2 s2 t2 tq1 tq2 u1 u2 t1) NoNestLoop(account q1 q2 s2 t1 t2 tq1 tq2 u1 u2 s1) */ select account.display_name\nfrom site AS s2\ninner join tag AS t2\non t2.site_id = s2.site_id AND s2.site_name = 'stackoverflow' AND t2.name = 'split'\ninner join tag_question AS tq2\non tq2.site_id = s2.site_id AND tq2.tag_id = t2.id\ninner join question AS q2\non q2.site_id = s2.site_id AND tq2.question_id = q2.id\ninner join so_user AS u2\non q2.owner_user_id = u2.id AND q2.site_id = u2.site_id\ninner join so_user AS u1\non u1.account_id = u2.account_id\ninner join account AS account\non account.id = u1.account_id\ninner join question AS q1\non q1.owner_user_id = u1.id AND q1.site_id = u1.site_id\ninner join tag_question AS tq1\non tq1.question_id = q1.id\ninner join tag AS t1\non tq1.tag_id = t1.id AND t1.name = 'prime-numbers'\ninner join site AS s1\non q1.site_id = s1.site_id AND tq1.site_id = s1.site_id AND t1.site_id = s1.site_id AND s1.site_name = 'math';",
+  "predicted_latency": 1481.0017347335815,
+  "actual_latency": 274686.042,
+  "q_error": 185.4731399416041,
+  "inference_time": 0.15218377113342285
+}

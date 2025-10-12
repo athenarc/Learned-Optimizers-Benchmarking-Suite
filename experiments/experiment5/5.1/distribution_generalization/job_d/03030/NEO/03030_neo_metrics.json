@@ -1,0 +1,9 @@
+{
+    "query_name": "03030",
+    "sql": "SELECT MIN(cn.name) AS from_company,\n       MIN(lt.link) AS movie_link_type,\n       MIN(t.title) AS non_polish_sequel_movie\nFROM company_name AS cn,\n     company_type AS ct,\n     keyword AS k,\n     link_type AS lt,\n     movie_companies AS mc,\n     movie_keyword AS mk,\n     movie_link AS ml,\n     title AS t\nWHERE lt.id = ml.link_type_id\n  AND ml.movie_id = t.id\n  AND t.id = mk.movie_id\n  AND mk.keyword_id = k.id\n  AND t.id = mc.movie_id\n  AND mc.company_type_id = ct.id\n  AND mc.company_id = cn.id\n  AND ml.movie_id = mk.movie_id\n  AND ml.movie_id = mc.movie_id\n  AND mk.movie_id = mc.movie_id\n  AND lt.link LIKE '%follow%'\n  AND (cn.name LIKE '%Film%'\n       OR cn.name LIKE '%Warner%')\n  AND mc.note IS NULL\n  AND k.keyword = 'secretary'\nAND cn.country_code <> '[us]'\nAND ct.kind = 'production companies'\nAND t.production_year BETWEEN 1998  AND 2012;",
+    "hint_str": "/*+ HashJoin(mc k mk lt ml cn ct t)\n HashJoin(mc k mk lt ml cn ct)\n HashJoin(mc k mk lt ml cn)\n MergeJoin(mc k mk lt ml)\n MergeJoin(k mk lt ml)\n HashJoin(mk lt ml)\n HashJoin(lt ml)\n TidScan(mc)\n BitmapScan(k)\n BitmapScan(mk)\n BitmapScan(lt)\n BitmapScan(ml)\n BitmapScan(cn)\n TidScan(ct)\n BitmapScan(t)\n Leading(((((mc (k (mk (lt ml)))) cn) ct) t)) */",
+    "inference_time": 4.108081817626953,
+    "planning_time": 6.639,
+    "predicted_latency": -10936.75,
+    "actual_latency": 668.561
+}

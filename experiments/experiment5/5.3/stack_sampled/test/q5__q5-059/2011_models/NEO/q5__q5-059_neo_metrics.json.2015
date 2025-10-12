@@ -1,0 +1,9 @@
+{
+    "query_name": "q5__q5-059",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, tag_question tq1, so_user u1, comment c1,\naccount\nwhere\n-- underappreciated (high votes, low views) questions with at least one comment\ns1.site_name='cooking' and\nt1.name in ('microwave', 'fish', 'dough', 'milk', 'beef', 'pork', 'frying', 'culinary-uses', 'storage-lifetime', 'temperature') and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\nq1.owner_user_id = u1.id and\nq1.site_id = u1.site_id and\nq1.score > 15 and\nq1.view_count < 2973 and\nc1.site_id = q1.site_id and\nc1.post_id = q1.id and\n\n-- to get the display name\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(s1 tq1 t1 q1 c1 u1 account)\n HashJoin(s1 tq1 t1 q1 c1 u1)\n NestLoop(s1 tq1 t1 q1 c1)\n MergeJoin(s1 tq1 t1 q1)\n HashJoin(s1 tq1 t1)\n HashJoin(s1 tq1)\n IndexScan(s1)\n TidScan(tq1)\n BitmapScan(t1)\n BitmapScan(q1)\n IndexScan(c1)\n BitmapScan(u1)\n BitmapScan(account)\n Leading(((((((s1 tq1) t1) q1) c1) u1) account)) */",
+    "inference_time": 0.31314587593078613,
+    "planning_time": 13.403,
+    "predicted_latency": 7455.03857421875,
+    "actual_latency": 10682.934
+}

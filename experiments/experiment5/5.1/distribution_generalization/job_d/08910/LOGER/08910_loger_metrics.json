@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(at cn mc mk t mi) NoHashJoin(at cn mc mi mk t it1) NoMergeJoin(at cn it1 mc mi mk t k) NoNestLoop(at cn it1 k mc mi mk t ct) */ select min(mi.info) AS release_date,\nmin(t.title) AS youtube_movie\nfrom company_name AS cn\ninner join movie_companies AS mc\non cn.id = mc.company_id AND cn.country_code = '[us]' AND cn.name = 'Rockstar Games' AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%'\ninner join title AS t\non t.id = mc.movie_id AND t.production_year BETWEEN 1999 AND 2005\ninner join aka_title AS at\non t.id = at.movie_id AND mc.movie_id = at.movie_id\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND mk.movie_id = mc.movie_id AND mk.movie_id = at.movie_id\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mc.movie_id AND mi.movie_id = at.movie_id AND mk.movie_id = mi.movie_id AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates'\ninner join keyword AS k\non k.id = mk.keyword_id\ninner join company_type AS ct\non ct.id = mc.company_type_id;",
+  "predicted_latency": 515.3270959854126,
+  "actual_latency": 77.784,
+  "q_error": 6.625104082914385,
+  "inference_time": 0.04880928993225098
+}

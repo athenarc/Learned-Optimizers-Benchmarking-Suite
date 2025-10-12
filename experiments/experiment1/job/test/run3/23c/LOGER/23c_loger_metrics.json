@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(it1 mi) NoHashJoin(cc it1 mi t kt) NoHashJoin(cc it1 kt mi t cct1) NoHashJoin(cc cct1 it1 kt mi t mc) NoHashJoin(cc cct1 it1 kt mc mi t cn) NoHashJoin(cc cct1 cn it1 kt mc mi t ct) */ select min(kt.kind) AS movie_kind,\nmin(t.title) AS complete_us_internet_movie\nfrom info_type AS it1\ninner join movie_info AS mi\non it1.id = mi.info_type_id AND it1.info = 'release dates' AND mi.note like '%internet%' AND mi.info IS NOT NULL AND ( mi.info like 'USA:% 199%' OR mi.info like 'USA:% 200%')\ninner join complete_cast AS cc\non mi.movie_id = cc.movie_id\ninner join title AS t\non t.id = mi.movie_id AND t.id = cc.movie_id AND t.production_year > 1990\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind IN ('movie',\n'tv movie',\n'video movie',\n'video game')\ninner join comp_cast_type AS cct1\non cct1.id = cc.status_id AND cct1.kind = 'complete+verified'\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mi.movie_id = mc.movie_id AND mc.movie_id = cc.movie_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join movie_keyword AS mk\non mk.movie_id = mc.movie_id AND mk.movie_id = mi.movie_id AND mk.movie_id = cc.movie_id AND t.id = mk.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id;",
+  "predicted_latency": 522.4636197090149,
+  "actual_latency": 379.896,
+  "q_error": 1.375280654992458,
+  "inference_time": 0.1243429183959961
+}

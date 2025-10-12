@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(k mk) NoNestLoop(ci k mk t n) NoNestLoop(ci k mc mk n t cn) */ select min(n.name) AS member_in_charnamed_movie\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword = 'character-name-in-title'\ninner join title AS t\non t.id = mk.movie_id\ninner join cast_info AS ci\non ci.movie_id = t.id AND ci.movie_id = mk.movie_id\ninner join name AS n\non n.id = ci.person_id\ninner join movie_companies AS mc\non mc.movie_id = mk.movie_id AND ci.movie_id = mc.movie_id AND t.id = mc.movie_id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[us]';",
+  "predicted_latency": 595.2672958374023,
+  "actual_latency": 9358.182,
+  "q_error": 15.720974536044718,
+  "inference_time": 0.38523101806640625
+}

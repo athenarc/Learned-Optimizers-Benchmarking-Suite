@@ -1,9 +1,9 @@
-SELECT SUM(lo_revenue), d_year, p_brand1
-FROM lineorder, date, part, supplier
-WHERE lo_orderdate = d_datekey
-AND lo_partkey = p_partkey
-AND lo_suppkey = s_suppkey
-AND p_brand1 BETWEEN 'MFGR#2221' AND 'MFGR#2228'
-AND s_region = 'ASIA'
-GROUP BY d_year, p_brand1
-ORDER BY d_year, p_brand1;
+SELECT SUM(lo.lo_revenue), d.d_year, p.p_brand1
+FROM lineorder AS lo, date AS d, part AS p, supplier AS s
+WHERE lo.lo_orderdate = d.d_datekey
+AND lo.lo_partkey = p.p_partkey
+AND lo.lo_suppkey = s.s_suppkey
+AND p.p_brand1 BETWEEN 'MFGR#2221' AND 'MFGR#2228'
+AND s.s_region = 'ASIA'
+GROUP BY d.d_year, p.p_brand1
+ORDER BY d.d_year, p.p_brand1;

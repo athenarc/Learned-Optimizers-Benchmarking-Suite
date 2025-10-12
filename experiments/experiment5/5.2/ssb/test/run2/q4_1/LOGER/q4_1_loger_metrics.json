@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(l p s o) NoHashJoin(c l o p s d) */ select d.d_year,\nc.c_nation,\nsum(l.l_revenue - l.l_supplycost) AS profit\nfrom supplier AS s\ninner join lineitem AS l\non l.l_suppkey = s.s_suppkey AND s.s_region = 'AMERICA'\ninner join part AS p\non l.l_partkey = p.p_partkey AND ( p.p_mfgr = 'MFGR#1' OR p.p_mfgr = 'MFGR#2')\ninner join orders AS o\non l.l_orderkey = o.o_orderkey\ninner join customer AS c\non o.o_custkey = c.c_custkey AND c.c_region = 'AMERICA'\ninner join date AS d\non o.o_orderdate = d.d_datekey group by d.d_year, c.c_nation order by d.d_year, c.c_nation;",
+  "predicted_latency": 577.2026777267456,
+  "actual_latency": 2939.695,
+  "q_error": 5.093003053238927,
+  "inference_time": 0.0631554126739502
+}

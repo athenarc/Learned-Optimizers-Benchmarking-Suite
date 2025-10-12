@@ -1,0 +1,8 @@
+{
+    "query_name": "11a",
+    "sql": "SELECT MIN(cn.name) AS from_company, MIN(lt.link) AS movie_link_type, MIN(t.title) AS non_polish_sequel_movie FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_keyword AS mk, movie_link AS ml, title AS t WHERE cn.country_code !='[pl]' AND (cn.name LIKE '%Film%' OR cn.name LIKE '%Warner%') AND ct.kind ='production companies' AND k.keyword ='sequel' AND lt.link LIKE '%follow%' AND mc.note IS NULL AND t.production_year BETWEEN 1950 AND 2000 AND lt.id = ml.link_type_id AND ml.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_type_id = ct.id AND mc.company_id = cn.id AND ml.movie_id = mk.movie_id AND ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(k lt mk ml t mc ct cn)\n HashJoin(mc ct cn)\n MergeJoin(mc ct)\n HashJoin(k lt mk ml t)\n MergeJoin(lt mk ml t)\n HashJoin(lt mk ml)\n HashJoin(mk ml)\n BitmapScan(k)\n TidScan(lt)\n TidScan(mk)\n SeqScan(ml)\n BitmapScan(t)\n BitmapScan(mc)\n SeqScan(ct)\n IndexScan(cn)\n Leading(((k ((lt (mk ml)) t)) ((mc ct) cn))) */",
+    "predicted_latency_ms": 11657.240234375,
+    "planning_time_ms": 6.618,
+    "actual_latency_ms": 1930.346
+}

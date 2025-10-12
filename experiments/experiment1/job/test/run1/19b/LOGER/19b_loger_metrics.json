@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(ci n rt t chn) NoHashJoin(chn ci it mi n rt t an) NoMergeJoin(an chn ci it mc mi n rt t cn) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS kung_fu_panda\nfrom title AS t\ninner join cast_info AS ci\non t.id = ci.movie_id AND t.production_year BETWEEN 2007 AND 2008 AND t.title like '%Kung%Fu%Panda%' AND ci.note = '(voice)'\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Angel%'\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join movie_info AS mi\non mi.movie_id = ci.movie_id AND t.id = mi.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%2007%' OR mi.info like 'USA:%2008%')\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates'\ninner join aka_name AS an\non n.id = an.person_id AND ci.person_id = an.person_id\ninner join movie_companies AS mc\non mc.movie_id = ci.movie_id AND t.id = mc.movie_id AND mc.movie_id = mi.movie_id AND mc.note like '%(200%)%' AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 610.3376746177673,
+  "actual_latency": 203.212,
+  "q_error": 3.0034529192063824,
+  "inference_time": 0.09948039054870605
+}

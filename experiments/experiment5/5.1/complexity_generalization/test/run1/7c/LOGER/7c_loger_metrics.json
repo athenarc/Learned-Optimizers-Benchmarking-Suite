@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(an ci it lt ml n pi t) */ select min(n.name) AS cast_member_name,\nmin(pi.info) AS cast_member_info\nfrom person_info AS pi\ninner join aka_name AS an\non pi.person_id = an.person_id AND pi.note IS NOT NULL AND an.name IS NOT NULL AND ( an.name like '%a%' OR an.name like 'A%')\ninner join info_type AS it\non it.id = pi.info_type_id AND it.info = 'mini biography'\ninner join cast_info AS ci\non pi.person_id = ci.person_id AND an.person_id = ci.person_id\ninner join name AS n\non n.id = pi.person_id AND n.id = an.person_id AND ci.person_id = n.id AND n.name_pcode_cf BETWEEN 'A' AND 'F' AND ( n.gender = 'm' OR ( n.gender = 'f' AND n.name like 'A%'))\ninner join movie_link AS ml\non ci.movie_id = ml.linked_movie_id\ninner join link_type AS lt\non lt.id = ml.link_type_id AND lt.link IN ('references',\n'referenced in',\n'features',\n'featured in')\ninner join title AS t\non ml.linked_movie_id = t.id AND t.id = ci.movie_id AND t.production_year BETWEEN 1980 AND 2010;",
+  "predicted_latency": 671.32169008255,
+  "actual_latency": 22952.959,
+  "q_error": 34.19070073123595,
+  "inference_time": 0.471419095993042
+}

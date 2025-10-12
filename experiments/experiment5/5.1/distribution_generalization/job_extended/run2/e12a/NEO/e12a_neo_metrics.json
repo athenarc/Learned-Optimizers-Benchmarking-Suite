@@ -1,0 +1,9 @@
+{
+    "query_name": "e12a",
+    "sql": "select n.name\nfrom title as t,\nname as n,\ncast_info as ci,\nmovie_info as mi,\ninfo_type as it1,\ninfo_type as it2,\nperson_info as pi\nWHERE t.id = ci.movie_id\nAND t.id = mi.movie_id\nAND ci.person_id = n.id\nAND it1.id = 3\nAND it1.id = mi.info_type_id\nAND (mi.info ILIKE '%romance%'\n  OR mi.info ILIKE '%action%')\nAND it2.info ILIKE '%birth%'\nAND pi.person_id = n.id\nAND pi.info_type_id = it2.id\nAND pi.info ILIKE '%usa%'\ngroup by n.name\norder by count(*) DESC",
+    "hint_str": "/*+ HashJoin(it1 mi t ci n pi it2)\n HashJoin(it1 mi t ci n pi)\n HashJoin(it1 mi t ci n)\n HashJoin(it1 mi t ci)\n HashJoin(it1 mi t)\n HashJoin(it1 mi)\n BitmapScan(it1)\n BitmapScan(mi)\n BitmapScan(t)\n BitmapScan(ci)\n BitmapScan(n)\n BitmapScan(pi)\n BitmapScan(it2)\n Leading(((((((it1 mi) t) ci) n) pi) it2)) */",
+    "inference_time": 0.4203062057495117,
+    "planning_time": 9.153,
+    "predicted_latency": 1e+30,
+    "actual_latency": 16069.933
+}

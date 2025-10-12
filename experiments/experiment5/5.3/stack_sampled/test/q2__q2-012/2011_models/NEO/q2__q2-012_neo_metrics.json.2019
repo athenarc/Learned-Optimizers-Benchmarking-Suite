@@ -1,0 +1,9 @@
+{
+    "query_name": "q2__q2-012",
+    "sql": "select distinct account.display_name\nfrom\ntag t1, site s1, question q1, tag_question tq1, so_user u1,\ntag t2, site s2, question q2, tag_question tq2, so_user u2,\naccount\nwhere\n-- group theory askers\ns1.site_name='stats' and\nt1.name  = 'machine-learning' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\nq1.owner_user_id = u1.id and\nq1.site_id = u1.site_id and\n\n-- D&D askers\ns2.site_name='stackoverflow' and\nt2.name  = 'button' and\nt2.site_id = s2.site_id and\nq2.site_id = s2.site_id and\ntq2.site_id = s2.site_id and\ntq2.question_id = q2.id and\ntq2.tag_id = t2.id and\nq2.owner_user_id = u2.id and\nq2.site_id = u2.site_id and\n\n-- intersect\nu1.account_id = u2.account_id and\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(q1 account u1 s1 t1 tq1 u2 q2 t2 s2 tq2)\n HashJoin(q1 account u1 s1 t1 tq1 u2 q2 t2 s2)\n HashJoin(t2 s2)\n HashJoin(q1 account u1 s1 t1 tq1 u2 q2)\n HashJoin(u2 q2)\n HashJoin(q1 account u1 s1 t1 tq1)\n MergeJoin(q1 account u1 s1 t1)\n MergeJoin(q1 account u1 s1)\n HashJoin(q1 account u1)\n MergeJoin(account u1)\n IndexScan(q1)\n SeqScan(account)\n BitmapScan(u1)\n SeqScan(s1)\n TidScan(t1)\n BitmapScan(tq1)\n BitmapScan(u2)\n SeqScan(q2)\n IndexScan(t2)\n SeqScan(s2)\n BitmapScan(tq2)\n Leading((((((((q1 (account u1)) s1) t1) tq1) (u2 q2)) (t2 s2)) tq2)) */",
+    "inference_time": 1.8637151718139648,
+    "planning_time": 48.731,
+    "predicted_latency": 15732.396484375,
+    "actual_latency": 297530.292
+}

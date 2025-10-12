@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(chn ci cc) NoHashJoin(cc chn ci cct1) NoMergeJoin(cc cct1 chn ci t) NoHashJoin(cc cct1 chn ci t cct2) NoHashJoin(cc cct1 cct2 chn ci t kt) NoHashJoin(cc cct1 cct2 chn ci kt t mk) NoMergeJoin(cc cct1 cct2 chn ci kt mk t k) NoMergeJoin(cc cct1 cct2 chn ci k kt mk t n) */ select min(t.title) AS complete_downey_ironman_movie\nfrom char_name AS chn\ninner join cast_info AS ci\non chn.id = ci.person_role_id AND chn.name not like '%Sherlock%' AND ( chn.name like '%Tony%Stark%' OR chn.name like '%Iron%Man%')\ninner join complete_cast AS cc\non ci.movie_id = cc.movie_id\ninner join comp_cast_type AS cct1\non cct1.id = cc.subject_id AND cct1.kind = 'cast'\ninner join title AS t\non t.id = ci.movie_id AND t.id = cc.movie_id AND t.production_year > 1950\ninner join comp_cast_type AS cct2\non cct2.id = cc.status_id AND cct2.kind like '%complete%'\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie'\ninner join movie_keyword AS mk\non mk.movie_id = ci.movie_id AND t.id = mk.movie_id AND mk.movie_id = cc.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('superhero',\n'sequel',\n'second-part',\n'marvel-comics',\n'based-on-comic',\n'tv-special',\n'fight',\n'violence')\ninner join name AS n\non n.id = ci.person_id;",
+  "predicted_latency": 277.3360013961792,
+  "actual_latency": 395.475,
+  "q_error": 1.4259778680340072,
+  "inference_time": 0.12066507339477539
+}

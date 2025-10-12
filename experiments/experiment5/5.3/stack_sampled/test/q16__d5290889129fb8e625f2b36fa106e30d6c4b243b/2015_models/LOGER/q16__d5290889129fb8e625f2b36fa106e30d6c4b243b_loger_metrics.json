@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(t1 s) NoMergeJoin(s t1 tq1) NoMergeJoin(acc q1 s t1 tq1 u1 b1) */ select count(*)\nfrom tag AS t1\ninner join site AS s\non s.site_id = t1.site_id AND t1.name IN ('cucumber-java',\n'flv') AND s.site_name = 'stackoverflow'\ninner join tag_question AS tq1\non t1.id = tq1.tag_id AND s.site_id = tq1.site_id\ninner join question AS q1\non q1.id = tq1.question_id AND s.site_id = q1.site_id AND q1.score >= 0 AND q1.score <= 5\ninner join so_user AS u1\non q1.owner_user_id = u1.id AND s.site_id = u1.site_id\ninner join account AS acc\non acc.id = u1.account_id AND acc.website_url ilike '%me'\ninner join badge AS b1\non s.site_id = b1.site_id AND b1.user_id = u1.id;",
+  "predicted_latency": 138.4555995464325,
+  "actual_latency": 40.441,
+  "q_error": 3.423644310141502,
+  "inference_time": 0.07579541206359863
+}

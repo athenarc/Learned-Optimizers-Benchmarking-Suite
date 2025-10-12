@@ -1,0 +1,9 @@
+{
+    "query_name": "01019",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(executive producer)',\n'(voice)',\n'(writer)',\n'(as Amis) (credit only)')\nAND n.name like '%Amy%'\nAND t.production_year BETWEEN 1998  AND 2013;",
+    "hint_str": "/*+ HashJoin(mi n t ci an chn mc cn it rt)\n NestLoop(mi n t ci an chn mc cn it)\n MergeJoin(mi n t ci an chn mc cn)\n MergeJoin(mi n t ci an chn mc)\n MergeJoin(mi n t ci an chn)\n MergeJoin(mi n t ci an)\n HashJoin(n t ci an)\n HashJoin(n t ci)\n HashJoin(t ci)\n TidScan(mi)\n TidScan(n)\n IndexScan(t)\n BitmapScan(ci)\n TidScan(an)\n TidScan(chn)\n TidScan(mc)\n BitmapScan(cn)\n IndexScan(it)\n BitmapScan(rt)\n Leading(((((((mi ((n (t ci)) an)) chn) mc) cn) it) rt)) */",
+    "inference_time": 4.565483570098877,
+    "planning_time": 18.386,
+    "predicted_latency": -10964.9619140625,
+    "actual_latency": 42593.541
+}

@@ -1,0 +1,240 @@
+[
+    {
+        "Bao": {
+            "Bao prediction": 688.389,
+            "Bao recommended hint": "SET enable_mergejoin TO off; SET enable_indexscan TO off; "
+        }
+    },
+    {
+        "Plan": {
+            "Node Type": "Aggregate",
+            "Strategy": "Plain",
+            "Partial Mode": "Simple",
+            "Parallel Aware": false,
+            "Startup Cost": 3730.23,
+            "Total Cost": 3730.24,
+            "Plan Rows": 1,
+            "Plan Width": 8,
+            "Actual Startup Time": 43.819,
+            "Actual Total Time": 43.824,
+            "Actual Rows": 1,
+            "Actual Loops": 1,
+            "Output": [
+                "count(*)"
+            ],
+            "Plans": [
+                {
+                    "Node Type": "Nested Loop",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Join Type": "Inner",
+                    "Startup Cost": 5.34,
+                    "Total Cost": 3730.23,
+                    "Plan Rows": 1,
+                    "Plan Width": 0,
+                    "Actual Startup Time": 33.381,
+                    "Actual Total Time": 43.808,
+                    "Actual Rows": 20,
+                    "Actual Loops": 1,
+                    "Inner Unique": true,
+                    "Join Filter": "(tag.site_id = question.site_id)",
+                    "Rows Removed by Join Filter": 0,
+                    "Plans": [
+                        {
+                            "Node Type": "Nested Loop",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Join Type": "Inner",
+                            "Startup Cost": 4.89,
+                            "Total Cost": 3609.3,
+                            "Plan Rows": 27,
+                            "Plan Width": 16,
+                            "Actual Startup Time": 33.316,
+                            "Actual Total Time": 43.271,
+                            "Actual Rows": 20,
+                            "Actual Loops": 1,
+                            "Output": [
+                                "tag.site_id",
+                                "site.site_id",
+                                "tag_question.site_id",
+                                "tag_question.question_id"
+                            ],
+                            "Inner Unique": false,
+                            "Plans": [
+                                {
+                                    "Node Type": "Nested Loop",
+                                    "Parent Relationship": "Outer",
+                                    "Parallel Aware": false,
+                                    "Join Type": "Inner",
+                                    "Startup Cost": 0.0,
+                                    "Total Cost": 3476.82,
+                                    "Plan Rows": 1,
+                                    "Plan Width": 12,
+                                    "Actual Startup Time": 23.507,
+                                    "Actual Total Time": 33.378,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 1,
+                                    "Output": [
+                                        "tag.site_id",
+                                        "tag.id",
+                                        "site.site_id"
+                                    ],
+                                    "Inner Unique": false,
+                                    "Join Filter": "(tag.site_id = site.site_id)",
+                                    "Rows Removed by Join Filter": 0,
+                                    "Plans": [
+                                        {
+                                            "Node Type": "Seq Scan",
+                                            "Parent Relationship": "Outer",
+                                            "Parallel Aware": false,
+                                            "Relation Name": "site",
+                                            "Schema": "public",
+                                            "Alias": "site",
+                                            "Startup Cost": 0.0,
+                                            "Total Cost": 3.16,
+                                            "Plan Rows": 1,
+                                            "Plan Width": 4,
+                                            "Actual Startup Time": 0.062,
+                                            "Actual Total Time": 0.068,
+                                            "Actual Rows": 1,
+                                            "Actual Loops": 1,
+                                            "Output": [
+                                                "site.site_id",
+                                                "site.site_name"
+                                            ],
+                                            "Filter": "((site.site_name)::text = 'stackoverflow'::text)",
+                                            "Rows Removed by Filter": 172
+                                        },
+                                        {
+                                            "Node Type": "Seq Scan",
+                                            "Parent Relationship": "Inner",
+                                            "Parallel Aware": false,
+                                            "Relation Name": "tag",
+                                            "Schema": "public",
+                                            "Alias": "tag",
+                                            "Startup Cost": 0.0,
+                                            "Total Cost": 3473.62,
+                                            "Plan Rows": 3,
+                                            "Plan Width": 8,
+                                            "Actual Startup Time": 23.44,
+                                            "Actual Total Time": 33.302,
+                                            "Actual Rows": 1,
+                                            "Actual Loops": 1,
+                                            "Output": [
+                                                "tag.id",
+                                                "tag.site_id",
+                                                "tag.name"
+                                            ],
+                                            "Filter": "((tag.name)::text = 'static-allocation'::text)",
+                                            "Rows Removed by Filter": 184929
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Node Type": "Bitmap Heap Scan",
+                                    "Parent Relationship": "Inner",
+                                    "Parallel Aware": false,
+                                    "Relation Name": "tag_question",
+                                    "Schema": "public",
+                                    "Alias": "tag_question",
+                                    "Startup Cost": 4.89,
+                                    "Total Cost": 132.16,
+                                    "Plan Rows": 32,
+                                    "Plan Width": 12,
+                                    "Actual Startup Time": 9.795,
+                                    "Actual Total Time": 9.871,
+                                    "Actual Rows": 20,
+                                    "Actual Loops": 1,
+                                    "Output": [
+                                        "tag_question.question_id",
+                                        "tag_question.tag_id",
+                                        "tag_question.site_id"
+                                    ],
+                                    "Recheck Cond": "((tag_question.site_id = tag.site_id) AND (tag_question.tag_id = tag.id))",
+                                    "Rows Removed by Index Recheck": 0,
+                                    "Exact Heap Blocks": 20,
+                                    "Lossy Heap Blocks": 0,
+                                    "Plans": [
+                                        {
+                                            "Node Type": "Bitmap Index Scan",
+                                            "Parent Relationship": "Outer",
+                                            "Parallel Aware": false,
+                                            "Index Name": "tag_question_site_id_tag_id_question_id_idx",
+                                            "Startup Cost": 0.0,
+                                            "Total Cost": 4.89,
+                                            "Plan Rows": 32,
+                                            "Plan Width": 0,
+                                            "Actual Startup Time": 9.774,
+                                            "Actual Total Time": 9.774,
+                                            "Actual Rows": 20,
+                                            "Actual Loops": 1,
+                                            "Index Cond": "((tag_question.site_id = tag.site_id) AND (tag_question.tag_id = tag.id))"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Node Type": "Bitmap Heap Scan",
+                            "Parent Relationship": "Inner",
+                            "Parallel Aware": false,
+                            "Relation Name": "question",
+                            "Schema": "public",
+                            "Alias": "question",
+                            "Startup Cost": 0.45,
+                            "Total Cost": 4.47,
+                            "Plan Rows": 1,
+                            "Plan Width": 8,
+                            "Actual Startup Time": 0.02,
+                            "Actual Total Time": 0.02,
+                            "Actual Rows": 1,
+                            "Actual Loops": 20,
+                            "Output": [
+                                "question.id",
+                                "question.site_id",
+                                "question.accepted_answer_id",
+                                "question.creation_date",
+                                "question.deletion_date",
+                                "question.score",
+                                "question.view_count",
+                                "question.body",
+                                "question.owner_user_id",
+                                "question.last_editor_id",
+                                "question.last_edit_date",
+                                "question.last_activity_date",
+                                "question.title",
+                                "question.favorite_count",
+                                "question.closed_date",
+                                "question.tagstring"
+                            ],
+                            "Recheck Cond": "((question.id = tag_question.question_id) AND (question.site_id = tag_question.site_id))",
+                            "Rows Removed by Index Recheck": 0,
+                            "Exact Heap Blocks": 20,
+                            "Lossy Heap Blocks": 0,
+                            "Plans": [
+                                {
+                                    "Node Type": "Bitmap Index Scan",
+                                    "Parent Relationship": "Outer",
+                                    "Parallel Aware": false,
+                                    "Index Name": "question_pkey",
+                                    "Startup Cost": 0.0,
+                                    "Total Cost": 0.45,
+                                    "Plan Rows": 1,
+                                    "Plan Width": 0,
+                                    "Actual Startup Time": 0.013,
+                                    "Actual Total Time": 0.013,
+                                    "Actual Rows": 1,
+                                    "Actual Loops": 20,
+                                    "Index Cond": "((question.id = tag_question.question_id) AND (question.site_id = tag_question.site_id))"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Planning Time": 670.418,
+        "Triggers": [],
+        "Execution Time": 44.018
+    }
+]

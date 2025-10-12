@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(cn mc) NoMergeJoin(cn mc t) NoHashJoin(cn mc t ci) NoHashJoin(ci cn mc t rt) NoHashJoin(ci cn mc rt t n1) NoHashJoin(ci cn mc n1 rt t a1) */ select min(a1.name) AS writer_pseudo_name,\nmin(t.title) AS movie_title\nfrom company_name AS cn\ninner join movie_companies AS mc\non mc.company_id = cn.id AND cn.country_code = '[sm]'\ninner join title AS t\non t.id = mc.movie_id\ninner join cast_info AS ci\non ci.movie_id = t.id AND ci.movie_id = mc.movie_id\ninner join role_type AS rt\non ci.role_id = rt.id AND rt.role = 'actress'\ninner join name AS n1\non n1.id = ci.person_id\ninner join aka_name AS a1\non a1.person_id = ci.person_id AND a1.person_id = n1.id;",
+  "predicted_latency": 589.5751118659973,
+  "actual_latency": 37.025,
+  "q_error": 15.923703223929705,
+  "inference_time": 0.042290449142456055
+}

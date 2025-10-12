@@ -1,0 +1,8 @@
+{
+    "query_name": "19d",
+    "sql": "SELECT MIN(n.name) AS voicing_actress, MIN(t.title) AS jap_engl_voiced_movie FROM aka_name AS an, char_name AS chn, cast_info AS ci, company_name AS cn, info_type AS it, movie_companies AS mc, movie_info AS mi, name AS n, role_type AS rt, title AS t WHERE ci.note  in ('(voice)', '(voice: Japanese version)', '(voice) (uncredited)', '(voice: English version)') AND cn.country_code ='[us]' AND it.info  = 'release dates' AND n.gender ='f' AND rt.role ='actress' AND t.production_year  > 2000 AND t.id = mi.movie_id AND t.id = mc.movie_id AND t.id = ci.movie_id AND mc.movie_id = ci.movie_id AND mc.movie_id = mi.movie_id AND mi.movie_id = ci.movie_id AND cn.id = mc.company_id AND it.id = mi.info_type_id AND n.id = ci.person_id AND rt.id = ci.role_id AND n.id = an.person_id AND ci.person_id = an.person_id AND chn.id = ci.person_role_id;",
+    "hint_str": "/*+ HashJoin(n t an ci cn mc chn mi rt it)\n NestLoop(n t an ci cn mc chn mi rt)\n HashJoin(n t an ci cn mc chn mi)\n HashJoin(n t an ci cn mc chn)\n MergeJoin(t an ci cn mc chn)\n HashJoin(t an ci cn mc)\n HashJoin(an ci cn mc)\n NestLoop(cn mc)\n HashJoin(an ci)\n BitmapScan(n)\n SeqScan(t)\n SeqScan(an)\n SeqScan(ci)\n IndexScan(cn)\n IndexScan(mc)\n BitmapScan(chn)\n TidScan(mi)\n IndexScan(rt)\n BitmapScan(it)\n Leading(((((n ((t ((an ci) (cn mc))) chn)) mi) rt) it)) */",
+    "predicted_latency_ms": 13211.697265625,
+    "planning_time_ms": 18.02,
+    "actual_latency_ms": 11017.332
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "02362",
+    "sql": "SELECT MIN(mi.info) AS release_date,\n       MIN(miidx.info) AS rating,\n       MIN(t.title) AS german_movie\nFROM company_name AS cn,\n     company_type AS ct,\n     info_type AS it,\n     info_type AS it2,\n     kind_type AS kt,\n     movie_companies AS mc,\n     movie_info AS mi,\n     movie_info_idx AS miidx,\n     title AS t\nWHERE it.info ='rating'\n  AND it2.info ='release dates'\n  AND mi.movie_id = t.id\n  AND it2.id = mi.info_type_id\n  AND kt.id = t.kind_id\n  AND mc.movie_id = t.id\n  AND cn.id = mc.company_id\n  AND ct.id = mc.company_type_id\n  AND miidx.movie_id = t.id\n  AND it.id = miidx.info_type_id\n  AND mi.movie_id = miidx.movie_id\n  AND mi.movie_id = mc.movie_id\n  AND miidx.movie_id = mc.movie_id\n  AND ct.kind = 'distributors'\nAND kt.kind = 'movie'\nAND cn.country_code = '[gb]';",
+    "hint_str": "/*+ HashJoin(kt ct it cn miidx it2 mi mc t)\n HashJoin(ct it cn miidx it2 mi mc t)\n MergeJoin(it cn miidx it2 mi mc t)\n HashJoin(it cn miidx it2 mi mc)\n MergeJoin(cn miidx it2 mi mc)\n HashJoin(miidx it2 mi mc)\n HashJoin(miidx it2 mi)\n MergeJoin(it2 mi)\n BitmapScan(kt)\n SeqScan(ct)\n BitmapScan(it)\n TidScan(cn)\n BitmapScan(miidx)\n BitmapScan(it2)\n SeqScan(mi)\n IndexScan(mc)\n TidScan(t)\n Leading((kt (ct ((it (cn ((miidx (it2 mi)) mc))) t)))) */",
+    "inference_time": 4.661542177200317,
+    "planning_time": 9.809,
+    "predicted_latency": -11468.9580078125,
+    "actual_latency": 45519.739
+}

@@ -1,0 +1,160 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Startup Cost": 3641805.71,
+      "Total Cost": 3641805.73,
+      "Plan Rows": 7,
+      "Plan Width": 27,
+      "Actual Startup Time": 22707.11,
+      "Actual Total Time": 22707.114,
+      "Actual Rows": 2,
+      "Actual Loops": 1,
+      "Output": [
+        "lineitem.l_shipmode",
+        "(sum(CASE WHEN ((orders.o_orderpriority = '1-URGENT'::bpchar) OR (orders.o_orderpriority = '2-HIGH'::bpchar)) THEN 1 ELSE 0 END))",
+        "(sum(CASE WHEN ((orders.o_orderpriority <> '1-URGENT'::bpchar) AND (orders.o_orderpriority <> '2-HIGH'::bpchar)) THEN 1 ELSE 0 END))"
+      ],
+      "Sort Key": [
+        "lineitem.l_shipmode"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Startup Cost": 3641805.54,
+          "Total Cost": 3641805.61,
+          "Plan Rows": 7,
+          "Plan Width": 27,
+          "Actual Startup Time": 22707.058,
+          "Actual Total Time": 22707.061,
+          "Actual Rows": 2,
+          "Actual Loops": 1,
+          "Output": [
+            "lineitem.l_shipmode",
+            "sum(CASE WHEN ((orders.o_orderpriority = '1-URGENT'::bpchar) OR (orders.o_orderpriority = '2-HIGH'::bpchar)) THEN 1 ELSE 0 END)",
+            "sum(CASE WHEN ((orders.o_orderpriority <> '1-URGENT'::bpchar) AND (orders.o_orderpriority <> '2-HIGH'::bpchar)) THEN 1 ELSE 0 END)"
+          ],
+          "Group Key": [
+            "lineitem.l_shipmode"
+          ],
+          "Plans": [
+            {
+              "Node Type": "Hash Join",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Join Type": "Inner",
+              "Startup Cost": 613170.42,
+              "Total Cost": 3148499.79,
+              "Plan Rows": 28188900,
+              "Plan Width": 27,
+              "Actual Startup Time": 8079.429,
+              "Actual Total Time": 22568.913,
+              "Actual Rows": 312971,
+              "Actual Loops": 1,
+              "Output": [
+                "lineitem.l_shipmode",
+                "orders.o_orderpriority"
+              ],
+              "Inner Unique": true,
+              "Hash Cond": "(lineitem.l_orderkey = orders.o_orderkey)",
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Relation Name": "lineitem",
+                  "Schema": "public",
+                  "Alias": "lineitem",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 2534589.42,
+                  "Plan Rows": 281889,
+                  "Plan Width": 15,
+                  "Actual Startup Time": 0.621,
+                  "Actual Total Time": 14111.969,
+                  "Actual Rows": 312971,
+                  "Actual Loops": 1,
+                  "Output": [
+                    "lineitem.l_orderkey",
+                    "lineitem.l_partkey",
+                    "lineitem.l_suppkey",
+                    "lineitem.l_linenumber",
+                    "lineitem.l_quantity",
+                    "lineitem.l_extendedprice",
+                    "lineitem.l_discount",
+                    "lineitem.l_tax",
+                    "lineitem.l_returnflag",
+                    "lineitem.l_linestatus",
+                    "lineitem.l_shipdate",
+                    "lineitem.l_commitdate",
+                    "lineitem.l_receiptdate",
+                    "lineitem.l_shipinstruct",
+                    "lineitem.l_shipmode",
+                    "lineitem.l_comment",
+                    "lineitem.l_dummy"
+                  ],
+                  "Filter": "((lineitem.l_shipmode = ANY ('{SHIP,RAIL}'::bpchar[])) AND (lineitem.l_commitdate < lineitem.l_receiptdate) AND (lineitem.l_shipdate < lineitem.l_commitdate) AND (lineitem.l_receiptdate >= '1993-01-01'::date) AND (lineitem.l_receiptdate < '1994-01-01 00:00:00'::timestamp without time zone))",
+                  "Rows Removed by Filter": 59673080
+                },
+                {
+                  "Node Type": "Hash",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": false,
+                  "Startup Cost": 425675.74,
+                  "Total Cost": 425675.74,
+                  "Plan Rows": 14999574,
+                  "Plan Width": 20,
+                  "Actual Startup Time": 7961.339,
+                  "Actual Total Time": 7961.34,
+                  "Actual Rows": 14999999,
+                  "Actual Loops": 1,
+                  "Output": [
+                    "orders.o_orderpriority",
+                    "orders.o_orderkey"
+                  ],
+                  "Hash Buckets": 16777216,
+                  "Original Hash Buckets": 16777216,
+                  "Hash Batches": 1,
+                  "Original Hash Batches": 1,
+                  "Peak Memory Usage": 892791,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Relation Name": "orders",
+                      "Schema": "public",
+                      "Alias": "orders",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 425675.74,
+                      "Plan Rows": 14999574,
+                      "Plan Width": 20,
+                      "Actual Startup Time": 0.048,
+                      "Actual Total Time": 2517.848,
+                      "Actual Rows": 14999999,
+                      "Actual Loops": 1,
+                      "Output": [
+                        "orders.o_orderpriority",
+                        "orders.o_orderkey"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning Time": 1144.387,
+    "Triggers": [],
+    "Execution Time": 22726.519
+  }
+]

@@ -1,0 +1,9 @@
+{
+    "query_name": "q15__c9619ad44302bada330d337c174f9dab77538622",
+    "sql": "SELECT b1.name, count(*)\nFROM\nsite as s,\nso_user as u1,\ntag as t1,\ntag_question as tq1,\nquestion as q1,\nbadge as b1,\naccount as acc\nWHERE\ns.site_id = u1.site_id\nAND s.site_id = b1.site_id\nAND s.site_id = t1.site_id\nAND s.site_id = tq1.site_id\nAND s.site_id = q1.site_id\nAND t1.id = tq1.tag_id\nAND q1.id = tq1.question_id\nAND q1.owner_user_id = u1.id\nAND acc.id = u1.account_id\nAND b1.user_id = u1.id\nAND (q1.favorite_count >= 5)\nAND (q1.favorite_count <= 5000)\nAND (s.site_name in ('superuser'))\nAND (t1.name in ('boot','hard-drive','memory','microsoft-excel','security','shell','terminal','unix','usb','windows-xp','wireless-networking'))\nAND (acc.website_url ILIKE ('%code%'))\nGROUP BY b1.name\nORDER BY COUNT(*)\nDESC\nLIMIT 100",
+    "hint_str": "/*+ HashJoin(tq1 q1 acc t1 s u1 b1)\n MergeJoin(acc t1 s u1 b1)\n HashJoin(acc t1 s u1)\n MergeJoin(t1 s u1)\n MergeJoin(t1 s)\n MergeJoin(tq1 q1)\n BitmapScan(tq1)\n BitmapScan(q1)\n IndexScan(acc)\n BitmapScan(t1)\n BitmapScan(s)\n SeqScan(u1)\n TidScan(b1)\n Leading(((tq1 q1) ((acc ((t1 s) u1)) b1))) */",
+    "inference_time": 0.7413797378540039,
+    "planning_time": 14.577,
+    "predicted_latency": 13266.724609375,
+    "actual_latency": 168336.285
+}

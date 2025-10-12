@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 b q1 s t1 tq1 u1 acc) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.favorite_count >= 0 AND q1.favorite_count <= 10000\ninner join tag AS t1\non t1.id = tq1.tag_id AND t1.name IN ('10.10',\n'13.04',\n'dpkg',\n'firefox',\n'gnome-shell',\n'graphics',\n'installation',\n'login',\n'mouse',\n'nautilus',\n'permissions',\n'security',\n'ssh')\ninner join answer AS a1\non q1.id = a1.question_id\ninner join so_user AS u1\non a1.owner_user_id = u1.id AND u1.downvotes >= 0 AND u1.downvotes <= 1\ninner join site AS s\non s.site_id = a1.site_id AND s.site_id = t1.site_id AND s.site_id = tq1.site_id AND s.site_id = u1.site_id AND s.site_id = q1.site_id AND s.site_name IN ('askubuntu')\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Analytical',\n'Announcer',\n'Good Answer',\n'Good Question',\n'Organizer',\n'Peer Pressure')\ninner join account AS acc\non acc.id = u1.account_id group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1562.1669292449951,
+  "actual_latency": 5403.595,
+  "q_error": 3.459038146846183,
+  "inference_time": 0.0805046558380127
+}

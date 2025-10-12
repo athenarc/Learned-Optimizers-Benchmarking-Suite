@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(it kt mc miidx t ct) NoMergeJoin(cn ct it kt mc miidx t mi) */ select min(mi.info) AS release_date,\nmin(miidx.info) AS rating,\nmin(t.title) AS german_movie\nfrom info_type AS it\ninner join movie_info_idx AS miidx\non it.id = miidx.info_type_id AND it.info = 'rating'\ninner join title AS t\non miidx.movie_id = t.id\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie'\ninner join movie_companies AS mc\non mc.movie_id = t.id AND miidx.movie_id = mc.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[de]'\ninner join movie_info AS mi\non mi.movie_id = mc.movie_id AND mi.movie_id = t.id AND mi.movie_id = miidx.movie_id\ninner join info_type AS it2\non it2.id = mi.info_type_id AND it2.info = 'release dates';",
+  "predicted_latency": 687.2566938400269,
+  "actual_latency": 1558.844,
+  "q_error": 2.268212174537005,
+  "inference_time": 0.12592291831970215
+}

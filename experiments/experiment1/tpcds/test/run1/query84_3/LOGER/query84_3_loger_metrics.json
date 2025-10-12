@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(c ca hd ib) NoMergeJoin(c ca cd hd ib sr) */ select c.c_customer_id AS customer_id,\ncoalesce(c.c_last_name, '') || ', ' || coalesce(c.c_first_name, '') AS customername\nfrom customer_address AS ca\ninner join customer AS c\non c.c_current_addr_sk = ca.ca_address_sk AND ca.ca_city = 'Pleasant Hill'\ninner join household_demographics AS hd\non hd.hd_demo_sk = c.c_current_hdemo_sk\ninner join income_band AS ib\non ib.ib_income_band_sk = hd.hd_income_band_sk AND ib.ib_lower_bound >= 35577 AND ib.ib_upper_bound <= 35577 + 50000\ninner join customer_demographics AS cd\non cd.cd_demo_sk = c.c_current_cdemo_sk\ninner join store_returns AS sr\non sr.sr_cdemo_sk = cd.cd_demo_sk order by c.c_customer_id LIMIT 100;",
+  "predicted_latency": 433.4758520126343,
+  "actual_latency": 403.037,
+  "q_error": 1.0755237162162141,
+  "inference_time": 0.09192156791687012
+}

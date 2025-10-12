@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(n an) NoMergeJoin(an n ci) NoMergeJoin(an chn ci n t) NoMergeJoin(an chn ci n t mc) NoHashJoin(an chn ci mc mi n t it) NoMergeJoin(an chn ci it mc mi n t rt) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS voiced_movie\nfrom name AS n\ninner join aka_name AS an\non n.id = an.person_id AND n.gender = 'f' AND n.name like '%Kop,%'\ninner join cast_info AS ci\non n.id = ci.person_id AND ci.person_id = an.person_id AND ci.note IN ('(writer)',\n'(executive producer)',\n'(uncredited)',\n'(as Anya)')\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join title AS t\non t.id = ci.movie_id AND t.production_year BETWEEN 2000 AND 2009\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mc.movie_id = ci.movie_id AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join movie_info AS mi\non t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.movie_id = ci.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates'\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 377.69293785095215,
+  "actual_latency": 351.448,
+  "q_error": 1.074676589000228,
+  "inference_time": 0.05631542205810547
+}

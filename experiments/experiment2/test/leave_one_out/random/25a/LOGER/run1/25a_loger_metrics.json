@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(ci it1 mi mi_idx it2) NoMergeJoin(ci it1 it2 mi mi_idx mk) NoHashJoin(ci it1 it2 mi mi_idx mk k) NoHashJoin(ci it1 it2 k mi mi_idx mk n t) */ select min(mi.info) AS movie_budget,\nmin(mi_idx.info) AS movie_votes,\nmin(n.name) AS male_writer,\nmin(t.title) AS violent_movie_title\nfrom info_type AS it1\ninner join movie_info AS mi\non it1.id = mi.info_type_id AND it1.info = 'genres' AND mi.info = 'Horror'\ninner join cast_info AS ci\non ci.movie_id = mi.movie_id AND ci.note IN ('(writer)',\n'(head writer)',\n'(written by)',\n'(story)',\n'(story editor)')\ninner join movie_info_idx AS mi_idx\non mi.movie_id = mi_idx.movie_id AND ci.movie_id = mi_idx.movie_id\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'votes'\ninner join movie_keyword AS mk\non mi.movie_id = mk.movie_id AND mi_idx.movie_id = mk.movie_id AND ci.movie_id = mk.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('murder',\n'blood',\n'gore',\n'death',\n'female-nudity')\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'm'\ninner join title AS t\non t.id = mk.movie_id AND t.id = mi.movie_id AND t.id = mi_idx.movie_id AND t.id = ci.movie_id;",
+  "predicted_latency": 263.3104920387268,
+  "actual_latency": 3011.482,
+  "q_error": 11.43699962991631,
+  "inference_time": 0.41413021087646484
+}

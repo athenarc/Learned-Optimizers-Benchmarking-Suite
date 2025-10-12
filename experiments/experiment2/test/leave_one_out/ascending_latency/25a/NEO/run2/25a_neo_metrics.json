@@ -1,0 +1,9 @@
+{
+    "query_name": "25a",
+    "sql": "SELECT MIN(mi.info) AS movie_budget, MIN(mi_idx.info) AS movie_votes, MIN(n.name) AS male_writer, MIN(t.title) AS violent_movie_title FROM cast_info AS ci, info_type AS it1, info_type AS it2, keyword AS k, movie_info AS mi, movie_info_idx AS mi_idx, movie_keyword AS mk, name AS n, title AS t WHERE ci.note  in ('(writer)', '(head writer)', '(written by)', '(story)', '(story editor)') AND it1.info  = 'genres' AND it2.info  = 'votes' AND k.keyword  in ('murder', 'blood', 'gore', 'death', 'female-nudity') AND mi.info  = 'Horror' AND n.gender  = 'm' AND t.id = mi.movie_id AND t.id = mi_idx.movie_id AND t.id = ci.movie_id AND t.id = mk.movie_id AND ci.movie_id = mi.movie_id AND ci.movie_id = mi_idx.movie_id AND ci.movie_id = mk.movie_id AND mi.movie_id = mi_idx.movie_id AND mi.movie_id = mk.movie_id AND mi_idx.movie_id = mk.movie_id AND n.id = ci.person_id AND it1.id = mi.info_type_id AND it2.id = mi_idx.info_type_id AND k.id = mk.keyword_id;",
+    "hint_str": "/*+ HashJoin(mi it1 n ci it2 k t mk mi_idx)\n MergeJoin(n ci it2 k t mk mi_idx)\n HashJoin(ci it2 k t mk mi_idx)\n MergeJoin(it2 k t mk mi_idx)\n NestLoop(k t mk mi_idx)\n HashJoin(k t mk)\n NestLoop(t mk)\n HashJoin(mi it1)\n TidScan(mi)\n IndexScan(it1)\n BitmapScan(n)\n IndexScan(ci)\n BitmapScan(it2)\n IndexScan(k)\n IndexScan(t)\n IndexScan(mk)\n IndexScan(mi_idx)\n Leading(((mi it1) (n (ci (it2 ((k (t mk)) mi_idx)))))) */",
+    "inference_time": 0.23148441314697266,
+    "planning_time": 13.974,
+    "predicted_latency": 12999.958984375,
+    "actual_latency": 8885.483
+}

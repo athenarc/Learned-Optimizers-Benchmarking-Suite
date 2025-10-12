@@ -1,0 +1,9 @@
+{
+    "query_name": "q4_3",
+    "sql": "SELECT d.d_year, s.s_city, p.p_brand1, SUM(l.l_revenue - l.l_supplycost) AS profit\nFROM date AS d, customer AS c, supplier AS s, part AS p, lineitem AS l, orders AS o\nWHERE o.o_custkey = c.c_custkey\n  AND l.l_orderkey = o.o_orderkey\n  AND l.l_suppkey = s.s_suppkey\n  AND l.l_partkey = p.p_partkey\n  AND o.o_orderdate = d.d_datekey\n  AND c.c_region = 'AMERICA'\n  AND s.s_nation = 'UNITED STATES'\n  AND (d.d_year = 1997 OR d.d_year = 1998)\n  AND p.p_category = 'MFGR#14'\nGROUP BY d.d_year, s.s_city, p.p_brand1\nORDER BY d.d_year, s.s_city, p.p_brand1;",
+    "hint_str": "/*+ HashJoin(o c d l p s)\n MergeJoin(o c d l p)\n HashJoin(o c d l)\n HashJoin(o c d)\n HashJoin(o c)\n BitmapScan(o)\n IndexScan(c)\n IndexScan(d)\n BitmapScan(l)\n BitmapScan(p)\n BitmapScan(s)\n Leading((((((o c) d) l) p) s)) */",
+    "inference_time": 0.2949941158294678,
+    "planning_time": 1.898,
+    "predicted_latency": -80258.25,
+    "actual_latency": 3354.529
+}

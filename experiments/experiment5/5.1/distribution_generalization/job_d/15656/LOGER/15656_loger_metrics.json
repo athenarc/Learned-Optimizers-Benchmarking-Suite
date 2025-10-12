@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cn k mc mk t ml) NoMergeJoin(cn k mc mk ml t lt) NoMergeJoin(cn k lt mc mk ml t ct) */ select min(cn.name) AS from_company,\nmin(mc.note) AS production_note,\nmin(t.title) AS movie_based_on_book\nfrom keyword AS k\ninner join movie_keyword AS mk\non mk.keyword_id = k.id AND k.keyword IN ('martial-arts',\n'violence',\n'bag-over-head')\ninner join title AS t\non t.id = mk.movie_id AND t.production_year > 2009\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mk.movie_id = mc.movie_id AND mc.note IS NOT NULL\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '20th Century Fox%' OR cn.name like 'Twentieth Century Fox%')\ninner join movie_link AS ml\non ml.movie_id = t.id AND ml.movie_id = mc.movie_id AND ml.movie_id = mk.movie_id\ninner join link_type AS lt\non lt.id = ml.link_type_id\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind IS NOT NULL AND ct.kind <> 'miscellaneous companies';",
+  "predicted_latency": 878.5884380340576,
+  "actual_latency": 115.433,
+  "q_error": 7.611241482366893,
+  "inference_time": 0.05209469795227051
+}

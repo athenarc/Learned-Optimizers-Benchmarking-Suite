@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(it1 mii) NoMergeJoin(it1 mii t) NoMergeJoin(it1 mii t ci) NoNestLoop(ci it1 mii t n) NoNestLoop(ci it1 mii n pi t it2) */ select min(n.name),\nmin(t.title)\nfrom info_type AS it1\ninner join movie_info_idx AS mii\non it1.id = mii.info_type_id AND it1.info ilike 'rating' AND ( mii.info ilike '0%' OR mii.info ilike '1%' OR mii.info ilike '2%')\ninner join title AS t\non t.id = mii.movie_id\ninner join cast_info AS ci\non t.id = ci.movie_id\ninner join name AS n\non ci.person_id = n.id\ninner join person_info AS pi\non n.id = pi.person_id AND pi.info ilike '%USA%'\ninner join info_type AS it2\non pi.info_type_id = it2.id AND it2.info ilike '%birth%';",
+  "predicted_latency": 1059.0077638626099,
+  "actual_latency": 4177.482,
+  "q_error": 3.944713289695924,
+  "inference_time": 0.05292248725891113
+}

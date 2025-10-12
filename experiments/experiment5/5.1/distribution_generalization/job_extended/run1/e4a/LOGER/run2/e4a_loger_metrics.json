@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cn ct mc miidx) NoMergeJoin(cn ct it mc mi miidx t) NoNestLoop(cn ct it mc mi miidx t kt) */ select min(mi.info) AS release_date,\nmin(miidx.info) AS rating,\nmin(t.title) AS hongkong_movie\nfrom company_name AS cn\ninner join movie_companies AS mc\non cn.id = mc.company_id AND cn.country_code = '[hk]'\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies'\ninner join movie_info_idx AS miidx\non miidx.movie_id = mc.movie_id\ninner join info_type AS it\non it.id = miidx.info_type_id AND it.info = 'rating'\ninner join movie_info AS mi\non mi.movie_id = miidx.movie_id AND mi.movie_id = mc.movie_id\ninner join title AS t\non mi.movie_id = t.id AND miidx.movie_id = t.id AND mc.movie_id = t.id\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie';",
+  "predicted_latency": 352.76320576667786,
+  "actual_latency": 218.945,
+  "q_error": 1.6111955320590918,
+  "inference_time": 0.09184408187866211
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "7b",
+    "sql": "SELECT MIN(n.name) AS of_person, MIN(t.title) AS biography_movie FROM aka_name AS an, cast_info AS ci, info_type AS it, link_type AS lt, movie_link AS ml, name AS n, person_info AS pi, title AS t WHERE an.name LIKE '%a%' AND it.info ='mini biography' AND lt.link ='features' AND n.name_pcode_cf LIKE 'D%' AND n.gender = 'm' AND pi.note ='Volker Boehm' AND t.production_year BETWEEN 1980 AND 1984 AND n.id = an.person_id AND n.id = pi.person_id AND ci.person_id = n.id AND t.id = ci.movie_id AND ml.linked_movie_id = t.id AND lt.id = ml.link_type_id AND it.id = pi.info_type_id AND pi.person_id = an.person_id AND pi.person_id = ci.person_id AND an.person_id = ci.person_id AND ci.movie_id = ml.linked_movie_id;",
+    "hint_str": "/*+ HashJoin(it an lt ml pi t ci n)\n MergeJoin(an lt ml pi t ci n)\n HashJoin(lt ml pi t ci n)\n HashJoin(pi t ci n)\n MergeJoin(t ci n)\n HashJoin(t ci)\n HashJoin(lt ml)\n BitmapScan(it)\n TidScan(an)\n BitmapScan(lt)\n BitmapScan(ml)\n IndexScan(pi)\n BitmapScan(t)\n BitmapScan(ci)\n TidScan(n)\n Leading((it (an ((lt ml) (pi ((t ci) n)))))) */",
+    "inference_time": 0.4633355140686035,
+    "planning_time": 7.282,
+    "predicted_latency": -8596.453125,
+    "actual_latency": 5990.275
+}

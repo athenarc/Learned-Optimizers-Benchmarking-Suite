@@ -1,0 +1,8 @@
+{
+    "query_name": "15c",
+    "sql": "SELECT MIN(mi.info) AS release_date, MIN(t.title) AS modern_american_internet_movie FROM aka_title AS at, company_name AS cn, company_type AS ct, info_type AS it1, keyword AS k, movie_companies AS mc, movie_info AS mi, movie_keyword AS mk, title AS t WHERE cn.country_code  = '[us]' AND it1.info  = 'release dates' AND mi.note  like '%internet%' AND mi.info  is not NULL and (mi.info like 'USA:% 199%' or mi.info like 'USA:% 200%') AND t.production_year  > 1990 AND t.id = at.movie_id AND t.id = mi.movie_id AND t.id = mk.movie_id AND t.id = mc.movie_id AND mk.movie_id = mi.movie_id AND mk.movie_id = mc.movie_id AND mk.movie_id = at.movie_id AND mi.movie_id = mc.movie_id AND mi.movie_id = at.movie_id AND mc.movie_id = at.movie_id AND k.id = mk.keyword_id AND it1.id = mi.info_type_id AND cn.id = mc.company_id AND ct.id = mc.company_type_id;",
+    "hint_str": "/*+ HashJoin(at t mk mi k mc it1 cn ct)\n HashJoin(at t mk mi k mc it1 cn)\n MergeJoin(at t mk mi k mc it1)\n MergeJoin(at t mk mi k mc)\n NestLoop(at t mk mi k)\n MergeJoin(at t mk mi)\n HashJoin(at t mk)\n MergeJoin(t mk)\n BitmapScan(at)\n SeqScan(t)\n SeqScan(mk)\n TidScan(mi)\n IndexScan(k)\n IndexScan(mc)\n IndexScan(it1)\n TidScan(cn)\n BitmapScan(ct)\n Leading((((((((at (t mk)) mi) k) mc) it1) cn) ct)) */",
+    "predicted_latency_ms": 13804.29296875,
+    "planning_time_ms": 13.15,
+    "actual_latency_ms": 18628.019
+}

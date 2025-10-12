@@ -1,0 +1,9 @@
+{
+    "query_name": "03121",
+    "sql": "SELECT MIN(mi.info) AS movie_budget,\n       MIN(mi_idx.info) AS movie_votes,\n       MIN(n.name) AS male_writer,\n       MIN(t.title) AS violent_movie_title\nFROM cast_info AS ci,\n     info_type AS it1,\n     info_type AS it2,\n     keyword AS k,\n     movie_info AS mi,\n     movie_info_idx AS mi_idx,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE ci.note IN ('(writer)',\n                  '(head writer)',\n                  '(written by)',\n                  '(story)',\n                  '(story editor)')\n  AND it1.info = 'genres'\n  AND it2.info = 'votes'\n  AND t.id = mi.movie_id\n  AND t.id = mi_idx.movie_id\n  AND t.id = ci.movie_id\n  AND t.id = mk.movie_id\n  AND ci.movie_id = mi.movie_id\n  AND ci.movie_id = mi_idx.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND mi.movie_id = mi_idx.movie_id\n  AND mi.movie_id = mk.movie_id\n  AND mi_idx.movie_id = mk.movie_id\n  AND n.id = ci.person_id\n  AND it1.id = mi.info_type_id\n  AND it2.id = mi_idx.info_type_id\n  AND k.id = mk.keyword_id\n  AND t.title like '100%'\nAND k.keyword IN ('murder',\n'based-on-comic',\n'marvel-cinematic-universe',\n'hand-to-hand-combat',\n'1970s')\nAND mi.info = 'Documentary'\nAND n.gender = 'm'\nAND t.production_year > 1997;",
+    "hint_str": "/*+ HashJoin(ci mk k t mi_idx n it2 mi it1)\n HashJoin(ci mk k t mi_idx n it2 mi)\n MergeJoin(ci mk k t mi_idx n it2)\n HashJoin(ci mk k t mi_idx n)\n MergeJoin(ci mk k t mi_idx)\n HashJoin(mk k t mi_idx)\n HashJoin(mk k t)\n HashJoin(mk k)\n IndexScan(ci)\n IndexScan(mk)\n BitmapScan(k)\n BitmapScan(t)\n BitmapScan(mi_idx)\n IndexScan(n)\n SeqScan(it2)\n BitmapScan(mi)\n BitmapScan(it1)\n Leading((((((ci (((mk k) t) mi_idx)) n) it2) mi) it1)) */",
+    "inference_time": 3.0401289463043213,
+    "planning_time": 15.984,
+    "predicted_latency": -10935.1962890625,
+    "actual_latency": 37970.721
+}

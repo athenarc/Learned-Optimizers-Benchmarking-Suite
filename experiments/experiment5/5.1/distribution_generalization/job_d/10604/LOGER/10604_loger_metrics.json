@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mk ci) NoMergeJoin(ci mk cc) NoMergeJoin(cc ci mk cct2) NoHashJoin(cc cct2 ci mk n) NoMergeJoin(cc cct2 ci mk n cct1) NoHashJoin(cc cct1 cct2 ci mk n k) NoHashJoin(cc cct1 cct2 ci k mk n chn) NoMergeJoin(cc cct1 cct2 chn ci k mk n t) NoMergeJoin(cc cct1 cct2 chn ci k mk n t kt) */ select min(n.name) AS cast_member,\nmin(t.title) AS complete_dynamic_hero_movie\nfrom movie_keyword AS mk\ninner join cast_info AS ci\non mk.movie_id = ci.movie_id\ninner join complete_cast AS cc\non ci.movie_id = cc.movie_id AND mk.movie_id = cc.movie_id\ninner join comp_cast_type AS cct2\non cct2.id = cc.status_id AND cct2.kind like '%complete%'\ninner join name AS n\non n.id = ci.person_id\ninner join comp_cast_type AS cct1\non cct1.id = cc.subject_id AND cct1.kind = 'cast'\ninner join keyword AS k\non k.id = mk.keyword_id AND k.keyword IN ('murder',\n'tv-special',\n'based-on-comic',\n'marvel-comics',\n'laser',\n'violence',\n'fight',\n'tv-special',\n'second-part',\n'spoof-title')\ninner join char_name AS chn\non chn.id = ci.person_role_id AND chn.name IS NOT NULL AND ( chn.name like '%Mac%' OR chn.name like '%Mac%')\ninner join title AS t\non t.id = cc.movie_id AND t.id = mk.movie_id AND t.id = ci.movie_id AND t.production_year > 1964\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie';",
+  "predicted_latency": 786.185085773468,
+  "actual_latency": 223754.658,
+  "q_error": 284.60811843036265,
+  "inference_time": 0.05084872245788574
+}

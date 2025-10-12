@@ -1,0 +1,9 @@
+{
+    "query_name": "04245",
+    "sql": "SELECT MIN(mi.info) AS movie_budget,\n       MIN(mi_idx.info) AS movie_votes,\n       MIN(n.name) AS male_writer,\n       MIN(t.title) AS violent_movie_title\nFROM cast_info AS ci,\n     info_type AS it1,\n     info_type AS it2,\n     keyword AS k,\n     movie_info AS mi,\n     movie_info_idx AS mi_idx,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE ci.note IN ('(writer)',\n                  '(head writer)',\n                  '(written by)',\n                  '(story)',\n                  '(story editor)')\n  AND it1.info = 'genres'\n  AND it2.info = 'votes'\n  AND t.id = mi.movie_id\n  AND t.id = mi_idx.movie_id\n  AND t.id = ci.movie_id\n  AND t.id = mk.movie_id\n  AND ci.movie_id = mi.movie_id\n  AND ci.movie_id = mi_idx.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND mi.movie_id = mi_idx.movie_id\n  AND mi.movie_id = mk.movie_id\n  AND mi_idx.movie_id = mk.movie_id\n  AND n.id = ci.person_id\n  AND it1.id = mi.info_type_id\n  AND it2.id = mi_idx.info_type_id\n  AND k.id = mk.keyword_id\n  AND t.title like 'Statuesque%'\nAND k.keyword IN ('violence',\n'second-part',\n'based-on-comic',\n'blood',\n'stalker')\nAND mi.info = 'Romance'\nAND n.gender = 'm'\nAND t.production_year > 2007;",
+    "hint_str": "/*+ HashJoin(it1 mi n ci mi_idx t mk k it2)\n HashJoin(it1 mi n ci mi_idx t mk k)\n MergeJoin(mi n ci mi_idx t mk k)\n HashJoin(mi n ci mi_idx t mk)\n MergeJoin(n ci mi_idx t mk)\n HashJoin(ci mi_idx t mk)\n MergeJoin(ci mi_idx t)\n MergeJoin(mi_idx t)\n SeqScan(it1)\n BitmapScan(mi)\n IndexScan(n)\n TidScan(ci)\n IndexScan(mi_idx)\n SeqScan(t)\n TidScan(mk)\n BitmapScan(k)\n BitmapScan(it2)\n Leading(((it1 ((mi (n ((ci (mi_idx t)) mk))) k)) it2)) */",
+    "inference_time": 1.497687816619873,
+    "planning_time": 12.388,
+    "predicted_latency": -10970.8916015625,
+    "actual_latency": 5645.428
+}

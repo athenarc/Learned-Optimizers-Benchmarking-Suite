@@ -1,33 +1,25 @@
---start query 1 in stream 1 using template query99.tpl
-select  
-   substr(w_warehouse_name,1,20)
-  ,sm_type
-  ,cc_name
-  ,sum(case when (cs_ship_date_sk - cs_sold_date_sk <= 30 ) then 1 else 0 end)  as "30 days" 
-  ,sum(case when (cs_ship_date_sk - cs_sold_date_sk > 30) and 
-                 (cs_ship_date_sk - cs_sold_date_sk <= 60) then 1 else 0 end )  as "31-60 days" 
-  ,sum(case when (cs_ship_date_sk - cs_sold_date_sk > 60) and 
-                 (cs_ship_date_sk - cs_sold_date_sk <= 90) then 1 else 0 end)  as "61-90 days" 
-  ,sum(case when (cs_ship_date_sk - cs_sold_date_sk > 90) and
-                 (cs_ship_date_sk - cs_sold_date_sk <= 120) then 1 else 0 end)  as "91-120 days" 
-  ,sum(case when (cs_ship_date_sk - cs_sold_date_sk  > 120) then 1 else 0 end)  as ">120 days" 
-from
-   catalog_sales
-  ,warehouse
-  ,ship_mode
-  ,call_center
-  ,date_dim
-where
-    d_month_seq between 1190 and 1190 + 11
-and cs_ship_date_sk   = d_date_sk
-and cs_warehouse_sk   = w_warehouse_sk
-and cs_ship_mode_sk   = sm_ship_mode_sk
-and cs_call_center_sk = cc_call_center_sk
-group by
-   substr(w_warehouse_name,1,20)
-  ,sm_type
-  ,cc_name
-order by substr(w_warehouse_name,1,20)
-        ,sm_type
-        ,cc_name
-limit 100;
+SELECT
+  SUBSTR(w.w_warehouse_name, 1, 20),
+  sm.sm_type,
+  cc.cc_name,
+  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 30) THEN 1 ELSE 0 END) AS "30 days",
+  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 30) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 60) THEN 1 ELSE 0 END) AS "31-60 days",
+  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 60) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 90) THEN 1 ELSE 0 END) AS "61-90 days",
+  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 90) AND (cs.cs_ship_date_sk - cs.cs_sold_date_sk <= 120) THEN 1 ELSE 0 END) AS "91-120 days",
+  SUM(CASE WHEN (cs.cs_ship_date_sk - cs.cs_sold_date_sk > 120) THEN 1 ELSE 0 END) AS ">120 days"
+FROM catalog_sales AS cs,
+  warehouse AS w,
+  ship_mode AS sm,
+  call_center AS cc,
+  date_dim AS dd
+WHERE
+  dd.d_month_seq BETWEEN 1190 AND 1190 + 11 AND cs.cs_ship_date_sk = dd.d_date_sk AND cs.cs_warehouse_sk = w.w_warehouse_sk AND cs.cs_ship_mode_sk = sm.sm_ship_mode_sk AND cs.cs_call_center_sk = cc.cc_call_center_sk
+GROUP BY
+  SUBSTR(w.w_warehouse_name, 1, 20),
+  sm.sm_type,
+  cc.cc_name
+ORDER BY
+  SUBSTR(w.w_warehouse_name, 1, 20),
+  sm.sm_type,
+  cc.cc_name
+LIMIT 100;

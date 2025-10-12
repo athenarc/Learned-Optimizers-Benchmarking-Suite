@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(dd wsale wsite) NoHashJoin(dd wsale wsite sm) */ select substr(w.w_warehouse_name, 1, 20),\nsm.sm_type,\nwsite.web_name,\nsum(case when wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 30 then 1 else 0 end) AS \"30 days\",\nsum(case when wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 30 AND wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 60 then 1 else 0 end) AS \"31-60 days\",\nsum(case when wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 60 AND wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 90 then 1 else 0 end) AS \"61-90 days\",\nsum(case when wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 90 AND wsale.ws_ship_date_sk - wsale.ws_sold_date_sk <= 120 then 1 else 0 end) AS \"91-120 days\",\nsum(case when wsale.ws_ship_date_sk - wsale.ws_sold_date_sk > 120 then 1 else 0 end) AS \">120 days\"\nfrom date_dim AS dd\ninner join web_sales AS wsale\non wsale.ws_ship_date_sk = dd.d_date_sk AND dd.d_month_seq BETWEEN 1212 AND 1212 + 11\ninner join web_site AS wsite\non wsale.ws_web_site_sk = wsite.web_site_sk\ninner join ship_mode AS sm\non wsale.ws_ship_mode_sk = sm.sm_ship_mode_sk\ninner join warehouse AS w\non wsale.ws_warehouse_sk = w.w_warehouse_sk group by substr(w.w_warehouse_name, 1, 20), sm.sm_type, wsite.web_name order by substr(w.w_warehouse_name, 1, 20), sm.sm_type, wsite.web_name LIMIT 100;",
+  "predicted_latency": 443.1093633174896,
+  "actual_latency": 2968.279,
+  "q_error": 6.698750344106848,
+  "inference_time": 0.06593847274780273
+}

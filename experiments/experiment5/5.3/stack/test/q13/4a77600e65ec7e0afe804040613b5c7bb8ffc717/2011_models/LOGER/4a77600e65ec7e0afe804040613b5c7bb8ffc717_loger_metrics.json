@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('math') AND t1.name IN ('algebraic-number-theory',\n'complex-numbers',\n'inequality',\n'metric-spaces',\n'triangles',\n'vector-spaces')\ninner join question AS q1\non s.site_id = q1.site_id AND q1.view_count >= 10 AND q1.view_count <= 1000\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.downvotes >= 10 AND u1.downvotes <= 100000\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id AND q1.id = tq1.question_id\ninner join account AS acc\non acc.id = u1.account_id\ninner join answer AS a1\non a1.owner_user_id = u1.id AND s.site_id = a1.site_id AND q1.id = a1.question_id\ninner join badge AS b\non b.user_id = u1.id AND s.site_id = b.site_id AND b.name IN ('Excavator',\n'Reviewer',\n'Self-Learner',\n'Steward',\n'Talkative',\n'Vox Populi') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 770.1804637908936,
+  "actual_latency": 1537950.112,
+  "q_error": 1996.869804292463,
+  "inference_time": 0.08747506141662598
+}

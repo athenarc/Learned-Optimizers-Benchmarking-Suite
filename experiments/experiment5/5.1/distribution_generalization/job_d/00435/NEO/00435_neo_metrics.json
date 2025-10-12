@@ -1,0 +1,9 @@
+{
+    "query_name": "00435",
+    "sql": "SELECT MIN(k.keyword) AS movie_keyword,\n       MIN(n.name) AS actor_name,\n       MIN(t.title) AS hero_movie\nFROM cast_info AS ci,\n     keyword AS k,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE k.id = mk.keyword_id\n  AND t.id = mk.movie_id\n  AND t.id = ci.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND n.id = ci.person_id\n  AND k.keyword IN ('fight',\n'marvel-comics',\n'murder',\n'superhero',\n'claw',\n'violence',\n'sequel',\n'hospital')\nAND t.production_year > 2010;",
+    "hint_str": "/*+ HashJoin(t n mk k ci)\n MergeJoin(n mk k ci)\n HashJoin(mk k ci)\n NestLoop(mk k)\n BitmapScan(t)\n SeqScan(n)\n SeqScan(mk)\n IndexScan(k)\n SeqScan(ci)\n Leading((t (n ((mk k) ci)))) */",
+    "inference_time": 3.0222573280334473,
+    "planning_time": 1.715,
+    "predicted_latency": -11478.8505859375,
+    "actual_latency": 39342.163
+}

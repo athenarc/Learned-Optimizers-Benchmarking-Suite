@@ -1,0 +1,9 @@
+{
+    "query_name": "03783",
+    "sql": "SELECT MIN(k.keyword) AS movie_keyword,\n       MIN(n.name) AS actor_name,\n       MIN(t.title) AS marvel_movie\nFROM cast_info AS ci,\n     keyword AS k,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE k.id = mk.keyword_id\n  AND t.id = mk.movie_id\n  AND t.id = ci.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND n.id = ci.person_id\n  AND k.keyword = 'violence'\nAND n.name like '%Williams,%'\nAND t.production_year > 1997;",
+    "hint_str": "/*+ HashJoin(n t ci k mk)\n HashJoin(t ci k mk)\n HashJoin(ci k mk)\n MergeJoin(k mk)\n BitmapScan(n)\n BitmapScan(t)\n TidScan(ci)\n BitmapScan(k)\n IndexScan(mk)\n Leading((n (t (ci (k mk))))) */",
+    "inference_time": 0.899688720703125,
+    "planning_time": 2.099,
+    "predicted_latency": -11478.4013671875,
+    "actual_latency": 30326.76
+}

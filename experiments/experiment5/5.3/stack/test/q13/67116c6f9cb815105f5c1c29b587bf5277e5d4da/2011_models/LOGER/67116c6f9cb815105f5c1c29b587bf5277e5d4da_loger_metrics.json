@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom question AS q1\ninner join tag_question AS tq1\non q1.id = tq1.question_id AND q1.view_count >= 100 AND q1.view_count <= 100000\ninner join site AS s\non s.site_id = q1.site_id AND s.site_id = tq1.site_id AND s.site_name IN ('chemistry',\n'webapps')\ninner join so_user AS u1\non s.site_id = u1.site_id AND u1.reputation >= 0 AND u1.reputation <= 10\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('bond',\n'electrochemistry',\n'equilibrium',\n'experimental-chemistry',\n'google-drive',\n'homework',\n'nomenclature')\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Notable Question',\n'Popular Question',\n'Scholar',\n'Tumbleweed') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1566.1439895629883,
+  "actual_latency": 119119.366,
+  "q_error": 76.05901296038475,
+  "inference_time": 0.23592805862426758
+}

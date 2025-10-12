@@ -1,0 +1,173 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Plain",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Startup Cost": 30000331202.05,
+      "Total Cost": 30000331202.06,
+      "Plan Rows": 1,
+      "Plan Width": 8,
+      "Actual Startup Time": 49334.202,
+      "Actual Total Time": 49334.207,
+      "Actual Rows": 1,
+      "Actual Loops": 1,
+      "Plans": [
+        {
+          "Node Type": "Nested Loop",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Join Type": "Inner",
+          "Startup Cost": 30000003932.54,
+          "Total Cost": 30000331202.05,
+          "Plan Rows": 1,
+          "Plan Width": 0,
+          "Actual Startup Time": 241.123,
+          "Actual Total Time": 49332.492,
+          "Actual Rows": 2919,
+          "Actual Loops": 1,
+          "Inner Unique": true,
+          "Join Filter": "((t.site_id = tq.site_id) AND (t.id = tq.tag_id))",
+          "Rows Removed by Join Filter": 30278234,
+          "Plans": [
+            {
+              "Node Type": "Nested Loop",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Join Type": "Inner",
+              "Startup Cost": 20000003931.98,
+              "Total Cost": 20000310509.49,
+              "Plan Rows": 21335,
+              "Plan Width": 20,
+              "Actual Startup Time": 31.088,
+              "Actual Total Time": 22004.675,
+              "Actual Rows": 10926780,
+              "Actual Loops": 1,
+              "Inner Unique": false,
+              "Plans": [
+                {
+                  "Node Type": "Nested Loop",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 10000003931.54,
+                  "Total Cost": 10000005150.76,
+                  "Plan Rows": 1,
+                  "Plan Width": 12,
+                  "Actual Startup Time": 13.037,
+                  "Actual Total Time": 19.732,
+                  "Actual Rows": 4,
+                  "Actual Loops": 1,
+                  "Inner Unique": false,
+                  "Plans": [
+                    {
+                      "Node Type": "Index Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Scan Direction": "Forward",
+                      "Index Name": "site_pkey",
+                      "Relation Name": "site",
+                      "Alias": "s",
+                      "Startup Cost": 0.14,
+                      "Total Cost": 15.17,
+                      "Plan Rows": 1,
+                      "Plan Width": 4,
+                      "Actual Startup Time": 0.087,
+                      "Actual Total Time": 0.101,
+                      "Actual Rows": 1,
+                      "Actual Loops": 1,
+                      "Filter": "((site_name)::text = 'stackoverflow'::text)",
+                      "Rows Removed by Filter": 172
+                    },
+                    {
+                      "Node Type": "Bitmap Heap Scan",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Relation Name": "tag",
+                      "Alias": "t",
+                      "Startup Cost": 3931.4,
+                      "Total Cost": 5135.58,
+                      "Plan Rows": 1,
+                      "Plan Width": 8,
+                      "Actual Startup Time": 12.938,
+                      "Actual Total Time": 19.607,
+                      "Actual Rows": 4,
+                      "Actual Loops": 1,
+                      "Recheck Cond": "(site_id = s.site_id)",
+                      "Rows Removed by Index Recheck": 0,
+                      "Filter": "((name)::text = ANY ('{actionlistener,bitbucket,cryptography,kernel}'::text[]))",
+                      "Rows Removed by Filter": 54235,
+                      "Exact Heap Blocks": 345,
+                      "Lossy Heap Blocks": 0,
+                      "Plans": [
+                        {
+                          "Node Type": "Bitmap Index Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Index Name": "tag_pkey",
+                          "Startup Cost": 0.0,
+                          "Total Cost": 3931.39,
+                          "Plan Rows": 1069,
+                          "Plan Width": 0,
+                          "Actual Startup Time": 12.333,
+                          "Actual Total Time": 12.333,
+                          "Actual Rows": 54239,
+                          "Actual Loops": 1,
+                          "Index Cond": "(site_id = s.site_id)"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Node Type": "Index Scan",
+                  "Parent Relationship": "Inner",
+                  "Parallel Aware": false,
+                  "Scan Direction": "Forward",
+                  "Index Name": "question_pkey",
+                  "Relation Name": "question",
+                  "Alias": "q",
+                  "Startup Cost": 0.43,
+                  "Total Cost": 305126.59,
+                  "Plan Rows": 23214,
+                  "Plan Width": 8,
+                  "Actual Startup Time": 12.674,
+                  "Actual Total Time": 5282.942,
+                  "Actual Rows": 2731695,
+                  "Actual Loops": 4,
+                  "Index Cond": "(site_id = t.site_id)",
+                  "Rows Removed by Index Recheck": 0,
+                  "Filter": "((view_count >= 0) AND (view_count <= 100))",
+                  "Rows Removed by Filter": 6478843
+                }
+              ]
+            },
+            {
+              "Node Type": "Index Scan",
+              "Parent Relationship": "Inner",
+              "Parallel Aware": false,
+              "Scan Direction": "Forward",
+              "Index Name": "tag_question_pkey",
+              "Relation Name": "tag_question",
+              "Alias": "tq",
+              "Startup Cost": 0.56,
+              "Total Cost": 0.95,
+              "Plan Rows": 1,
+              "Plan Width": 12,
+              "Actual Startup Time": 0.002,
+              "Actual Total Time": 0.002,
+              "Actual Rows": 3,
+              "Actual Loops": 10926780,
+              "Index Cond": "((site_id = q.site_id) AND (question_id = q.id))",
+              "Rows Removed by Index Recheck": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning Time": 2.395,
+    "Triggers": [],
+    "Execution Time": 49334.326
+  }
+]

@@ -1,0 +1,8 @@
+{
+    "query_name": "10b",
+    "sql": "SELECT MIN(chn.name) AS character, MIN(t.title) AS russian_mov_with_actor_producer FROM char_name AS chn, cast_info AS ci, company_name AS cn, company_type AS ct, movie_companies AS mc, role_type AS rt, title AS t WHERE ci.note  like '%(producer)%' AND cn.country_code  = '[ru]' AND rt.role  = 'actor' AND t.production_year > 2010 AND t.id = mc.movie_id AND t.id = ci.movie_id AND ci.movie_id = mc.movie_id AND chn.id = ci.person_role_id AND rt.id = ci.role_id AND cn.id = mc.company_id AND ct.id = mc.company_type_id;",
+    "hint_str": "/*+ HashJoin(mc cn t ci rt chn ct)\n HashJoin(mc cn t ci rt chn)\n NestLoop(mc cn t ci rt)\n HashJoin(mc cn t ci)\n HashJoin(mc cn t)\n HashJoin(mc cn)\n IndexScan(mc)\n TidScan(cn)\n IndexScan(t)\n IndexScan(ci)\n IndexScan(rt)\n BitmapScan(chn)\n BitmapScan(ct)\n Leading(((((((mc cn) t) ci) rt) chn) ct)) */",
+    "predicted_latency_ms": 7541.82763671875,
+    "planning_time_ms": 4.384,
+    "actual_latency_ms": 2996.955
+}

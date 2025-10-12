@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(acc q1 s t1 tq1 u1 b1) */ select b1.name,\ncount(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('blender',\n'travel',\n'webmasters') AND t1.name IN ('airport-security',\n'canada',\n'health')\ninner join tag_question AS tq1\non t1.id = tq1.tag_id AND s.site_id = tq1.site_id\ninner join question AS q1\non q1.id = tq1.question_id AND s.site_id = q1.site_id AND q1.score >= 10 AND q1.score <= 1000\ninner join so_user AS u1\non q1.owner_user_id = u1.id AND s.site_id = u1.site_id\ninner join account AS acc\non acc.id = u1.account_id AND acc.website_url ilike '%de'\ninner join badge AS b1\non s.site_id = b1.site_id AND b1.user_id = u1.id group by b1.name order by count(*) desc LIMIT 100;",
+  "predicted_latency": 148.34341406822205,
+  "actual_latency": 44.711,
+  "q_error": 3.3178281422518405,
+  "inference_time": 0.05317401885986328
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "3_7",
+    "sql": "select\n    l.l_orderkey,\n    sum(l.l_extendedprice * (1 - l.l_discount)) as revenue,\n    o.o_orderdate,\n    o.o_shippriority\nfrom\n    customer c,\n    orders o,\n    lineitem l\nwhere\n    c.c_mktsegment = 'MACHINERY'\n    and c.c_custkey = o.o_custkey\n    and l.l_orderkey = o.o_orderkey\n    and o.o_orderdate < date '1995-03-03'\n    and l.l_shipdate > date '1995-03-03'\ngroup by\n    l.l_orderkey,\n    o.o_orderdate,\n    o.o_shippriority\norder by\n    revenue desc,\n    o.o_orderdate;",
+    "hint_str": "/*+ HashJoin(l c o)\n HashJoin(c o)\n BitmapScan(l)\n SeqScan(c)\n IndexScan(o)\n Leading((l (c o))) */",
+    "inference_time": 0.012017250061035156,
+    "planning_time": 0.616,
+    "predicted_latency": 1371326.0,
+    "actual_latency": 3858.192
+}

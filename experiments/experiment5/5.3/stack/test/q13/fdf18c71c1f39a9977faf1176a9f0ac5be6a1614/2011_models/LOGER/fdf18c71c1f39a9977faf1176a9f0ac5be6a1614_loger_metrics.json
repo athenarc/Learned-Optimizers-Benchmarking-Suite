@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom so_user AS u1\ninner join account AS acc\non acc.id = u1.account_id AND u1.upvotes >= 10 AND u1.upvotes <= 1000000\ninner join site AS s\non s.site_id = u1.site_id AND s.site_name IN ('mathematica',\n'security',\n'wordpress')\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.name IN ('admin',\n'attacks',\n'css',\n'error',\n'evaluation',\n'mobile',\n'output-formatting',\n'pattern-matching',\n'post-thumbnails',\n'taxonomy',\n'uploads',\n'users',\n'widgets')\ninner join tag_question AS tq1\non s.site_id = tq1.site_id AND t1.id = tq1.tag_id\ninner join question AS q1\non s.site_id = q1.site_id AND q1.id = tq1.question_id AND q1.score >= 0 AND q1.score <= 1000\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Benefactor',\n'Guru',\n'Tumbleweed') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1630.2833557128906,
+  "actual_latency": 53701.582,
+  "q_error": 32.94002960394413,
+  "inference_time": 0.272611141204834
+}

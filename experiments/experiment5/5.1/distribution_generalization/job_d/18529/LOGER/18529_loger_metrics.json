@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cn mc) NoMergeJoin(cn mc ct) NoMergeJoin(cn ct mc t mk) NoMergeJoin(cn ct mc mk t k) NoMergeJoin(cn ct k mc mk t ml) NoMergeJoin(cn ct k mc mk ml t lt) */ select min(cn.name) AS from_company,\nmin(mc.note) AS production_note,\nmin(t.title) AS movie_based_on_book\nfrom company_name AS cn\ninner join movie_companies AS mc\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND mc.note IS NOT NULL\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind IS NOT NULL AND ct.kind <> 'special effects companies'\ninner join title AS t\non t.id = mc.movie_id AND t.production_year > 1994\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND mk.movie_id = mc.movie_id\ninner join keyword AS k\non mk.keyword_id = k.id AND k.keyword IN ('based-on-comic',\n'hero',\n'sequel')\ninner join movie_link AS ml\non ml.movie_id = t.id AND ml.movie_id = mc.movie_id AND ml.movie_id = mk.movie_id\ninner join link_type AS lt\non lt.id = ml.link_type_id;",
+  "predicted_latency": 662.5143885612488,
+  "actual_latency": 3074.603,
+  "q_error": 4.640809396875093,
+  "inference_time": 0.10172295570373535
+}

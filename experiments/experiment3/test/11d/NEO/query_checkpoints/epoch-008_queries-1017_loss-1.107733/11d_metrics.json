@@ -1,0 +1,8 @@
+{
+    "query_name": "11d",
+    "sql": "SELECT MIN(cn.name) AS from_company, MIN(mc.note) AS production_note, MIN(t.title) AS movie_based_on_book FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_keyword AS mk, movie_link AS ml, title AS t WHERE cn.country_code  != '[pl]' AND ct.kind  != 'production companies' and ct.kind is not NULL AND k.keyword  in ('sequel', 'revenge', 'based-on-novel') AND mc.note  is not NULL AND t.production_year  > 1950 AND lt.id = ml.link_type_id AND ml.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_type_id = ct.id AND mc.company_id = cn.id AND ml.movie_id = mk.movie_id AND ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(k t mk ct lt ml cn mc)\n HashJoin(ct lt ml cn mc)\n MergeJoin(lt ml cn mc)\n MergeJoin(cn mc)\n HashJoin(lt ml)\n HashJoin(k t mk)\n MergeJoin(t mk)\n BitmapScan(k)\n IndexScan(t)\n TidScan(mk)\n BitmapScan(ct)\n TidScan(lt)\n IndexScan(ml)\n SeqScan(cn)\n IndexScan(mc)\n Leading(((k (t mk)) (ct ((lt ml) (cn mc))))) */",
+    "predicted_latency_ms": 11704.65625,
+    "planning_time_ms": 7.216,
+    "actual_latency_ms": 25380.009
+}

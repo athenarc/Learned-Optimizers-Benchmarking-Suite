@@ -1,0 +1,9 @@
+{
+    "query_name": "query7_1",
+    "sql": "SELECT\n  i.i_item_id,\n  AVG(ss.ss_quantity) AS agg1,\n  AVG(ss.ss_list_price) AS agg2,\n  AVG(ss.ss_coupon_amt) AS agg3,\n  AVG(ss.ss_sales_price) AS agg4\nFROM store_sales AS ss,\n  customer_demographics AS cd,\n  date_dim AS dd,\n  item AS i,\n  promotion AS p\nWHERE\n  ss.ss_sold_date_sk = dd.d_date_sk AND ss.ss_item_sk = i.i_item_sk AND ss.ss_cdemo_sk = cd.cd_demo_sk AND ss.ss_promo_sk = p.p_promo_sk AND cd.cd_gender = 'F' AND cd.cd_marital_status = 'W' AND cd.cd_education_status = 'Primary' AND (p.p_channel_email = 'N' OR p.p_channel_event = 'N') AND dd.d_year = 1998\nGROUP BY\n  i.i_item_id\nORDER BY\n  i.i_item_id\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(ss dd p i cd)\n HashJoin(ss dd p i)\n MergeJoin(ss dd p)\n HashJoin(ss dd)\n TidScan(ss)\n TidScan(dd)\n BitmapScan(p)\n SeqScan(i)\n BitmapScan(cd)\n Leading(((((ss dd) p) i) cd)) */",
+    "inference_time": 0.7706372737884521,
+    "planning_time": 2.859,
+    "predicted_latency": 207405.796875,
+    "actual_latency": 51434.408
+}

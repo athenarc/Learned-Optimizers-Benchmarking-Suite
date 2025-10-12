@@ -1,15 +1,17 @@
---start query 1 in stream 1 using template query82.tpl
-select  i_item_id
-       ,i_item_desc
-       ,i_current_price
- from item, inventory, date_dim, store_sales
- where i_current_price between 3 and 3+30
- and inv_item_sk = i_item_sk
- and d_date_sk=inv_date_sk
- and d_date between cast('1998-05-20' as date) and cast('1998-07-19' as date)
- and i_manufact_id in (59,526,301,399)
- and inv_quantity_on_hand between 100 and 500
- and ss_item_sk = i_item_sk
- group by i_item_id,i_item_desc,i_current_price
- order by i_item_id
- limit 100;
+SELECT
+  i.i_item_id,
+  i.i_item_desc,
+  i.i_current_price
+FROM item AS i,
+  inventory AS inv,
+  date_dim AS dd,
+  store_sales AS ss
+WHERE
+  i.i_current_price BETWEEN 3 AND 3 + 30 AND inv.inv_item_sk = i.i_item_sk AND dd.d_date_sk = inv.inv_date_sk AND dd.d_date BETWEEN CAST('1998-05-20' AS date) AND CAST('1998-07-19' AS date) AND i.i_manufact_id IN (59, 526, 301, 399) AND inv.inv_quantity_on_hand BETWEEN 100 AND 500 AND ss.ss_item_sk = i.i_item_sk
+GROUP BY
+  i.i_item_id,
+  i.i_item_desc,
+  i.i_current_price
+ORDER BY
+  i.i_item_id
+LIMIT 100;

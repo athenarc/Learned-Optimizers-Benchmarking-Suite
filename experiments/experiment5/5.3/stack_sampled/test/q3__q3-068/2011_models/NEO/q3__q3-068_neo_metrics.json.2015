@@ -1,0 +1,9 @@
+{
+    "query_name": "q3__q3-068",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, answer a1, tag_question tq1, so_user u1,\ntag t2, site s2, question q2, tag_question tq2, so_user u2,\naccount\nwhere\n-- answerers\ns1.site_name='stackoverflow' and\nt1.name  = 'plot' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\na1.site_id = q1.site_id and\na1.question_id = q1.id and\na1.owner_user_id = u1.id and\na1.site_id = u1.site_id and\n\n-- askers\ns2.site_name='physics' and\nt2.name  = 'quantum-mechanics' and\nt2.site_id = s2.site_id and\nq2.site_id = s2.site_id and\ntq2.site_id = s2.site_id and\ntq2.question_id = q2.id and\ntq2.tag_id = t2.id and\nq2.owner_user_id = u2.id and\nq2.site_id = u2.site_id and\n\n\n-- intersect\nu1.account_id = u2.account_id and\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(s1 q1 tq2 t2 s2 u2 q2 a1 u1 tq1 t1 account)\n HashJoin(s1 q1 tq2 t2 s2 u2 q2 a1 u1 tq1 t1)\n MergeJoin(tq1 t1)\n HashJoin(s1 q1 tq2 t2 s2 u2 q2 a1 u1)\n HashJoin(tq2 t2 s2 u2 q2 a1 u1)\n NestLoop(a1 u1)\n HashJoin(tq2 t2 s2 u2 q2)\n HashJoin(s2 u2 q2)\n HashJoin(u2 q2)\n MergeJoin(tq2 t2)\n MergeJoin(s1 q1)\n TidScan(s1)\n TidScan(q1)\n IndexScan(tq2)\n TidScan(t2)\n BitmapScan(s2)\n BitmapScan(u2)\n TidScan(q2)\n SeqScan(a1)\n IndexScan(u1)\n SeqScan(tq1)\n IndexScan(t1)\n BitmapScan(account)\n Leading(((((s1 q1) (((tq2 t2) (s2 (u2 q2))) (a1 u1))) (tq1 t1)) account)) */",
+    "inference_time": 0.7397117614746094,
+    "planning_time": 74.558,
+    "predicted_latency": 10332.654296875,
+    "actual_latency": 16683.474
+}

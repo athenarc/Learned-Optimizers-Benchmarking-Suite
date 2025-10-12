@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(cn mc t ci) */ select min(an.name) AS acress_pseudonym,\nmin(t.title) AS japanese_anime_movie\nfrom company_name AS cn\ninner join movie_companies AS mc\non mc.company_id = cn.id AND cn.country_code = '[jp]' AND mc.note like '%(Japan)%' AND mc.note not like '%(USA)%' AND ( mc.note like '%(2006)%' OR mc.note like '%(2007)%')\ninner join title AS t\non t.id = mc.movie_id AND t.title like 'Spider-Man%' AND t.production_year BETWEEN 1995 AND 2013\ninner join cast_info AS ci\non ci.movie_id = t.id AND ci.movie_id = mc.movie_id AND ci.note = '(voice)'\ninner join name AS n\non n.id = ci.person_id AND n.name like '%Yo%' AND n.name not like '%Yu%'\ninner join role_type AS rt\non ci.role_id = rt.id AND rt.role = 'actor'\ninner join aka_name AS an\non an.person_id = ci.person_id AND an.person_id = n.id;",
+  "predicted_latency": 638.583242893219,
+  "actual_latency": 329.005,
+  "q_error": 1.940953003429185,
+  "inference_time": 0.03887295722961426
+}

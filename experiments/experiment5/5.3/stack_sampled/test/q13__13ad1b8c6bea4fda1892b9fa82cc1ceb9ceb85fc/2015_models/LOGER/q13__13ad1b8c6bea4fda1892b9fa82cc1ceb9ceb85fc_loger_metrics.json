@@ -1,0 +1,7 @@
+{
+  "query": "/*+  */ select acc.location,\ncount(*)\nfrom site AS s\ninner join tag AS t1\non s.site_id = t1.site_id AND s.site_name IN ('askubuntu',\n'math') AND t1.name IN ('algebraic-curves',\n'differential-forms',\n'epsilon-delta',\n'filesystem',\n'software-center',\n'stochastic-integrals')\ninner join tag_question AS tq1\non t1.id = tq1.tag_id AND s.site_id = tq1.site_id\ninner join answer AS a1\non s.site_id = a1.site_id\ninner join so_user AS u1\non a1.owner_user_id = u1.id AND s.site_id = u1.site_id AND u1.reputation >= 10 AND u1.reputation <= 100000\ninner join question AS q1\non s.site_id = q1.site_id AND q1.id = a1.question_id AND q1.id = tq1.question_id AND q1.view_count >= 10 AND q1.view_count <= 1000\ninner join account AS acc\non acc.id = u1.account_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Constituent',\n'Custodian',\n'Editor',\n'Excavator',\n'Revival',\n'Supporter') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 511.56681776046753,
+  "actual_latency": 120.95,
+  "q_error": 4.229572697482162,
+  "inference_time": 0.0929405689239502
+}

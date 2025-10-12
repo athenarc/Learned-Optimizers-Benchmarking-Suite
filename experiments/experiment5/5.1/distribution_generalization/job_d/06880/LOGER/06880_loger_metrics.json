@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(ci it1 k mi mi_idx mk n t it2) */ select min(mi.info) AS movie_budget,\nmin(mi_idx.info) AS movie_votes,\nmin(n.name) AS male_writer,\nmin(t.title) AS violent_movie_title\nfrom keyword AS k\ninner join movie_keyword AS mk\non k.id = mk.keyword_id AND k.keyword IN ('hero',\n'marvel-cinematic-universe',\n'based-on-comic',\n'superhero',\n'punishment')\ninner join title AS t\non t.id = mk.movie_id AND t.title like '100%' AND t.production_year > 1997\ninner join cast_info AS ci\non t.id = ci.movie_id AND ci.movie_id = mk.movie_id AND ci.note IN ('(writer)',\n'(head writer)',\n'(written by)',\n'(story)',\n'(story editor)')\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'm'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mk.movie_id AND ci.movie_id = mi.movie_id AND mi.info = 'Family'\ninner join movie_info_idx AS mi_idx\non t.id = mi_idx.movie_id AND mi_idx.movie_id = mk.movie_id AND ci.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'genres'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'votes';",
+  "predicted_latency": 302.995502948761,
+  "actual_latency": 102.432,
+  "q_error": 2.9580160784594756,
+  "inference_time": 0.0462801456451416
+}

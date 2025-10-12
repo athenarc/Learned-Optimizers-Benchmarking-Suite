@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(cd cs p) NoMergeJoin(cd cs i p dd) */ select i.i_item_id,\navg(cs.cs_quantity) AS agg1,\navg(cs.cs_list_price) AS agg2,\navg(cs.cs_coupon_amt) AS agg3,\navg(cs.cs_sales_price) AS agg4\nfrom customer_demographics AS cd\ninner join catalog_sales AS cs\non cs.cs_bill_cdemo_sk = cd.cd_demo_sk AND cd.cd_gender = 'F' AND cd.cd_marital_status = 'W' AND cd.cd_education_status = 'Primary'\ninner join promotion AS p\non cs.cs_promo_sk = p.p_promo_sk AND ( p.p_channel_email = 'N' OR p.p_channel_event = 'N')\ninner join item AS i\non cs.cs_item_sk = i.i_item_sk\ninner join date_dim AS dd\non cs.cs_sold_date_sk = dd.d_date_sk AND dd.d_year = 1998 group by i.i_item_id order by i.i_item_id LIMIT 100;",
+  "predicted_latency": 353.1423509120941,
+  "actual_latency": 1820.43,
+  "q_error": 5.154946710011426,
+  "inference_time": 0.07614755630493164
+}

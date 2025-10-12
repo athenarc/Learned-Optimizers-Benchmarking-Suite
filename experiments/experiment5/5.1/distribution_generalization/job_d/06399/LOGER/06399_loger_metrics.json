@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(it1 mi mi_idx) NoNestLoop(it1 mi mi_idx it2) NoHashJoin(it1 it2 mi mi_idx t) NoHashJoin(it1 it2 mi mi_idx t ci) NoHashJoin(ci it1 it2 mi mi_idx t n) */ select min(mi.info) AS movie_budget,\nmin(mi_idx.info) AS movie_votes,\nmin(t.title) AS movie_title\nfrom info_type AS it1\ninner join movie_info AS mi\non it1.id = mi.info_type_id AND it1.info = 'genres' AND mi.info IN ('Action',\n'Drama',\n'War',\n'Thriller',\n'Crime',\n'Family')\ninner join movie_info_idx AS mi_idx\non mi.movie_id = mi_idx.movie_id\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'votes'\ninner join title AS t\non t.id = mi.movie_id AND t.id = mi_idx.movie_id\ninner join cast_info AS ci\non t.id = ci.movie_id AND ci.movie_id = mi_idx.movie_id AND ci.movie_id = mi.movie_id AND ci.note IN ('(writer)',\n'(producer)',\n'(voice)',\n'(uncredited)',\n'(executive producer)')\ninner join name AS n\non n.id = ci.person_id AND n.gender = 'f';",
+  "predicted_latency": 576.2422680854797,
+  "actual_latency": 11410.043,
+  "q_error": 19.80077413951077,
+  "inference_time": 0.03325223922729492
+}

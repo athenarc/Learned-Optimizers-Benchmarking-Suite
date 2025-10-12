@@ -1,0 +1,8 @@
+{
+    "query_name": "12b",
+    "sql": "SELECT MIN(mi.info) AS budget, MIN(t.title) AS unsuccsessful_movie FROM company_name AS cn, company_type AS ct, info_type AS it1, info_type AS it2, movie_companies AS mc, movie_info AS mi, movie_info_idx AS mi_idx, title AS t WHERE cn.country_code ='[us]' AND ct.kind  is not NULL and (ct.kind ='production companies' or ct.kind = 'distributors') AND it1.info ='budget' AND it2.info ='bottom 10 rank' AND t.production_year >2000 AND (t.title LIKE 'Birdemic%' OR t.title LIKE '%Movie%') AND t.id = mi.movie_id AND t.id = mi_idx.movie_id AND mi.info_type_id = it1.id AND mi_idx.info_type_id = it2.id AND t.id = mc.movie_id AND ct.id = mc.company_type_id AND cn.id = mc.company_id AND mc.movie_id = mi.movie_id AND mc.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id;",
+    "hint_str": "/*+ HashJoin(cn t mi_idx it2 mc mi ct it1)\n HashJoin(t mi_idx it2 mc mi ct it1)\n MergeJoin(t mi_idx it2 mc mi ct)\n HashJoin(t mi_idx it2 mc mi)\n HashJoin(t mi_idx it2 mc)\n HashJoin(t mi_idx it2)\n MergeJoin(t mi_idx)\n BitmapScan(cn)\n SeqScan(t)\n SeqScan(mi_idx)\n SeqScan(it2)\n IndexScan(mc)\n BitmapScan(mi)\n BitmapScan(ct)\n BitmapScan(it1)\n Leading((cn ((((((t mi_idx) it2) mc) mi) ct) it1))) */",
+    "predicted_latency_ms": 12653.802734375,
+    "planning_time_ms": 7.299,
+    "actual_latency_ms": 1528.2
+}

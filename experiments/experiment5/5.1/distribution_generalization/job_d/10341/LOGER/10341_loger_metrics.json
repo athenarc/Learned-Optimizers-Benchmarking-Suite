@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(k mk mi_idx) NoHashJoin(it2 k mi_idx mk mi) NoHashJoin(it2 k mi mi_idx mk it1) NoHashJoin(it1 it2 k mi mi_idx mk t) NoMergeJoin(it1 it2 k mi mi_idx mk t kt) */ select min(mi_idx.info) AS rating,\nmin(t.title) AS north_european_dark_production\nfrom keyword AS k\ninner join movie_keyword AS mk\non k.id = mk.keyword_id AND k.keyword IS NOT NULL AND k.keyword IN ('based-on-comic',\n'marvel-comics',\n'web',\n'tv-mini-series')\ninner join movie_info_idx AS mi_idx\non mk.movie_id = mi_idx.movie_id AND mi_idx.info < '9'\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'rating'\ninner join movie_info AS mi\non mi.movie_id = mi_idx.movie_id AND mk.movie_id = mi.movie_id AND mi.info IN ('English',\n'USA',\n'Norway',\n'Norwegian',\n'Danish',\n'German',\n'Denish',\n'Sweden',\n'American',\n'Italy')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'countries'\ninner join title AS t\non t.id = mi_idx.movie_id AND t.id = mk.movie_id AND t.id = mi.movie_id AND t.production_year > 1969\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind IN ('tv series',\n'tv series');",
+  "predicted_latency": 632.5454711914062,
+  "actual_latency": 185.224,
+  "q_error": 3.415029754197114,
+  "inference_time": 0.04261612892150879
+}

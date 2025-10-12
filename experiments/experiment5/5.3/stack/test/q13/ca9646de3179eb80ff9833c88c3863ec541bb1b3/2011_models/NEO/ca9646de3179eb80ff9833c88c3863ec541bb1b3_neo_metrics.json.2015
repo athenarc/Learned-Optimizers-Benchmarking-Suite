@@ -1,0 +1,9 @@
+{
+    "query_name": "ca9646de3179eb80ff9833c88c3863ec541bb1b3",
+    "sql": "SELECT acc.location, count(*)\nFROM\nsite as s,\nso_user as u1,\nquestion as q1,\nanswer as a1,\ntag as t1,\ntag_question as tq1,\nbadge as b,\naccount as acc\nWHERE\ns.site_id = q1.site_id\nAND s.site_id = u1.site_id\nAND s.site_id = a1.site_id\nAND s.site_id = t1.site_id\nAND s.site_id = tq1.site_id\nAND s.site_id = b.site_id\nAND q1.id = tq1.question_id\nAND q1.id = a1.question_id\nAND a1.owner_user_id = u1.id\nAND t1.id = tq1.tag_id\nAND b.user_id = u1.id\nAND acc.id = u1.account_id\nAND (s.site_name in ('dba','electronics','ru','unix'))\nAND (t1.name in ('bash'))\nAND (q1.favorite_count >= 5)\nAND (q1.favorite_count <= 5000)\nAND (u1.upvotes >= 10)\nAND (u1.upvotes <= 1000000)\nAND (b.name in ('Announcer','Autobiographer','Citizen Patrol','Commentator','Constituent','Curious','Enlightened','Good Answer','Necromancer','Nice Question','Revival','Student','Supporter','Tumbleweed','Yearling'))\nGROUP BY acc.location\nORDER BY COUNT(*)\nDESC\nLIMIT 100",
+    "hint_str": "/*+ HashJoin(a1 s t1 u1 acc q1 b tq1)\n NestLoop(a1 s t1 u1 acc q1 b)\n MergeJoin(a1 s t1 u1 acc q1)\n MergeJoin(a1 s t1 u1 acc)\n HashJoin(a1 s t1 u1)\n MergeJoin(a1 s t1)\n HashJoin(s t1)\n SeqScan(a1)\n BitmapScan(s)\n IndexScan(t1)\n IndexScan(u1)\n BitmapScan(acc)\n TidScan(q1)\n IndexScan(b)\n BitmapScan(tq1)\n Leading(((((((a1 (s t1)) u1) acc) q1) b) tq1)) */",
+    "inference_time": 0.8779690265655518,
+    "planning_time": 25.883,
+    "predicted_latency": 5255.279296875,
+    "actual_latency": 16760.985
+}

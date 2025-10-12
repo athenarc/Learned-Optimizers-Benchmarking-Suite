@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(ct k lt mc mk ml cn) NoHashJoin(cn ct k lt mc mk ml t) */ select min(cn.name) AS company_name,\nmin(lt.link) AS link_type,\nmin(t.title) AS western_follow_up\nfrom link_type AS lt\ninner join movie_link AS ml\non lt.id = ml.link_type_id AND lt.link like '%follow%'\ninner join movie_keyword AS mk\non ml.movie_id = mk.movie_id\ninner join keyword AS k\non mk.keyword_id = k.id AND k.keyword = 'sequel'\ninner join movie_companies AS mc\non mk.movie_id = mc.movie_id AND ml.movie_id = mc.movie_id AND mc.note IS NULL\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind = 'production companies'\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')\ninner join title AS t\non t.id = mc.movie_id AND t.id = mk.movie_id AND ml.movie_id = t.id AND t.production_year BETWEEN 1950 AND 2010\ninner join movie_info AS mi\non mi.movie_id = t.id AND mc.movie_id = mi.movie_id AND mk.movie_id = mi.movie_id AND ml.movie_id = mi.movie_id AND mi.info IN ('Sweden',\n'Norway',\n'Germany',\n'Denmark',\n'Swedish',\n'Denish',\n'Norwegian',\n'German',\n'English');",
+  "predicted_latency": 339.2595052719116,
+  "actual_latency": 58.643,
+  "q_error": 5.785166264889443,
+  "inference_time": 0.13501548767089844
+}

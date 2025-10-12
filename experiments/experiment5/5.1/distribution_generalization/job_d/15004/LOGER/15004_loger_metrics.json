@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(ci mc t n) NoHashJoin(ci mc n rt t an) */ select min(an.name) AS acress_pseudonym,\nmin(t.title) AS japanese_anime_movie\nfrom title AS t\ninner join movie_companies AS mc\non t.id = mc.movie_id AND t.title like 'The%' AND t.production_year BETWEEN 1978 AND 2000 AND mc.note like '%(Japan)%' AND mc.note not like '%(USA)%' AND ( mc.note like '%(2006)%' OR mc.note like '%(2007)%')\ninner join cast_info AS ci\non ci.movie_id = t.id AND ci.movie_id = mc.movie_id AND ci.note = '(based on the novel by)'\ninner join name AS n\non n.id = ci.person_id AND n.name like '%Yo%' AND n.name not like '%Yu%'\ninner join role_type AS rt\non ci.role_id = rt.id AND rt.role = 'writer'\ninner join aka_name AS an\non an.person_id = ci.person_id AND an.person_id = n.id\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code = '[jp]';",
+  "predicted_latency": 201.74279808998108,
+  "actual_latency": 304.288,
+  "q_error": 1.5082967168140586,
+  "inference_time": 0.03942441940307617
+}

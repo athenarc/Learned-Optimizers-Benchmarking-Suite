@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(a1 acc q1 s t1 tq1 u1 b) */ select acc.location,\ncount(*)\nfrom so_user AS u1\ninner join account AS acc\non acc.id = u1.account_id AND u1.upvotes >= 10 AND u1.upvotes <= 1000000\ninner join site AS s\non s.site_id = u1.site_id AND s.site_name IN ('codereview',\n'dba',\n'magento',\n'unix')\ninner join tag_question AS tq1\non s.site_id = tq1.site_id\ninner join tag AS t1\non s.site_id = t1.site_id AND t1.id = tq1.tag_id AND t1.name IN ('algorithm',\n'awk',\n'c',\n'centos',\n'jquery',\n'networking',\n'oracle',\n'permissions',\n'programming-challenge',\n'security',\n'sql-server-2012',\n'strings')\ninner join question AS q1\non s.site_id = q1.site_id AND q1.id = tq1.question_id AND q1.favorite_count >= 0 AND q1.favorite_count <= 1\ninner join answer AS a1\non s.site_id = a1.site_id AND a1.owner_user_id = u1.id AND q1.id = a1.question_id\ninner join badge AS b\non s.site_id = b.site_id AND b.user_id = u1.id AND b.name IN ('Enthusiast',\n'Excavator',\n'Guru',\n'Promoter') group by acc.location order by count(*) desc LIMIT 100;",
+  "predicted_latency": 1353.96409034729,
+  "actual_latency": 725780.226,
+  "q_error": 536.0409712297749,
+  "inference_time": 0.28075194358825684
+}

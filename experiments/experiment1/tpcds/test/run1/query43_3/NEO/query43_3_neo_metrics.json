@@ -1,0 +1,9 @@
+{
+    "query_name": "query43_3",
+    "sql": "SELECT\n  s.s_store_name,\n  s.s_store_id,\n  SUM(CASE WHEN (dd.d_day_name = 'Sunday') THEN ss.ss_sales_price ELSE NULL END) AS sun_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Monday') THEN ss.ss_sales_price ELSE NULL END) AS mon_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Tuesday') THEN ss.ss_sales_price ELSE NULL END) AS tue_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Wednesday') THEN ss.ss_sales_price ELSE NULL END) AS wed_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Thursday') THEN ss.ss_sales_price ELSE NULL END) AS thu_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Friday') THEN ss.ss_sales_price ELSE NULL END) AS fri_sales,\n  SUM(CASE WHEN (dd.d_day_name = 'Saturday') THEN ss.ss_sales_price ELSE NULL END) AS sat_sales\nFROM date_dim AS dd,\n  store_sales AS ss,\n  store AS s\nWHERE\n  dd.d_date_sk = ss.ss_sold_date_sk AND s.s_store_sk = ss.ss_store_sk AND s.s_gmt_offset = -5 AND dd.d_year = 1998\nGROUP BY\n  s.s_store_name,\n  s.s_store_id\nORDER BY\n  s.s_store_name,\n  s.s_store_id,\n  sun_sales,\n  mon_sales,\n  tue_sales,\n  wed_sales,\n  thu_sales,\n  fri_sales,\n  sat_sales\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(dd s ss)\n MergeJoin(s ss)\n BitmapScan(dd)\n SeqScan(s)\n IndexScan(ss)\n Leading((dd (s ss))) */",
+    "inference_time": 0.15055060386657715,
+    "planning_time": 0.967,
+    "predicted_latency": 215320.015625,
+    "actual_latency": 52238.536
+}

@@ -1,12 +1,12 @@
-SELECT d_year, s_city, p_brand1, SUM(lo_revenue - lo_supplycost) AS profit
-FROM date, customer, supplier, part, lineorder
-WHERE lo_custkey = c_custkey
-AND lo_suppkey = s_suppkey
-AND lo_partkey = p_partkey
-AND lo_orderdate = d_datekey
-AND c_region = 'AMERICA'
-AND s_nation = 'UNITED STATES'
-AND (d_year = 1997 OR d_year = 1998)
-AND p_category = 'MFGR#14'
-GROUP BY d_year, s_city, p_brand1
-ORDER BY d_year, s_city, p_brand1;
+SELECT d.d_year, s.s_city, p.p_brand1, SUM(lo.lo_revenue - lo.lo_supplycost) AS profit
+FROM date AS d, customer AS c, supplier AS s, part AS p, lineorder AS lo
+WHERE lo.lo_custkey = c.c_custkey
+AND lo.lo_suppkey = s.s_suppkey
+AND lo.lo_partkey = p.p_partkey
+AND lo.lo_orderdate = d.d_datekey
+AND c.c_region = 'AMERICA'
+AND s.s_nation = 'UNITED STATES'
+AND (d.d_year = 1997 OR d.d_year = 1998)
+AND p.p_category = 'MFGR#14'
+GROUP BY d.d_year, s.s_city, p.p_brand1
+ORDER BY d.d_year, s.s_city, p.p_brand1;

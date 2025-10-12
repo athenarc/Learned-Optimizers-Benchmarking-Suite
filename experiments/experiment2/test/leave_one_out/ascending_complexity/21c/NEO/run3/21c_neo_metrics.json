@@ -1,0 +1,9 @@
+{
+    "query_name": "21c",
+    "sql": "SELECT MIN(cn.name) AS company_name, MIN(lt.link) AS link_type, MIN(t.title) AS western_follow_up FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_info AS mi, movie_keyword AS mk, movie_link AS ml, title AS t WHERE cn.country_code !='[pl]' AND (cn.name LIKE '%Film%' OR cn.name LIKE '%Warner%') AND ct.kind ='production companies' AND k.keyword ='sequel' AND lt.link LIKE '%follow%' AND mc.note IS NULL AND mi.info IN ('Sweden', 'Norway', 'Germany', 'Denmark', 'Swedish', 'Denish', 'Norwegian', 'German', 'English') AND t.production_year BETWEEN 1950 AND 2010 AND lt.id = ml.link_type_id AND ml.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_type_id = ct.id AND mc.company_id = cn.id AND mi.movie_id = t.id AND ml.movie_id = mk.movie_id AND ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id AND ml.movie_id = mi.movie_id AND mk.movie_id = mi.movie_id AND mc.movie_id = mi.movie_id;",
+    "hint_str": "/*+ HashJoin(t mk k mi ml mc cn lt ct)\n MergeJoin(t mk k mi ml mc cn lt)\n MergeJoin(t mk k mi ml mc cn)\n HashJoin(t mk k mi ml mc)\n MergeJoin(t mk k mi ml)\n HashJoin(t mk k mi)\n HashJoin(t mk k)\n MergeJoin(mk k)\n TidScan(t)\n BitmapScan(mk)\n IndexScan(k)\n TidScan(mi)\n BitmapScan(ml)\n IndexScan(mc)\n TidScan(cn)\n SeqScan(lt)\n BitmapScan(ct)\n Leading((((((((t (mk k)) mi) ml) mc) cn) lt) ct)) */",
+    "inference_time": 0.1854548454284668,
+    "planning_time": 13.919,
+    "predicted_latency": 10974.0849609375,
+    "actual_latency": 4290.093
+}

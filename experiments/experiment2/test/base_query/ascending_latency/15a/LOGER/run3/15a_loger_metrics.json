@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(it1 mi) NoHashJoin(it1 mi mk) NoMergeJoin(it1 mi mk k) NoHashJoin(it1 k mi mk t) NoHashJoin(it1 k mi mk t mc) NoHashJoin(it1 k mc mi mk t cn) NoNestLoop(at cn it1 k mc mi mk t ct) */ select min(mi.info) AS release_date,\nmin(t.title) AS internet_movie\nfrom info_type AS it1\ninner join movie_info AS mi\non it1.id = mi.info_type_id AND it1.info = 'release dates' AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join movie_keyword AS mk\non mk.movie_id = mi.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id\ninner join title AS t\non t.id = mi.movie_id AND t.id = mk.movie_id AND t.production_year > 2000\ninner join movie_companies AS mc\non mk.movie_id = mc.movie_id AND mi.movie_id = mc.movie_id AND t.id = mc.movie_id AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%'\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join aka_title AS at\non mk.movie_id = at.movie_id AND mi.movie_id = at.movie_id AND mc.movie_id = at.movie_id AND t.id = at.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id;",
+  "predicted_latency": 121.3156059384346,
+  "actual_latency": 618.738,
+  "q_error": 5.100234180209247,
+  "inference_time": 0.07999777793884277
+}

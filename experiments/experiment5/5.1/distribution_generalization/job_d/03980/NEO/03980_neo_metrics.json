@@ -1,0 +1,9 @@
+{
+    "query_name": "03980",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(executive producer)',\n'(writer)',\n'(producer)',\n'(uncredited)')\nAND n.name like '%Nienaltowski,%'\nAND t.production_year BETWEEN 1996  AND 2010;",
+    "hint_str": "/*+ HashJoin(it t n ci mi mc an rt cn chn)\n HashJoin(it t n ci mi mc an rt cn)\n MergeJoin(t n ci mi mc an rt cn)\n MergeJoin(t n ci mi mc an rt)\n MergeJoin(t n ci mi mc an)\n HashJoin(t n ci mi mc)\n HashJoin(n ci mi mc)\n HashJoin(ci mi mc)\n HashJoin(mi mc)\n BitmapScan(it)\n SeqScan(t)\n BitmapScan(n)\n SeqScan(ci)\n BitmapScan(mi)\n BitmapScan(mc)\n TidScan(an)\n BitmapScan(rt)\n SeqScan(cn)\n BitmapScan(chn)\n Leading(((it ((((t (n (ci (mi mc)))) an) rt) cn)) chn)) */",
+    "inference_time": 2.4986629486083984,
+    "planning_time": 20.728,
+    "predicted_latency": -10995.12109375,
+    "actual_latency": 25630.37
+}

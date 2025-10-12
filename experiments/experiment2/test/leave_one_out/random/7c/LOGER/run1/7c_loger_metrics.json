@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(it pi n) NoMergeJoin(an ci it n pi t ml) NoNestLoop(an ci it ml n pi t lt) */ select min(n.name) AS cast_member_name,\nmin(pi.info) AS cast_member_info\nfrom info_type AS it\ninner join person_info AS pi\non it.id = pi.info_type_id AND it.info = 'mini biography' AND pi.note IS NOT NULL\ninner join name AS n\non n.id = pi.person_id AND n.name_pcode_cf BETWEEN 'A' AND 'F' AND ( n.gender = 'm' OR ( n.gender = 'f' AND n.name like 'A%'))\ninner join aka_name AS an\non pi.person_id = an.person_id AND n.id = an.person_id AND an.name IS NOT NULL AND ( an.name like '%a%' OR an.name like 'A%')\ninner join cast_info AS ci\non pi.person_id = ci.person_id AND ci.person_id = n.id AND an.person_id = ci.person_id\ninner join title AS t\non t.id = ci.movie_id AND t.production_year BETWEEN 1980 AND 2010\ninner join movie_link AS ml\non ci.movie_id = ml.linked_movie_id AND ml.linked_movie_id = t.id\ninner join link_type AS lt\non lt.id = ml.link_type_id AND lt.link IN ('references',\n'referenced in',\n'features',\n'featured in');",
+  "predicted_latency": 440.45791029930115,
+  "actual_latency": 6956.99,
+  "q_error": 15.794903070925818,
+  "inference_time": 0.3195185661315918
+}

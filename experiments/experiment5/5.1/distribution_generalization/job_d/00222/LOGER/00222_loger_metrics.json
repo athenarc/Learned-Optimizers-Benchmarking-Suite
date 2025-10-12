@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(t mc) NoMergeJoin(mc t ci) NoMergeJoin(an chn ci mc rt t cn) NoMergeJoin(an chn ci cn mc mi n rt t it) */ select min(n.name) AS voicing_actress,\nmin(t.title) AS voiced_movie\nfrom title AS t\ninner join movie_companies AS mc\non t.id = mc.movie_id AND t.production_year BETWEEN 1997 AND 2006 AND mc.note IS NOT NULL AND ( mc.note like '%(USA)%' OR mc.note like '%(worldwide)%')\ninner join cast_info AS ci\non t.id = ci.movie_id AND mc.movie_id = ci.movie_id AND ci.note IN ('(writer)',\n'(producer)',\n'(voice)',\n'(as Colleen Zenk Pinter)')\ninner join role_type AS rt\non rt.id = ci.role_id AND rt.role = 'actress'\ninner join aka_name AS an\non ci.person_id = an.person_id\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join movie_info AS mi\non t.id = mi.movie_id AND mc.movie_id = mi.movie_id AND mi.movie_id = ci.movie_id AND mi.info IS NOT NULL AND ( mi.info like 'Japan:%200%' OR mi.info like 'USA:%200%')\ninner join name AS n\non n.id = an.person_id AND n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Colleen%'\ninner join info_type AS it\non it.id = mi.info_type_id AND it.info = 'release dates';",
+  "predicted_latency": 562.0454549789429,
+  "actual_latency": 4180.8,
+  "q_error": 7.438544272467491,
+  "inference_time": 0.06814694404602051
+}

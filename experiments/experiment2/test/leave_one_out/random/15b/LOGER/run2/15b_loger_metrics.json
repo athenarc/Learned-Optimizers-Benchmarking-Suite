@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(at cn ct it1 mc mi t mk) NoHashJoin(at cn ct it1 mc mi mk t k) */ select min(mi.info) AS release_date,\nmin(t.title) AS youtube_movie\nfrom movie_companies AS mc\ninner join company_name AS cn\non cn.id = mc.company_id AND mc.note like '%(200%)%' AND mc.note like '%(worldwide)%' AND cn.country_code = '[us]' AND cn.name = 'YouTube'\ninner join title AS t\non t.id = mc.movie_id AND t.production_year BETWEEN 2005 AND 2010\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mc.movie_id AND mi.note like '%internet%' AND mi.info like 'USA:% 200%'\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates'\ninner join aka_title AS at\non mi.movie_id = at.movie_id AND mc.movie_id = at.movie_id AND t.id = at.movie_id\ninner join movie_keyword AS mk\non mk.movie_id = mi.movie_id AND mk.movie_id = at.movie_id AND mk.movie_id = mc.movie_id AND t.id = mk.movie_id\ninner join keyword AS k\non k.id = mk.keyword_id;",
+  "predicted_latency": 610.7310056686401,
+  "actual_latency": 46.361,
+  "q_error": 13.17337860849939,
+  "inference_time": 0.417100191116333
+}

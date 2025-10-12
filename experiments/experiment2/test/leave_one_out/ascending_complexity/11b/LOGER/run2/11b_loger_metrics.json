@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(k lt mc mk ml t cn) NoMergeJoin(cn k lt mc mk ml t ct) */ select min(cn.name) AS from_company,\nmin(lt.link) AS movie_link_type,\nmin(t.title) AS sequel_movie\nfrom link_type AS lt\ninner join movie_link AS ml\non lt.id = ml.link_type_id AND lt.link like '%follows%'\ninner join title AS t\non ml.movie_id = t.id AND t.production_year = 1998 AND t.title like '%Money%'\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND ml.movie_id = mk.movie_id\ninner join keyword AS k\non mk.keyword_id = k.id AND k.keyword = 'sequel'\ninner join movie_companies AS mc\non t.id = mc.movie_id AND mk.movie_id = mc.movie_id AND ml.movie_id = mc.movie_id AND mc.note IS NULL\ninner join company_name AS cn\non mc.company_id = cn.id AND cn.country_code <> '[pl]' AND ( cn.name like '%Film%' OR cn.name like '%Warner%')\ninner join company_type AS ct\non mc.company_type_id = ct.id AND ct.kind = 'production companies';",
+  "predicted_latency": -8.040150627493858,
+  "actual_latency": 9.415,
+  "q_error": -0.8539724511411427,
+  "inference_time": 0.07175683975219727
+}

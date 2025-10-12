@@ -1,0 +1,8 @@
+{
+    "query_name": "11b",
+    "sql": "SELECT MIN(cn.name) AS from_company, MIN(lt.link) AS movie_link_type, MIN(t.title) AS sequel_movie FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_keyword AS mk, movie_link AS ml, title AS t WHERE cn.country_code !='[pl]' AND (cn.name LIKE '%Film%' OR cn.name LIKE '%Warner%') AND ct.kind ='production companies' AND k.keyword ='sequel' AND lt.link LIKE '%follows%' AND mc.note IS NULL AND t.production_year  = 1998 and t.title like '%Money%' AND lt.id = ml.link_type_id AND ml.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_type_id = ct.id AND mc.company_id = cn.id AND ml.movie_id = mk.movie_id AND ml.movie_id = mc.movie_id AND mk.movie_id = mc.movie_id;",
+    "hint_str": "/*+ HashJoin(lt cn t mc ml mk ct k)\n HashJoin(lt cn t mc ml mk ct)\n NestLoop(cn t mc ml mk ct)\n MergeJoin(cn t mc ml mk)\n MergeJoin(ml mk)\n MergeJoin(cn t mc)\n MergeJoin(t mc)\n BitmapScan(lt)\n IndexScan(cn)\n BitmapScan(t)\n BitmapScan(mc)\n SeqScan(ml)\n BitmapScan(mk)\n IndexScan(ct)\n BitmapScan(k)\n Leading(((lt (((cn (t mc)) (ml mk)) ct)) k)) */",
+    "predicted_latency_ms": 9497.6240234375,
+    "planning_time_ms": 8.675,
+    "actual_latency_ms": 1291.181
+}

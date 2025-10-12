@@ -1,0 +1,9 @@
+{
+    "query_name": "query18_3",
+    "sql": "SELECT\n  i.i_item_id,\n  ca.ca_country,\n  ca.ca_state,\n  ca.ca_county,\n  AVG(CAST(cs.cs_quantity AS DECIMAL(12, 2))) AS agg1,\n  AVG(CAST(cs.cs_list_price AS DECIMAL(12, 2))) AS agg2,\n  AVG(CAST(cs.cs_coupon_amt AS DECIMAL(12, 2))) AS agg3,\n  AVG(CAST(cs.cs_sales_price AS DECIMAL(12, 2))) AS agg4,\n  AVG(CAST(cs.cs_net_profit AS DECIMAL(12, 2))) AS agg5,\n  AVG(CAST(c.c_birth_year AS DECIMAL(12, 2))) AS agg6,\n  AVG(CAST(cd1.cd_dep_count AS DECIMAL(12, 2))) AS agg7\nFROM catalog_sales AS cs,\n  customer_demographics AS cd1,\n  customer_demographics AS cd2,\n  customer AS c,\n  customer_address AS ca,\n  date_dim AS dd,\n  item AS i\nWHERE\n  cs.cs_sold_date_sk = dd.d_date_sk AND cs.cs_item_sk = i.i_item_sk AND cs.cs_bill_cdemo_sk = cd1.cd_demo_sk AND cs.cs_bill_customer_sk = c.c_customer_sk AND cd1.cd_gender = 'F' AND cd1.cd_education_status = '2 yr Degree' AND c.c_current_cdemo_sk = cd2.cd_demo_sk AND c.c_current_addr_sk = ca.ca_address_sk AND c.c_birth_month IN (7, 10, 12, 2, 4, 5) AND dd.d_year = 1999 AND ca.ca_state IN ('AK', 'IL', 'OH', 'UT', 'MO', 'SD', 'TN')\nGROUP BY ROLLUP (i.i_item_id, ca.ca_country, ca.ca_state, ca.ca_county)\nORDER BY\n  ca.ca_country,\n  ca.ca_state,\n  ca.ca_county,\n  i.i_item_id\nLIMIT 100;",
+    "hint_str": "/*+ HashJoin(i cd2 ca c cd1 cs dd)\n MergeJoin(cd2 ca c cd1 cs dd)\n HashJoin(ca c cd1 cs dd)\n HashJoin(c cd1 cs dd)\n HashJoin(cd1 cs dd)\n HashJoin(cs dd)\n SeqScan(i)\n BitmapScan(cd2)\n SeqScan(ca)\n TidScan(c)\n BitmapScan(cd1)\n BitmapScan(cs)\n BitmapScan(dd)\n Leading((i (cd2 (ca (c (cd1 (cs dd))))))) */",
+    "inference_time": 0.10127139091491699,
+    "planning_time": 3.002,
+    "predicted_latency": 197485.0625,
+    "actual_latency": 101442.779
+}

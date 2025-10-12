@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoMergeJoin(chn ci) NoMergeJoin(chn ci rt t mc) NoNestLoop(chn ci mc rt t ct) NoNestLoop(chn ci ct mc rt t cn) */ select min(chn.name) AS character,\nmin(t.title) AS movie_with_american_producer\nfrom char_name AS chn\ninner join cast_info AS ci\non chn.id = ci.person_role_id AND ci.note like '%(producer)%'\ninner join title AS t\non t.id = ci.movie_id AND t.production_year > 1990\ninner join role_type AS rt\non rt.id = ci.role_id\ninner join movie_companies AS mc\non ci.movie_id = mc.movie_id AND t.id = mc.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]';",
+  "predicted_latency": 422.30772972106934,
+  "actual_latency": 3309.824,
+  "q_error": 7.8374696153113526,
+  "inference_time": 0.06554269790649414
+}

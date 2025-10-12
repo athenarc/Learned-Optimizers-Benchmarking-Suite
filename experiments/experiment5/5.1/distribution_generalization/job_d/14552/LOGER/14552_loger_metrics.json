@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoNestLoop(ci it1 mi mi_idx n t it2) */ select min(mi.info) AS movie_budget,\nmin(mi_idx.info) AS movie_votes,\nmin(t.title) AS movie_title\nfrom name AS n\ninner join cast_info AS ci\non n.id = ci.person_id AND n.gender = 'f' AND n.name like '%Smith,%' AND ci.note IN ('(executive producer)',\n'(voice)')\ninner join title AS t\non t.id = ci.movie_id\ninner join movie_info AS mi\non t.id = mi.movie_id AND ci.movie_id = mi.movie_id\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'budget'\ninner join movie_info_idx AS mi_idx\non t.id = mi_idx.movie_id AND ci.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id\ninner join info_type AS it2\non it2.id = mi_idx.info_type_id AND it2.info = 'votes';",
+  "predicted_latency": 85.63174307346344,
+  "actual_latency": 354.009,
+  "q_error": 4.1340861144949,
+  "inference_time": 0.0967707633972168
+}

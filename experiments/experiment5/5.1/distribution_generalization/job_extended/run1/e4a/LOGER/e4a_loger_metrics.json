@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(it miidx) NoHashJoin(cn ct it kt mc miidx t mi) */ select min(mi.info) AS release_date,\nmin(miidx.info) AS rating,\nmin(t.title) AS hongkong_movie\nfrom info_type AS it\ninner join movie_info_idx AS miidx\non it.id = miidx.info_type_id AND it.info = 'rating'\ninner join title AS t\non miidx.movie_id = t.id\ninner join movie_companies AS mc\non miidx.movie_id = mc.movie_id AND mc.movie_id = t.id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[hk]'\ninner join kind_type AS kt\non kt.id = t.kind_id AND kt.kind = 'movie'\ninner join company_type AS ct\non ct.id = mc.company_type_id AND ct.kind = 'production companies'\ninner join movie_info AS mi\non mi.movie_id = miidx.movie_id AND mi.movie_id = t.id AND mi.movie_id = mc.movie_id;",
+  "predicted_latency": -2.108093351125717,
+  "actual_latency": 4018.242,
+  "q_error": -0.000524630759204079,
+  "inference_time": 0.09225988388061523
+}

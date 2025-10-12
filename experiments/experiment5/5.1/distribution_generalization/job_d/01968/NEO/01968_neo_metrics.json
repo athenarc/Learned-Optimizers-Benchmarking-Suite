@@ -1,0 +1,9 @@
+{
+    "query_name": "01968",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(producer)',\n'(uncredited)',\n'(voice)',\n'(as Colleen Zenk Pinter)')\nAND n.name like '%Colleen%'\nAND t.production_year BETWEEN 1996  AND 2008;",
+    "hint_str": "/*+ HashJoin(mc an ci mi t it chn n rt cn)\n HashJoin(mc an ci mi t it chn n rt)\n MergeJoin(mc an ci mi t it chn n)\n HashJoin(an ci mi t it chn n)\n HashJoin(an ci mi t it chn)\n MergeJoin(an ci mi t it)\n MergeJoin(an ci mi t)\n HashJoin(ci mi t)\n HashJoin(mi t)\n TidScan(mc)\n IndexScan(an)\n BitmapScan(ci)\n IndexScan(mi)\n IndexScan(t)\n SeqScan(it)\n SeqScan(chn)\n IndexScan(n)\n BitmapScan(rt)\n BitmapScan(cn)\n Leading((((mc ((((an (ci (mi t))) it) chn) n)) rt) cn)) */",
+    "inference_time": 4.097845792770386,
+    "planning_time": 23.318,
+    "predicted_latency": -10979.9677734375,
+    "actual_latency": 19871.344
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "22d",
+    "sql": "SELECT MIN(cn.name) AS movie_company, MIN(mi_idx.info) AS rating, MIN(t.title) AS western_violent_movie FROM company_name AS cn, company_type AS ct, info_type AS it1, info_type AS it2, keyword AS k, kind_type AS kt, movie_companies AS mc, movie_info AS mi, movie_info_idx AS mi_idx, movie_keyword AS mk, title AS t WHERE cn.country_code  != '[us]' AND it1.info  = 'countries' AND it2.info  = 'rating' AND k.keyword  in ('murder', 'murder-in-title', 'blood', 'violence') AND kt.kind  in ('movie', 'episode') AND mi.info IN ('Sweden', 'Norway', 'Germany', 'Denmark', 'Swedish', 'Danish', 'Norwegian', 'German', 'USA', 'American') AND mi_idx.info  < '8.5' AND t.production_year  > 2005 AND kt.id = t.kind_id AND t.id = mi.movie_id AND t.id = mk.movie_id AND t.id = mi_idx.movie_id AND t.id = mc.movie_id AND mk.movie_id = mi.movie_id AND mk.movie_id = mi_idx.movie_id AND mk.movie_id = mc.movie_id AND mi.movie_id = mi_idx.movie_id AND mi.movie_id = mc.movie_id AND mc.movie_id = mi_idx.movie_id AND k.id = mk.keyword_id AND it1.id = mi.info_type_id AND it2.id = mi_idx.info_type_id AND ct.id = mc.company_type_id AND cn.id = mc.company_id;",
+    "hint_str": "/*+ HashJoin(it2 mi_idx ct mc cn mi it1 k mk t kt)\n HashJoin(t kt)\n HashJoin(it2 mi_idx ct mc cn mi it1 k mk)\n HashJoin(ct mc cn mi it1 k mk)\n HashJoin(mi it1 k mk)\n HashJoin(k mk)\n HashJoin(mi it1)\n MergeJoin(ct mc cn)\n HashJoin(mc cn)\n HashJoin(it2 mi_idx)\n BitmapScan(it2)\n IndexScan(mi_idx)\n BitmapScan(ct)\n BitmapScan(mc)\n BitmapScan(cn)\n TidScan(mi)\n TidScan(it1)\n BitmapScan(k)\n IndexScan(mk)\n BitmapScan(t)\n IndexScan(kt)\n Leading((((it2 mi_idx) ((ct (mc cn)) ((mi it1) (k mk)))) (t kt))) */",
+    "inference_time": 1.126427412033081,
+    "planning_time": 30.123,
+    "predicted_latency": -8305.1669921875,
+    "actual_latency": 36617.068
+}

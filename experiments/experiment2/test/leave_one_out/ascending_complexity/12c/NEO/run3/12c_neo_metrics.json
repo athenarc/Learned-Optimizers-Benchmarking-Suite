@@ -1,0 +1,9 @@
+{
+    "query_name": "12c",
+    "sql": "SELECT MIN(cn.name) AS movie_company, MIN(mi_idx.info) AS rating, MIN(t.title) AS mainstream_movie FROM company_name AS cn, company_type AS ct, info_type AS it1, info_type AS it2, movie_companies AS mc, movie_info AS mi, movie_info_idx AS mi_idx, title AS t WHERE cn.country_code  = '[us]' AND ct.kind  = 'production companies' AND it1.info = 'genres' AND it2.info = 'rating' AND mi.info  in ('Drama', 'Horror', 'Western', 'Family') AND mi_idx.info  > '7.0' AND t.production_year  between 2000 and 2010 AND t.id = mi.movie_id AND t.id = mi_idx.movie_id AND mi.info_type_id = it1.id AND mi_idx.info_type_id = it2.id AND t.id = mc.movie_id AND ct.id = mc.company_type_id AND cn.id = mc.company_id AND mc.movie_id = mi.movie_id AND mc.movie_id = mi_idx.movie_id AND mi.movie_id = mi_idx.movie_id;",
+    "hint_str": "/*+ HashJoin(mi mc mi_idx it2 t it1 cn ct)\n MergeJoin(mi mc mi_idx it2 t it1 cn)\n HashJoin(mi mc mi_idx it2 t it1)\n MergeJoin(mi mc mi_idx it2 t)\n MergeJoin(mc mi_idx it2 t)\n HashJoin(mi_idx it2 t)\n HashJoin(mi_idx it2)\n TidScan(mi)\n IndexScan(mc)\n BitmapScan(mi_idx)\n BitmapScan(it2)\n IndexScan(t)\n IndexScan(it1)\n IndexScan(cn)\n BitmapScan(ct)\n Leading(((((mi (mc ((mi_idx it2) t))) it1) cn) ct)) */",
+    "inference_time": 0.06411385536193848,
+    "planning_time": 7.403,
+    "predicted_latency": 10651.9892578125,
+    "actual_latency": 9627.326
+}

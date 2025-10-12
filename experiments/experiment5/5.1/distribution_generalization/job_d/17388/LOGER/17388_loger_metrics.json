@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(at mc t cn) NoMergeJoin(at cn mc t mk) NoMergeJoin(at cn ct mc mk t k) NoHashJoin(at cn ct k mc mk t mi) NoMergeJoin(at cn ct k mc mi mk t it1) */ select min(mi.info) AS release_date,\nmin(t.title) AS modern_american_internet_movie\nfrom title AS t\ninner join movie_companies AS mc\non t.id = mc.movie_id AND t.production_year > 2007\ninner join aka_title AS at\non t.id = at.movie_id AND mc.movie_id = at.movie_id\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join movie_keyword AS mk\non t.id = mk.movie_id AND mk.movie_id = mc.movie_id AND mk.movie_id = at.movie_id\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join keyword AS k\non k.id = mk.keyword_id\ninner join movie_info AS mi\non t.id = mi.movie_id AND mi.movie_id = mc.movie_id AND mi.movie_id = at.movie_id AND mk.movie_id = mi.movie_id AND mi.note like '%internet%' AND mi.info IS NOT NULL AND ( mi.info like 'USA:% 199%' OR mi.info like 'USA:% 200%')\ninner join info_type AS it1\non it1.id = mi.info_type_id AND it1.info = 'release dates';",
+  "predicted_latency": 555.1968812942505,
+  "actual_latency": 42327.045,
+  "q_error": 76.23790123123361,
+  "inference_time": 0.06030583381652832
+}

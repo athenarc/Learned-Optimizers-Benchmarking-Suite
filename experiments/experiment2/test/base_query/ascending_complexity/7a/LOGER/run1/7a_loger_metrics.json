@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(lt ml t ci) NoMergeJoin(ci lt ml pi t it) NoMergeJoin(ci it lt ml pi t n) NoMergeJoin(ci it lt ml n pi t an) */ select min(n.name) AS of_person,\nmin(t.title) AS biography_movie\nfrom link_type AS lt\ninner join movie_link AS ml\non lt.id = ml.link_type_id AND lt.link = 'features'\ninner join title AS t\non ml.linked_movie_id = t.id AND t.production_year BETWEEN 1980 AND 1995\ninner join cast_info AS ci\non t.id = ci.movie_id AND ci.movie_id = ml.linked_movie_id\ninner join person_info AS pi\non pi.person_id = ci.person_id AND pi.note = 'Volker Boehm'\ninner join info_type AS it\non it.id = pi.info_type_id AND it.info = 'mini biography'\ninner join name AS n\non n.id = pi.person_id AND ci.person_id = n.id AND n.name_pcode_cf BETWEEN 'A' AND 'F' AND ( n.gender = 'm' OR ( n.gender = 'f' AND n.name like 'B%'))\ninner join aka_name AS an\non pi.person_id = an.person_id AND an.person_id = ci.person_id AND n.id = an.person_id AND an.name like '%a%';",
+  "predicted_latency": 396.5408504009247,
+  "actual_latency": 871.68,
+  "q_error": 2.198209841731775,
+  "inference_time": 0.0702962875366211
+}

@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(c cs dd cd1) NoNestLoop(c cd1 cs dd ca) NoMergeJoin(c ca cd1 cs dd i cd2) */ select i.i_item_id,\nca.ca_country,\nca.ca_state,\nca.ca_county,\navg(cs.cs_quantity::numeric(12, 2)) AS agg1,\navg(cs.cs_list_price::numeric(12, 2)) AS agg2,\navg(cs.cs_coupon_amt::numeric(12, 2)) AS agg3,\navg(cs.cs_sales_price::numeric(12, 2)) AS agg4,\navg(cs.cs_net_profit::numeric(12, 2)) AS agg5,\navg(c.c_birth_year::numeric(12, 2)) AS agg6,\navg(cd1.cd_dep_count::numeric(12, 2)) AS agg7\nfrom date_dim AS dd\ninner join catalog_sales AS cs\non cs.cs_sold_date_sk = dd.d_date_sk AND dd.d_year = 1999\ninner join customer AS c\non cs.cs_bill_customer_sk = c.c_customer_sk AND c.c_birth_month IN (7,\n10,\n12,\n2,\n4,\n5)\ninner join customer_demographics AS cd1\non cs.cs_bill_cdemo_sk = cd1.cd_demo_sk AND cd1.cd_gender = 'F' AND cd1.cd_education_status = '2 yr Degree'\ninner join customer_address AS ca\non c.c_current_addr_sk = ca.ca_address_sk AND ca.ca_state IN ('AK',\n'IL',\n'OH',\n'UT',\n'MO',\n'SD',\n'TN')\ninner join item AS i\non cs.cs_item_sk = i.i_item_sk\ninner join customer_demographics AS cd2\non c.c_current_cdemo_sk = cd2.cd_demo_sk group by rollup(i.i_item_id, ca.ca_country, ca.ca_state, ca.ca_county) order by ca.ca_country, ca.ca_state, ca.ca_county, i.i_item_id LIMIT 100;",
+  "predicted_latency": 466.3553237915039,
+  "actual_latency": 6256.707,
+  "q_error": 13.416180068734931,
+  "inference_time": 0.07407474517822266
+}

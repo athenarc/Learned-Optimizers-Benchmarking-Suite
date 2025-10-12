@@ -1,0 +1,7 @@
+{
+  "query": "/*+  */ select l.l_shipmode,\nsum(case when o.o_orderpriority = '1-URGENT' OR o.o_orderpriority = '2-HIGH' then 1 else 0 end) AS high_line_count,\nsum(case when o.o_orderpriority <> '1-URGENT' AND o.o_orderpriority <> '2-HIGH' then 1 else 0 end) AS low_line_count\nfrom lineitem AS l\ninner join orders AS o\non o.o_orderkey = l.l_orderkey AND l.l_shipmode IN ('SHIP',\n'RAIL') AND l.l_commitdate < l.l_receiptdate AND l.l_shipdate < l.l_commitdate AND l.l_receiptdate >= '1993-01-01'::date AND l.l_receiptdate < '1993-01-01'::date + '1'::interval(4) group by l.l_shipmode order by l.l_shipmode;",
+  "predicted_latency": 409.01339054107666,
+  "actual_latency": 7286.787,
+  "q_error": 17.8155218594688,
+  "inference_time": 0.01880502700805664
+}

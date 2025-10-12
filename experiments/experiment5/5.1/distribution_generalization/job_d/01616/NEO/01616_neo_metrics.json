@@ -1,0 +1,9 @@
+{
+    "query_name": "01616",
+    "sql": "SELECT MIN(n.name) AS voicing_actress,\n       MIN(t.title) AS voiced_movie\nFROM aka_name AS an,\n     char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     info_type AS it,\n     movie_companies AS mc,\n     movie_info AS mi,\n     name AS n,\n     role_type AS rt,\n     title AS t\nWHERE cn.country_code ='[us]'\n  AND it.info = 'release dates'\n  AND mc.note IS NOT NULL\n  AND mi.info IS NOT NULL\n  AND n.gender ='f'\n  AND rt.role ='actress'\n  AND t.id = mi.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND mc.movie_id = ci.movie_id\n  AND mc.movie_id = mi.movie_id\n  AND mi.movie_id = ci.movie_id\n  AND cn.id = mc.company_id\n  AND it.id = mi.info_type_id\n  AND n.id = ci.person_id\n  AND rt.id = ci.role_id\n  AND n.id = an.person_id\n  AND ci.person_id = an.person_id\n  AND (mi.info LIKE 'Japan:%200%'\n       OR mi.info LIKE 'USA:%200%')\n  AND (mc.note LIKE '%(USA)%'\n       OR mc.note LIKE '%(worldwide)%')\n  AND chn.id = ci.person_role_id\n  AND ci.note IN ('(executive producer)',\n'(uncredited)',\n'(writer)',\n'(as Katarzyna)')\nAND n.name like '%Katarzyna%'\nAND t.production_year BETWEEN 2000  AND 2010;",
+    "hint_str": "/*+ HashJoin(rt cn an n ci t mc mi it chn)\n MergeJoin(rt cn an n ci t mc mi it)\n MergeJoin(rt cn an n ci t mc mi)\n HashJoin(rt cn an n ci t mc)\n HashJoin(cn an n ci t mc)\n NestLoop(an n ci t mc)\n MergeJoin(an n ci t)\n HashJoin(n ci t)\n MergeJoin(ci t)\n TidScan(rt)\n IndexScan(cn)\n IndexScan(an)\n TidScan(n)\n BitmapScan(ci)\n IndexScan(t)\n IndexScan(mc)\n TidScan(mi)\n IndexScan(it)\n BitmapScan(chn)\n Leading(((((rt (cn ((an (n (ci t))) mc))) mi) it) chn)) */",
+    "inference_time": 5.400927305221558,
+    "planning_time": 21.13,
+    "predicted_latency": -10995.12109375,
+    "actual_latency": 10753.612
+}

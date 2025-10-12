@@ -1,0 +1,9 @@
+{
+    "query_name": "03130",
+    "sql": "SELECT MIN(cn.name) AS from_company,\n       MIN(lt.link) AS movie_link_type,\n       MIN(t.title) AS non_polish_sequel_movie\nFROM company_name AS cn,\n     company_type AS ct,\n     keyword AS k,\n     link_type AS lt,\n     movie_companies AS mc,\n     movie_keyword AS mk,\n     movie_link AS ml,\n     title AS t\nWHERE lt.id = ml.link_type_id\n  AND ml.movie_id = t.id\n  AND t.id = mk.movie_id\n  AND mk.keyword_id = k.id\n  AND t.id = mc.movie_id\n  AND mc.company_type_id = ct.id\n  AND mc.company_id = cn.id\n  AND ml.movie_id = mk.movie_id\n  AND ml.movie_id = mc.movie_id\n  AND mk.movie_id = mc.movie_id\n  AND lt.link LIKE '%follow%'\n  AND (cn.name LIKE '%Film%'\n       OR cn.name LIKE '%Warner%')\n  AND mc.note IS NULL\n  AND k.keyword = 'character-name-in-title'\nAND cn.country_code <> '[us]'\nAND ct.kind = 'production companies'\nAND t.production_year BETWEEN 2001  AND 2012;",
+    "hint_str": "/*+ HashJoin(lt ml k mk mc cn t ct)\n HashJoin(mc cn t ct)\n NestLoop(mc cn t)\n HashJoin(mc cn)\n HashJoin(lt ml k mk)\n HashJoin(ml k mk)\n MergeJoin(k mk)\n BitmapScan(lt)\n BitmapScan(ml)\n IndexScan(k)\n IndexScan(mk)\n IndexScan(mc)\n SeqScan(cn)\n IndexScan(t)\n BitmapScan(ct)\n Leading(((lt (ml (k mk))) (((mc cn) t) ct))) */",
+    "inference_time": 3.4737308025360107,
+    "planning_time": 8.484,
+    "predicted_latency": -11188.787109375,
+    "actual_latency": 2319.111
+}

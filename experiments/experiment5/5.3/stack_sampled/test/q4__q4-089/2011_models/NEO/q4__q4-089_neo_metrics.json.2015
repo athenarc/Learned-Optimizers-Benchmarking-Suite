@@ -1,0 +1,9 @@
+{
+    "query_name": "q4__q4-089",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, answer a1, tag_question tq1, so_user u1,\naccount\nwhere\n-- answerers posted at least 1 yr after the question was asked\ns1.site_name='english' and\nt1.name = 'single-word-requests' and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\na1.site_id = q1.site_id and\na1.question_id = q1.id and\na1.owner_user_id = u1.id and\na1.site_id = u1.site_id and\na1.creation_date >= q1.creation_date + '1 year'::interval and\n\n-- to get the display name\naccount.id = u1.account_id;",
+    "hint_str": "/*+ MergeJoin(s1 tq1 t1 q1 a1 u1 account)\n HashJoin(s1 tq1 t1 q1 a1 u1)\n HashJoin(s1 tq1 t1 q1 a1)\n HashJoin(s1 tq1 t1 q1)\n HashJoin(s1 tq1 t1)\n HashJoin(s1 tq1)\n IndexScan(s1)\n TidScan(tq1)\n BitmapScan(t1)\n IndexScan(q1)\n BitmapScan(a1)\n BitmapScan(u1)\n IndexScan(account)\n Leading(((((((s1 tq1) t1) q1) a1) u1) account)) */",
+    "inference_time": 0.5113525390625,
+    "planning_time": 12.854,
+    "predicted_latency": 7455.03173828125,
+    "actual_latency": 13656.464
+}

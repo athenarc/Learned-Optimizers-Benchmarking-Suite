@@ -1,0 +1,9 @@
+{
+    "query_name": "16b",
+    "sql": "SELECT MIN(an.name) AS cool_actor_pseudonym, MIN(t.title) AS series_named_after_char FROM aka_name AS an, cast_info AS ci, company_name AS cn, keyword AS k, movie_companies AS mc, movie_keyword AS mk, name AS n, title AS t WHERE cn.country_code ='[us]' AND k.keyword ='character-name-in-title' AND an.person_id = n.id AND n.id = ci.person_id AND ci.movie_id = t.id AND t.id = mk.movie_id AND mk.keyword_id = k.id AND t.id = mc.movie_id AND mc.company_id = cn.id AND an.person_id = ci.person_id AND ci.movie_id = mc.movie_id AND ci.movie_id = mk.movie_id AND mc.movie_id = mk.movie_id;",
+    "hint_str": "/*+ HashJoin(an cn k mk n t mc ci)\n HashJoin(cn k mk n t mc ci)\n MergeJoin(k mk n t mc ci)\n HashJoin(n t mc ci)\n MergeJoin(t mc ci)\n HashJoin(t mc)\n HashJoin(k mk)\n BitmapScan(an)\n IndexScan(cn)\n IndexScan(k)\n IndexScan(mk)\n SeqScan(n)\n BitmapScan(t)\n BitmapScan(mc)\n TidScan(ci)\n Leading((an (cn ((k mk) (n ((t mc) ci)))))) */",
+    "inference_time": 0.6616895198822021,
+    "planning_time": 7.395,
+    "predicted_latency": -8596.4697265625,
+    "actual_latency": 196753.416
+}

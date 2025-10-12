@@ -1,0 +1,9 @@
+{
+    "query_name": "02527",
+    "sql": "SELECT MIN(chn.name) AS character,\n       MIN(t.title) AS movie_with_american_producer\nFROM char_name AS chn,\n     cast_info AS ci,\n     company_name AS cn,\n     company_type AS ct,\n     movie_companies AS mc,\n     role_type AS rt,\n     title AS t\nWHERE t.id = mc.movie_id\n  AND t.id = ci.movie_id\n  AND ci.movie_id = mc.movie_id\n  AND chn.id = ci.person_role_id\n  AND rt.id = ci.role_id\n  AND cn.id = mc.company_id\n  AND ct.id = mc.company_type_id\n  AND ci.note like '%(as%'\nAND cn.country_code = '[gb]'\nAND t.production_year > 2009;",
+    "hint_str": "/*+ HashJoin(rt ct cn mc t chn ci)\n HashJoin(ct cn mc t chn ci)\n HashJoin(chn ci)\n HashJoin(ct cn mc t)\n HashJoin(cn mc t)\n HashJoin(mc t)\n BitmapScan(rt)\n BitmapScan(ct)\n SeqScan(cn)\n IndexScan(mc)\n BitmapScan(t)\n SeqScan(chn)\n SeqScan(ci)\n Leading((rt ((ct (cn (mc t))) (chn ci)))) */",
+    "inference_time": 3.4433767795562744,
+    "planning_time": 3.52,
+    "predicted_latency": -11478.751953125,
+    "actual_latency": 10162.95
+}

@@ -1,0 +1,9 @@
+{
+    "query_name": "q6__q6-069",
+    "sql": "select COUNT(distinct account.display_name)\nfrom\ntag t1, site s1, question q1, tag_question tq1, so_user u1, comment c1,\naccount\nwhere\n-- underappreciated (high votes, low views) questions with at least one comment\ns1.site_name='buddhism' and\nt1.name in ('money', 'canon', 'tibetan-buddhism', 'culture', 'medical-science') and\nt1.site_id = s1.site_id and\nq1.site_id = s1.site_id and\ntq1.site_id = s1.site_id and\ntq1.question_id = q1.id and\ntq1.tag_id = t1.id and\nq1.owner_user_id = u1.id and\nq1.site_id = u1.site_id and\nc1.site_id = q1.site_id and\nc1.post_id = q1.id and\nc1.score > q1.score and\n\n-- to get the display name\naccount.id = u1.account_id;",
+    "hint_str": "/*+ HashJoin(t1 s1 account u1 q1 c1 tq1)\n HashJoin(t1 s1 account u1 q1 c1)\n MergeJoin(t1 s1 account u1 q1)\n HashJoin(account u1 q1)\n HashJoin(account u1)\n MergeJoin(t1 s1)\n BitmapScan(t1)\n BitmapScan(s1)\n SeqScan(account)\n SeqScan(u1)\n BitmapScan(q1)\n BitmapScan(c1)\n BitmapScan(tq1)\n Leading(((((t1 s1) ((account u1) q1)) c1) tq1)) */",
+    "inference_time": 0.8477456569671631,
+    "planning_time": 21.905,
+    "predicted_latency": 5289.65869140625,
+    "actual_latency": 63514.243
+}

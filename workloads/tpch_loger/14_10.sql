@@ -1,17 +1,13 @@
--- using 1739183667 as a seed to the RNG
-
-
 select
-	100.00 * sum(case
-		when p_type like 'PROMO%'
-			then l_extendedprice * (1 - l_discount)
-		else 0
-	end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
+    100.00 * sum(case
+        when p.p_type like 'PROMO%'
+            then l.l_extendedprice * (1 - l.l_discount)
+        else 0
+    end) / sum(l.l_extendedprice * (1 - l.l_discount)) as promo_revenue
 from
-	lineitem,
-	part
+    lineitem l,
+    part p
 where
-	l_partkey = p_partkey
-	and l_shipdate >= date '1995-05-01'
-	and l_shipdate < date '1995-05-01' + interval '1' month;
-
+    l.l_partkey = p.p_partkey
+    and l.l_shipdate >= date '1995-02-01'
+    and l.l_shipdate < date '1995-02-01' + interval '1' month;

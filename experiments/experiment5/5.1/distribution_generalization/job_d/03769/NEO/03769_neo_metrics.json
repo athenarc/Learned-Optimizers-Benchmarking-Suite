@@ -1,0 +1,9 @@
+{
+    "query_name": "03769",
+    "sql": "SELECT MIN(lt.link) AS link_type,\n       MIN(t1.title) AS first_movie,\n       MIN(t2.title) AS second_movie\nFROM keyword AS k,\n     link_type AS lt,\n     movie_keyword AS mk,\n     movie_link AS ml,\n     title AS t1,\n     title AS t2\nWHERE mk.keyword_id = k.id\n  AND t1.id = mk.movie_id\n  AND ml.movie_id = t1.id\n  AND ml.linked_movie_id = t2.id\n  AND lt.id = ml.link_type_id\n  AND mk.movie_id = t1.id\n  AND k.keyword = 'tv-special';",
+    "hint_str": "/*+ HashJoin(t1 t2 ml mk k lt)\n NestLoop(t1 t2 ml mk k)\n HashJoin(t1 t2 ml mk)\n HashJoin(t1 t2 ml)\n MergeJoin(t2 ml)\n IndexScan(t1)\n BitmapScan(t2)\n IndexScan(ml)\n IndexScan(mk)\n IndexScan(k)\n BitmapScan(lt)\n Leading(((((t1 (t2 ml)) mk) k) lt)) */",
+    "inference_time": 4.030696630477905,
+    "planning_time": 3.361,
+    "predicted_latency": -10872.4140625,
+    "actual_latency": 3295.037
+}

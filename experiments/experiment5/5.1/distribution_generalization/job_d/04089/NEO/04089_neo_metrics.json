@@ -1,0 +1,9 @@
+{
+    "query_name": "04089",
+    "sql": "SELECT MIN(an.name) AS cool_actor_pseudonym,\n       MIN(t.title) AS series_named_after_char\nFROM aka_name AS an,\n     cast_info AS ci,\n     company_name AS cn,\n     keyword AS k,\n     movie_companies AS mc,\n     movie_keyword AS mk,\n     name AS n,\n     title AS t\nWHERE k.keyword ='character-name-in-title'\n  AND an.person_id = n.id\n  AND n.id = ci.person_id\n  AND ci.movie_id = t.id\n  AND t.id = mk.movie_id\n  AND mk.keyword_id = k.id\n  AND t.id = mc.movie_id\n  AND mc.company_id = cn.id\n  AND an.person_id = ci.person_id\n  AND ci.movie_id = mc.movie_id\n  AND ci.movie_id = mk.movie_id\n  AND mc.movie_id = mk.movie_id\n  AND cn.country_code = '[us]';",
+    "hint_str": "/*+ HashJoin(n an cn ci k mk t mc)\n MergeJoin(an cn ci k mk t mc)\n HashJoin(cn ci k mk t mc)\n MergeJoin(ci k mk t mc)\n MergeJoin(k mk t mc)\n HashJoin(k mk t)\n HashJoin(k mk)\n BitmapScan(n)\n IndexScan(an)\n BitmapScan(cn)\n SeqScan(ci)\n BitmapScan(k)\n BitmapScan(mk)\n IndexScan(t)\n BitmapScan(mc)\n Leading((n (an (cn (ci (((k mk) t) mc)))))) */",
+    "inference_time": 5.89035177230835,
+    "planning_time": 8.763,
+    "predicted_latency": -11470.6533203125,
+    "actual_latency": 114998.996
+}

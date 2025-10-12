@@ -1,0 +1,9 @@
+{
+    "query_name": "03123",
+    "sql": "SELECT MIN(kt.kind) AS movie_kind,\n       MIN(t.title) AS complete_us_internet_movie\nFROM complete_cast AS cc,\n     comp_cast_type AS cct1,\n     company_name AS cn,\n     company_type AS ct,\n     info_type AS it1,\n     keyword AS k,\n     kind_type AS kt,\n     movie_companies AS mc,\n     movie_info AS mi,\n     movie_keyword AS mk,\n     title AS t\nWHERE cct1.kind = 'complete+verified'\n  AND it1.info = 'release dates'\n  AND mi.note LIKE '%internet%'\n  AND mi.info IS NOT NULL\n  AND (mi.info LIKE 'USA:% 199%'\n       OR mi.info LIKE 'USA:% 200%')\n  AND kt.id = t.kind_id\n  AND t.id = mi.movie_id\n  AND t.id = mk.movie_id\n  AND t.id = mc.movie_id\n  AND t.id = cc.movie_id\n  AND mk.movie_id = mi.movie_id\n  AND mk.movie_id = mc.movie_id\n  AND mk.movie_id = cc.movie_id\n  AND mi.movie_id = mc.movie_id\n  AND mi.movie_id = cc.movie_id\n  AND mc.movie_id = cc.movie_id\n  AND k.id = mk.keyword_id\n  AND it1.id = mi.info_type_id\n  AND cn.id = mc.company_id\n  AND ct.id = mc.company_type_id\n  AND cct1.id = cc.status_id\n  AND cn.country_code = '[us]'\n  AND kt.kind IN ('movie')\n  AND t.production_year > 2002;",
+    "hint_str": "/*+ HashJoin(mc cct1 k t kt cc mk mi ct cn it1)\n MergeJoin(mc cct1 k t kt cc mk mi ct cn)\n HashJoin(mc cct1 k t kt cc mk mi ct)\n HashJoin(mc cct1 k t kt cc mk mi)\n MergeJoin(cct1 k t kt cc mk mi)\n HashJoin(k t kt cc mk mi)\n MergeJoin(k t kt cc mk)\n HashJoin(t kt cc mk)\n HashJoin(t kt cc)\n HashJoin(t kt)\n SeqScan(mc)\n IndexScan(cct1)\n SeqScan(k)\n TidScan(t)\n SeqScan(kt)\n BitmapScan(cc)\n IndexScan(mk)\n TidScan(mi)\n BitmapScan(ct)\n TidScan(cn)\n BitmapScan(it1)\n Leading(((((mc (cct1 ((k (((t kt) cc) mk)) mi))) ct) cn) it1)) */",
+    "inference_time": 6.69829249382019,
+    "planning_time": 26.268,
+    "predicted_latency": -11001.3212890625,
+    "actual_latency": 4646.12
+}

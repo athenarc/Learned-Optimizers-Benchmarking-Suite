@@ -1,0 +1,7 @@
+{
+  "query": "/*+ NoHashJoin(mc t cn) NoHashJoin(cn mc t ct) NoHashJoin(cn ct mc t ci) NoHashJoin(ci cn ct mc t chn) NoHashJoin(chn ci cn ct mc t rt) */ select min(chn.name) AS character,\nmin(t.title) AS movie_with_american_producer\nfrom movie_companies AS mc\ninner join title AS t\non t.id = mc.movie_id AND t.production_year > 2008\ninner join company_name AS cn\non cn.id = mc.company_id AND cn.country_code = '[us]'\ninner join company_type AS ct\non ct.id = mc.company_type_id\ninner join cast_info AS ci\non t.id = ci.movie_id AND ci.movie_id = mc.movie_id AND ci.note like '%(voice)%'\ninner join char_name AS chn\non chn.id = ci.person_role_id\ninner join role_type AS rt\non rt.id = ci.role_id;",
+  "predicted_latency": 697.9221105575562,
+  "actual_latency": 6748.826,
+  "q_error": 9.669884214742096,
+  "inference_time": 0.044431447982788086
+}

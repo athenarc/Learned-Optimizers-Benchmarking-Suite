@@ -1,0 +1,8 @@
+{
+    "query_name": "10a",
+    "sql": "SELECT MIN(chn.name) AS uncredited_voiced_character, MIN(t.title) AS russian_movie FROM char_name AS chn, cast_info AS ci, company_name AS cn, company_type AS ct, movie_companies AS mc, role_type AS rt, title AS t WHERE ci.note  like '%(voice)%' and ci.note like '%(uncredited)%' AND cn.country_code  = '[ru]' AND rt.role  = 'actor' AND t.production_year > 2005 AND t.id = mc.movie_id AND t.id = ci.movie_id AND ci.movie_id = mc.movie_id AND chn.id = ci.person_role_id AND rt.id = ci.role_id AND cn.id = mc.company_id AND ct.id = mc.company_type_id;",
+    "hint_str": "/*+ HashJoin(t chn ct mc ci rt cn)\n MergeJoin(chn ct mc ci rt cn)\n MergeJoin(ct mc ci rt cn)\n HashJoin(mc ci rt cn)\n HashJoin(mc ci rt)\n MergeJoin(ci rt)\n BitmapScan(t)\n SeqScan(chn)\n IndexScan(ct)\n SeqScan(mc)\n BitmapScan(ci)\n TidScan(rt)\n BitmapScan(cn)\n Leading((t (chn (ct ((mc (ci rt)) cn))))) */",
+    "predicted_latency_ms": 11700.703125,
+    "planning_time_ms": 4.25,
+    "actual_latency_ms": 4492.034
+}
