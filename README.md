@@ -2,12 +2,6 @@
 
 This repo includes the code base used in the paper "What Drives Learned Optimizer Performance? A Systematic Evaluation", as was submitted for review for the EDBT/ICDT 2026 Joint Conference.
 
-## Authors
-
-- Kostas Mparmparousis; Athena Research Center; Athens, Greece; <a href="mailto:k.mparmparousis\@athenarc.gr">k.mparmparousis\@athenarc.gr</a>
-- Christos Tsapelas; Athena Research Center; Athens, Greece; <a href="mailto:ctsapelas\@athenarc.gr">ctsapelas\@athenarc.gr</a>
-- Georgia Koutrika; Athena Research Center; Athens, Greece; <a href="mailto:georgia\@athenarc.gr">georgia\@athenarc.gr</a>
-
 ---
 
 ## Repository Structure
