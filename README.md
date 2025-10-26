@@ -86,7 +86,7 @@ Each experiment directory includes documentation describing its objectives, meth
 ## Models
 
 We provide pretrained model checkpoints for each experiment and optimizer in the following Hugging Face repository:
-👉 [**LQO Evaluation Suite Models**](https://huggingface.co/kmparmp/lqo_evaluation_suite_models/tree/main)
+👉 [**LQO Evaluation Suite Models**](https://huggingface.co/EDBT-2026-Submission/LQO_Evaluation_Suite/tree/main)
 
 Please refer to each optimizer’s documentation for detailed instructions on which model checkpoint to load for each experiment.
 
