@@ -1,0 +1,26 @@
+SELECT MIN(cn.name) AS company_name, MIN(lt.link) AS link_type, MIN(t.title) AS german_follow_up
+FROM company_name AS cn, company_type AS ct, keyword AS k, link_type AS lt, movie_companies AS mc, movie_info AS mi, movie_keyword AS mk, movie_link AS ml, title AS t
+WHERE cn.country_code != '[ar]'
+    AND ( cn.name LIKE '%%'
+    OR cn.name LIKE '%%' )
+    AND ct.kind = 'production companies'
+    AND k.keyword = 'three-word-title'
+    AND lt.link LIKE '%d %'
+    AND mc.note IS NULL
+    AND mi.info IN ('90','None','OFM:Video','Horror','UK:5 July 2010','PFM:35 mm','Color','Color','UK:18 February 2013')
+    AND t.production_year BETWEEN 2005
+    AND 2011
+    AND lt.id = ml.link_type_id
+    AND ml.movie_id = t.id
+    AND t.id = mk.movie_id
+    AND mk.keyword_id = k.id
+    AND t.id = mc.movie_id
+    AND mc.company_type_id = ct.id
+    AND mc.company_id = cn.id
+    AND mi.movie_id = t.id
+    AND ml.movie_id = mk.movie_id
+    AND ml.movie_id = mc.movie_id
+    AND mk.movie_id = mc.movie_id
+    AND ml.movie_id = mi.movie_id
+    AND mk.movie_id = mi.movie_id
+    AND mc.movie_id = mi.movie_id;;

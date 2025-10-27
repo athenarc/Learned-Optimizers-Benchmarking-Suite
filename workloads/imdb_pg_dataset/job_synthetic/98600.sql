@@ -1,0 +1,3 @@
+SELECT COUNT(*)
+FROM title t, cast_info ci
+WHERE t.id = ci.movie_id AND t.production_year  >  1970 AND ci.person_id  =  234250 AND ci.role_id  <  3
