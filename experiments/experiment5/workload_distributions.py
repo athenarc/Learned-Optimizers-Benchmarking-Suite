@@ -7,6 +7,18 @@ import colorsys
 from matplotlib.colors import to_rgb, to_hex
 import matplotlib.patches as mpatches
 import random
+from pathlib import Path
+REPO_ROOT = Path(__file__).resolve()
+while REPO_ROOT.name != "Learned-Optimizers-Benchmarking-Suite" and REPO_ROOT.parent != REPO_ROOT:
+    REPO_ROOT = REPO_ROOT.parent
+PREPROC_DIR = REPO_ROOT / "preprocessing"
+IMDB_PG_DATASET_DIR = REPO_ROOT / "workloads" / "imdb_pg_dataset"
+JOB_DIR = IMDB_PG_DATASET_DIR / "job"
+JOB_D_DIR = IMDB_PG_DATASET_DIR / "job_d"
+JOB_EXTENDED_DIR = IMDB_PG_DATASET_DIR / "job_extended"
+JOB_LIGHT_DIR = IMDB_PG_DATASET_DIR / "job_light"
+JOB_SYNTHETIC_DIR = IMDB_PG_DATASET_DIR / "job_synthetic"
+JOB_LERO_DIR = IMDB_PG_DATASET_DIR / "job_lero"
 
 # Constants
 optimizers = ['Postgres', 'NEO', 'BAO', 'LOGER', 'FASTgres', 'LERO']
@@ -14,7 +26,7 @@ optimizers = ['Postgres', 'NEO', 'BAO', 'LOGER', 'FASTgres', 'LERO']
 import sys
 import os
 
-preproc_path = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/preprocessing"
+preproc_path = PREPROC_DIR
 
 # Add it to sys.path if not already there
 if preproc_path not in sys.path:
@@ -36,16 +48,14 @@ import matplotlib.pyplot as plt
 from sql_parser import parse_sql
 from selectivity import get_database_schema
 
-job = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job"
-# job_dynamic = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job_d"
-# job_extended = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job_extended"
-# job_light = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job_light"
-# job_synthetic = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job_synthetic"
-job_lero = "/data/hdd1/users/kmparmp/Learned-Optimizers-Benchmarking-Suite/workloads/imdb_pg_dataset/job_lero"
+job = JOB_DIR
+job_dynamic = JOB_D_DIR
+job_extended = JOB_EXTENDED_DIR
+job_light = JOB_LIGHT_DIR
+job_synthetic = JOB_SYNTHETIC_DIR
+job_lero = JOB_LERO_DIR
 
-# job_alts = [job_dynamic, job_extended, job_light, job_synthetic]
-# job_alts = [job_light, job_synthetic]
-job_alts = [job_lero]
+job_alts = [job_dynamic, job_extended, job_light, job_synthetic, job_lero]
 
 from query_template import get_query_template_no_correl
 from config import connect_to_db
