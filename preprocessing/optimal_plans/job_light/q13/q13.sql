@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM title,movie_info,movie_info_idx,movie_companies WHERE title.id=movie_info.movie_id AND title.id=movie_info_idx.movie_id AND title.id=movie_companies.movie_id AND movie_info_idx.info_type_id=113 AND movie_info.info_type_id=105;

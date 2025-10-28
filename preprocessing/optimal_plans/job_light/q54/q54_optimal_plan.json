@@ -1,0 +1,231 @@
+{
+  "Plan": {
+    "Node Type": "Aggregate",
+    "Strategy": "Plain",
+    "Partial Mode": "Simple",
+    "Parallel Aware": false,
+    "Async Capable": false,
+    "Startup Cost": 519110.54,
+    "Total Cost": 519110.55,
+    "Plan Rows": 1,
+    "Plan Width": 8,
+    "Actual Startup Time": 19590.371,
+    "Actual Total Time": 19590.374,
+    "Actual Rows": 1,
+    "Actual Loops": 1,
+    "Output": [
+      "count(*)"
+    ],
+    "Plans": [
+      {
+        "Node Type": "Merge Join",
+        "Parent Relationship": "Outer",
+        "Parallel Aware": false,
+        "Async Capable": false,
+        "Join Type": "Inner",
+        "Startup Cost": 97987.25,
+        "Total Cost": 390903.43,
+        "Plan Rows": 51282842,
+        "Plan Width": 0,
+        "Actual Startup Time": 934.771,
+        "Actual Total Time": 16906.103,
+        "Actual Rows": 51282842,
+        "Actual Loops": 1,
+        "Inner Unique": false,
+        "Merge Cond": "(title.id = movie_keyword.movie_id)",
+        "Plans": [
+          {
+            "Node Type": "Nested Loop",
+            "Parent Relationship": "Outer",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Join Type": "Inner",
+            "Startup Cost": 97970.47,
+            "Total Cost": 254163.21,
+            "Plan Rows": 1839592,
+            "Plan Width": 12,
+            "Actual Startup Time": 774.744,
+            "Actual Total Time": 1822.845,
+            "Actual Rows": 1839592,
+            "Actual Loops": 1,
+            "Output": [
+              "title.id",
+              "cast_info.movie_id",
+              "movie_info_idx.movie_id"
+            ],
+            "Inner Unique": false,
+            "Join Filter": "(title.id = cast_info.movie_id)",
+            "Rows Removed by Join Filter": 0,
+            "Plans": [
+              {
+                "Node Type": "Merge Join",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Join Type": "Inner",
+                "Startup Cost": 97970.03,
+                "Total Cost": 144122.78,
+                "Plan Rows": 58024,
+                "Plan Width": 8,
+                "Actual Startup Time": 774.661,
+                "Actual Total Time": 1055.167,
+                "Actual Rows": 58024,
+                "Actual Loops": 1,
+                "Output": [
+                  "title.id",
+                  "movie_info_idx.movie_id"
+                ],
+                "Inner Unique": true,
+                "Merge Cond": "(movie_info_idx.movie_id = title.id)",
+                "Plans": [
+                  {
+                    "Node Type": "Index Scan",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Scan Direction": "Forward",
+                    "Index Name": "idx_movie_info_idx_movie_id",
+                    "Relation Name": "movie_info_idx",
+                    "Schema": "public",
+                    "Alias": "movie_info_idx",
+                    "Startup Cost": 0.43,
+                    "Total Cost": 43179.41,
+                    "Plan Rows": 462220,
+                    "Plan Width": 4,
+                    "Actual Startup Time": 261.913,
+                    "Actual Total Time": 555.707,
+                    "Actual Rows": 459925,
+                    "Actual Loops": 1,
+                    "Output": [
+                      "movie_info_idx.id",
+                      "movie_info_idx.movie_id",
+                      "movie_info_idx.info_type_id",
+                      "movie_info_idx.info",
+                      "movie_info_idx.note"
+                    ],
+                    "Filter": "(movie_info_idx.info_type_id = 101)",
+                    "Rows Removed by Filter": 920110
+                  },
+                  {
+                    "Node Type": "Sort",
+                    "Parent Relationship": "Inner",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Startup Cost": 97967.59,
+                    "Total Cost": 98634.56,
+                    "Plan Rows": 266790,
+                    "Plan Width": 4,
+                    "Actual Startup Time": 391.095,
+                    "Actual Total Time": 413.889,
+                    "Actual Rows": 216079,
+                    "Actual Loops": 1,
+                    "Output": [
+                      "title.id"
+                    ],
+                    "Sort Key": [
+                      "title.id"
+                    ],
+                    "Sort Method": "quicksort",
+                    "Sort Space Used": 6145,
+                    "Sort Space Type": "Memory",
+                    "Plans": [
+                      {
+                        "Node Type": "Seq Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Relation Name": "title",
+                        "Schema": "public",
+                        "Alias": "title",
+                        "Startup Cost": 0.0,
+                        "Total Cost": 73922.68,
+                        "Plan Rows": 266790,
+                        "Plan Width": 4,
+                        "Actual Startup Time": 2.187,
+                        "Actual Total Time": 340.686,
+                        "Actual Rows": 216282,
+                        "Actual Loops": 1,
+                        "Output": [
+                          "title.id"
+                        ],
+                        "Filter": "((title.production_year > 2005) AND (title.kind_id = 1))",
+                        "Rows Removed by Filter": 2312030
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Node Type": "Index Only Scan",
+                "Parent Relationship": "Inner",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Scan Direction": "Forward",
+                "Index Name": "idx_cast_info_movie_id",
+                "Relation Name": "cast_info",
+                "Schema": "public",
+                "Alias": "cast_info",
+                "Startup Cost": 0.44,
+                "Total Cost": 1.42,
+                "Plan Rows": 38,
+                "Plan Width": 4,
+                "Actual Startup Time": 0.003,
+                "Actual Total Time": 0.008,
+                "Actual Rows": 32,
+                "Actual Loops": 58024,
+                "Output": [
+                  "cast_info.movie_id"
+                ],
+                "Index Cond": "(cast_info.movie_id = movie_info_idx.movie_id)",
+                "Rows Removed by Index Recheck": 0,
+                "Heap Fetches": 0
+              }
+            ]
+          },
+          {
+            "Node Type": "Index Only Scan",
+            "Parent Relationship": "Inner",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Scan Direction": "Forward",
+            "Index Name": "idx_movie_keyword_movie_id",
+            "Relation Name": "movie_keyword",
+            "Schema": "public",
+            "Alias": "movie_keyword",
+            "Startup Cost": 0.43,
+            "Total Cost": 88087.38,
+            "Plan Rows": 4523930,
+            "Plan Width": 4,
+            "Actual Startup Time": 0.019,
+            "Actual Total Time": 6975.268,
+            "Actual Rows": 55259419,
+            "Actual Loops": 1,
+            "Output": [
+              "movie_keyword.movie_id"
+            ],
+            "Heap Fetches": 0
+          }
+        ]
+      }
+    ]
+  },
+  "Planning Time": 4.903,
+  "Triggers": [],
+  "JIT": {
+    "Functions": 22,
+    "Options": {
+      "Inlining": true,
+      "Optimization": true,
+      "Expressions": true,
+      "Deforming": true
+    },
+    "Timing": {
+      "Generation": 1.498,
+      "Inlining": 92.448,
+      "Optimization": 103.87,
+      "Emission": 65.677,
+      "Total": 263.493
+    }
+  },
+  "Execution Time": 19619.156
+}

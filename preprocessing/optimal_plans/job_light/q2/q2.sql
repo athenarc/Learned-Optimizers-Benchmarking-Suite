@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM cast_info,title WHERE title.id=cast_info.movie_id AND title.production_year>1980 AND title.production_year<2010;
