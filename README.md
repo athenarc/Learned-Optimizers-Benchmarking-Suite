@@ -123,7 +123,7 @@ The learned query optimizers (LQOs) were trained and evaluated using the followi
 
 ## Utility Scripts
 
-The [preprocessing](preprocessing/) directory contains a separate repository implementing utility tools for supporting experiments. These include:
+The `preprocessing` directory contains a separate repository implementing utility tools for supporting experiments. These include:
 
 * An SQL parser
 * Scripts to transform workloads into directories compatible with our experiment structure
